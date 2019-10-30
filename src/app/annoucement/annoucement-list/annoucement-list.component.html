@@ -1,0 +1,101 @@
+<div class="main-container" >
+  <div *ngIf="loader" class="center-loder cs-loader">
+    <div class="outer">
+      <div class="innear">
+        <mat-spinner class="loader"></mat-spinner>
+      </div>
+    </div>
+  </div>
+  
+  <div class="middle-container">
+    <div class="page-heading">
+      <img src="assets/img/leads_icon.svg" class="h-icon">
+      <div class="heading-text">
+        <h2>Annoucement</h2>
+        <p>Total Annoucement  ({{count}})</p>
+      </div>
+    </div>
+    
+    <div class="top-pagination">
+      <ul>
+        <li class="refresh-area">
+          <a class="refresh-btn" mat-raised-button  matTooltip="Refresh" (click)="refresh()">
+            <i class="material-icons"> refresh</i>
+          </a>
+        </li>
+        <li><p>Pages {{pagenumber}} Of {{total_page}}</p></li>
+        
+        <li>
+          <button mat-button class="left-btn" (click)="pagination(page_limit,start-page_limit)" [disabled]="pagenumber == 1">
+            <i class="material-icons">keyboard_arrow_left</i></button>
+          </li>
+          
+          <li>
+            <input type="text" placeholder="GO TO" name="pagenumber" (keyup.enter)="pagination(page_limit,((pagenumber*page_limit)-page_limit))" [(ngModel)]="pagenumber">
+          </li>
+          
+          <li>
+            <button mat-button class="right-btn"  (click)="pagination(page_limit,(start+page_limit))" [disabled]="pagenumber == total_page">
+              <i class="material-icons">keyboard_arrow_right</i>
+            </button>
+          </li>
+        </ul>
+      </div>
+    </div>
+    
+    <div class="container-outer">
+      <app-master-tab-list></app-master-tab-list>
+      <div class="container tab-container" >
+        <div class="row">
+          <div class="col s12">
+            <div class="cs-table left-right-20">
+              <div class="table-head">
+                <table class="sno-border">
+                  <tr>
+                    <th class="w30">&nbsp;</th>
+                    <th class="w150">
+                      <!-- <div class="filter">
+                        <mat-form-field>
+                          <mat-select placeholder="Type">
+                            <mat-option value="option1">Distributor</mat-option>
+                            <mat-option value="option2">Sales Executive</mat-option>
+                          </mat-select>
+                        </mat-form-field>
+                      </div> -->Type
+                    </th>
+                    <th class="w100">Date</th>
+                    <th class="w100">Created By</th>
+                    <th class="w200">Subject</th>
+                    <th>Messege</th>
+                    <th class="w80">Action</th>
+                  </tr>
+                </table>
+              </div>
+              
+              <div class="table-container">
+                <div class="table-content">
+                  <table class="sno-border">
+                    <tr *ngFor="let data of annoucement_data;let i=index">
+                      <td class="w30">{{i+1}}.</td>
+                      <td class="w150">{{data.network_type | titlecase}}</td>
+                      <td class="w100">{{data.date_created}}</td>
+                      <td class="w100">{{data.created_by}}</td>
+                      <td class="w200">{{data.subject | titlecase}}</td>
+                      <td class="ellips" [innerHtml]="data.description"></td>
+                      <td class="w80">{{data.action | titlecase}}
+                        <div class="action-btns">
+                          <!-- <a mat-button class="view"><i class="material-icons">remove_red_eye</i> View</a> -->
+                          <button mat-button class="delete" (click)="delete(data.id)"><i class="material-icons">delete_sweep</i> Delete</button>
+                        </div>
+                      </td>
+                    </tr>
+                  </table>
+                </div>
+              </div>
+              
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>

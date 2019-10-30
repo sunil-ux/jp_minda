@@ -1,0 +1,243 @@
+<div class="main-container" >
+  <div *ngIf="loader=='1'" class="center-loder cs-loader">
+    <div class="outer">
+      <div class="innear">
+        <mat-spinner class="loader"></mat-spinner>
+      </div>
+    </div>
+  </div>
+  
+  <div class="main-outer">
+    <div class="main-inner">
+      <div class="middle-container" mat-button routerLink="/territory-list" routerLinkActive="active" style="cursor: pointer">
+        <div class="page-heading">
+          <div class="heading-text">
+            <h2>Territory MASTER</h2>
+            <p>Add New Territory</p>
+          </div>
+        </div>
+        <span class="required">INDICATE REQUIRED FIELDS ( <sup>*</sup> )</span>
+      </div>
+      
+      <div class="container-outer padding0 hidden">
+        <form name="form" #f="ngForm" (ngSubmit)="onsubmit()">
+          <div class="container " >
+            <div class="row">
+              <div class="sprate-box">
+                <div class="main-bdr">
+                  <div class="cs-heading">
+                    <h2>TERRITORY INFORMATION</h2>
+                  </div>
+                  
+                  <div class="from-fields">
+                    
+                    <div class="row adjust-row">
+                      <div class="col s6 pl0" [ngClass]="{ 'has-error' : f.submitted && !form.territory_name }">
+                        <div class="control-field">
+                          <mat-form-field class="cs-input">
+                            <input matInput placeholder="Territory Name" [(ngModel)]="form.territory_name" name="territory_name" required>
+                          </mat-form-field>
+                        </div>
+                        <p *ngIf="f.submitted && !form.territory_name" style="color: red">Territory Name is required</p>
+                        
+                      </div>
+                      <div class="col s4 empty">
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div class="row adjust-row pt0">
+                    <div class="col s4 pl0">
+                      <div class="territory-info">
+                        <div class="head" [ngClass]="{'active':active.state==true}">
+                          <h2>STATES</h2>
+                          <i class="material-icons search-icon right20" (click)="toggleterritory('state','open')"  matRipple>search</i>
+                          
+                          <input type="text" id="state" [(ngModel)]="data.stateSearch" name="stateSearch" placeholder="search..." class="fix-search">
+                          
+                          <i class="material-icons close-icon" (click)="data.stateSearch='';toggleterritory('state','close')" matRipple>clear</i>
+                          
+                        </div>
+                        
+                        <div class="cs-checkbox">
+                          <div class="checkbox-outer" >
+                            <section  class="checkbox-inner" *ngFor = "let val of states | myfilter:{src: 'territoryState', search: data.stateSearch};let i = index;" >
+                              <mat-checkbox class="check-list" [(ngModel)]="val.selected" (change)="getDistrictList(i)"  [name]="'state'+i"  > {{val.state_name}}</mat-checkbox>
+                            </section >
+                          </div>
+                        </div>
+                      </div>
+                      
+                    </div>
+                    <div class="col s4">
+                      <div class="territory-info">
+                        <div class="head" [ngClass]="{'active':active.districts==true}">
+                          <h2>DISTRICTS</h2>
+                          
+                          <span>
+                            <mat-checkbox class="fix-check" [(ngModel)]="form.allDistrict" (change)="allDistrict()"  name="allDistrict" ></mat-checkbox>
+                          </span>
+                          <i class="material-icons search-icon right60" (click)="toggleterritory('districts','open')"  matRipple>search</i>
+                          
+                          <input type="text" id="districts" [(ngModel)]="data.districtSearch" name="districtSearch" placeholder="search..." class="fix-search">
+                          
+                          <i class="material-icons close-icon" (click)="data.districtSearch='';toggleterritory('districts','close')" matRipple>clear</i>
+                          
+                          
+                        </div>
+                        
+                        <div *ngIf="!isAnyStateSelected" class="cs-not-data">
+                          <div class="inner-data">
+                            <p>No Data</p>
+                          </div>
+                        </div>
+                        
+                        <div class="cs-checkbox" *ngIf="isAnyStateSelected">
+                          <div class="checkbox-outer">
+                            <ng-container *ngFor = "let val of districts;let i = index">
+                              <ng-container *ngIf="val.selected"  >
+                                
+                                <section  class="checkbox-inner"  >
+                                  <mat-checkbox class="check-list"  [(ngModel)]="val.stateWiseDistrict" (change)="allStateWiseDistrict(i)" [name]="'dist'+i"  > {{val.state_name}}</mat-checkbox>
+                                </section >
+                                
+                                <section  class="checkbox-inner"   *ngFor = "let v of val.districts | myfilter:{src: 'territoryDistrict', search: data.districtSearch}; let x = index">
+                                  <mat-checkbox class="check-list" [(ngModel)]="v.selected"  [name]="'district'+x+i" (change)="getPincodeList(i,x)"> {{v.district_name}}</mat-checkbox>
+                                </section >
+                                
+                              </ng-container>
+                              
+                            </ng-container>
+                          </div>
+                        </div>
+                      </div>
+                    </div> 
+                    
+                    <div class="col s4 pr0">
+                      <div class="territory-info">
+                        <div class="head" [ngClass]="{'active':active.pincode==true}">
+                          <h2>AREA PINCODES</h2>
+                          <span>
+                            <mat-checkbox class="fix-check" [(ngModel)]="form.allPincode" (change)="allPincodes()"  name="allPincodes"  value="true"></mat-checkbox>
+                            
+                          </span>
+                          
+                          <i class="material-icons search-icon right60"  (click)="toggleterritory('pincode','open')"  matRipple>search</i>
+                          <input type="text" id="pincode" [(ngModel)]="data.pincodeSearch" name="PincodeSearch" placeholder="Pincode Search..." class="fix-search">
+                          <i class="material-icons close-icon" (click)="data.pincodeSearch='';toggleterritory('pincode','close')" matRipple>clear</i>
+                          
+                          
+                          
+                        </div>
+                        
+                        <div *ngIf="!isAnyDistrictSelected" class="cs-not-data">
+                          <div class="inner-data">
+                            <p>No Data</p>
+                          </div>
+                        </div>
+                        
+                        <div class="cs-checkbox" *ngIf="isAnyDistrictSelected">
+                          <div class="checkbox-outer">
+                            <ng-container *ngFor = "let val of pincodes;let sindex = index">
+                              
+                              <ng-container *ngIf="val.selected"  >
+                                
+                                <ng-container *ngFor = "let disval of val.districts;let dindex = index">
+                                  <ng-container *ngIf="disval.selected"  >
+                                    
+                                    <section  class="checkbox-inner"  >
+                                      <mat-checkbox class="check-list"  [(ngModel)]="disval.DistrictWisePincode" (change)="allDistrictWisePincode(sindex,dindex)" [name]="'pin'+sindex+dindex"  > {{disval.district_name}}</mat-checkbox>
+                                    </section >
+                                    
+                                    <section  class="checkbox-inner"   *ngFor = "let v of disval.pincodes | myfilter:{src: 'territoryPincode', search: data.pincodeSearch}; let x = index">
+                                      <mat-checkbox class="check-list" [(ngModel)]="v.selected"  [name]="'pin'+x+dindex+sindex"  (change)="SelectPincode()"> {{v.pincode}}</mat-checkbox>
+                                    </section >
+                                    
+                                  </ng-container>
+                                </ng-container>
+                              </ng-container>
+                            </ng-container>
+                          </div>
+                        </div>
+                      </div>
+                    </div> 
+                  </div>
+                  
+                </div>
+                
+                <div class="row">
+                  <div class="col s12 pr0">
+                    <div  class="cs-btn text-right mt15">
+                      
+                      <p *ngIf="f.submitted && !(finalPincodesDetailArr.length)" style="color: red">Pincode is required</p>
+                      
+                      <div class="in-btn">
+                        <button  [disabled]="!isAnyDistrictSelected || !isAnyPincodeSelected" (click)="onFinalPinCodesHandler()" type="button" mat-raised-button color="accent" >Add to Pincode List</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                
+                <div class="main-bdr padding0 mt15" *ngIf="finalPincodesDetailArr.length">
+                  <div class="cs-heading">
+                    <h2 class="pr40 relative">Selected Pincodes 
+                      <span class="counter-number" style="text-align:right">{{finalPincodesDetailArr.length}}</span>
+                    </h2> 
+                    <div class="top-search ml50">
+                      <input type="text" placeholder="SEARCH. . ."  [(ngModel)]="data.selectedPincodeSearch" name="selectedPincodeSearch">
+                      <i class="material-icons">search</i>
+                    </div>
+                    <div class="action-menu">
+                      <button type="button" class="action-menu-btn" mat-button [matMenuTriggerFor]="menu"><i class="material-icons">more_vert</i></button>
+                      <mat-menu class="action-dropdown" #menu="matMenu">
+                        <button type="button"  disabled mat-menu-item class="alert-btn red-clr" style="border-bottom: 1px solid #ccc;">Delete Statewise</button>
+                        <button mat-menu-item type="button" (click)="deleteSelectedPincode(stateName, '')" *ngFor='let stateName of distinctSelectedState'>{{stateName}}</button>
+                      </mat-menu>
+                    </div>
+                  </div>
+                  
+                  <div class="cs-table">
+                    <div class="table-head ">
+                      <table>
+                        <tr>
+                          <th>State Name</th>
+                          <th>District Name</th>
+                          <th>Pincode</th>
+                        </tr>
+                      </table>
+                    </div>
+                    <div class="table-container height-scroll">
+                      <div class="table-content shadow-none">
+                        <table>
+                          <tr *ngFor="let list of finalPincodesDetailArr | myfilter:{src: 'selectedPincodes', search: data.selectedPincodeSearch}">
+                            <td>{{list.state_name}}</td>
+                            <td>{{list.district_name}}</td>
+                            <td>
+                              <div class="action-btns">
+                                <button type="button" mat-button class="delete" (click)="deleteSelectedPincode('Pincode', list)"><i class="material-icons">delete_sweep</i> Delete</button>
+                              </div>
+                              <span> {{list.pincode}}</span>
+                            </td>
+                          </tr>
+                        </table>
+                      </div>
+                    </div>
+                  </div>
+                  
+                </div>
+              </div>
+              
+              <div class="cs-btn fixedd mt32 text-right pr10">
+                  <div class="in-btn">
+                    <button mat-raised-button color="accent"  >Save</button>
+                  </div>
+                </div>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="h50"></div>

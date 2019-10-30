@@ -1,0 +1,203 @@
+<div class="main-container" >
+    <div *ngIf="loader" class="center-loder cs-loader">
+        <div class="outer">
+            <div class="innear">
+                <mat-spinner class="loader"></mat-spinner>
+            </div>
+        </div>
+    </div>
+    <form #f="ngForm" name="form" (ngSubmit)="subbmitPurchaseOrder()">
+        <div class="main-outer">
+            <div class="main-inner">
+                <div class="middle-container"  mat-button routerLink="/product-list" routerLinkActive="active" style="cursor: pointer">
+                    <div class="page-heading" >
+                        <div class="heading-text">
+                            <h2>Purchase Order</h2>
+                            <p >Receive</p>
+                        </div>
+                    </div>
+                    <span class="required">INDICATES REQUIRED FIELDS ( <sup>*</sup> )</span>
+                </div>
+                <div class="container-outer padding0 hidden">
+                    <div class="container pr10" >
+                        <div class="row">
+                            <div class="col s12 padding0">
+                                <div class="sprate-box">
+                                    <div class="col s12 padding0 main-bdr">
+                                        <div class="from-fields field-adjust pt20 pb0">
+                                            <div class="row mb15">
+                                                <div class="col s3">
+                                                    <div class="control-field">
+                                                        <mat-form-field class="cs-input">
+                                                            <input matInput placeholder="Ware House" readonly  name="wareHouse" [(ngModel)]="vendorData.warehouse_name">
+                                                        </mat-form-field>
+                                                    </div>
+                                                </div>
+                                                <div class="col s3" >
+                                                    <div class="control-field">
+                                                        <mat-form-field class="cs-input">
+                                                            <input matInput placeholder="Company Name" name="companyName"  [(ngModel)]="vendorData.company_name" readonly  >
+                                                        </mat-form-field>
+                                                    </div>
+                                                </div>
+                                                <div class="col s2">
+                                                    <div class="control-field">
+                                                        <mat-form-field class="cs-input">
+                                                            <input matInput placeholder="Invoce no" required  name="invoice_no" [(ngModel)]="vendorData.invoice_no">
+                                                        </mat-form-field>
+                                                    </div>
+                                                </div>
+                                                <div class="col s2">
+                                                    <div class="control-field">
+                                                        <mat-form-field class="cs-input">
+                                                            <input matInput placeholder="Invoce Amount" required  name="invoice_amt" [(ngModel)]="vendorData.invoice_amt">
+                                                        </mat-form-field>
+                                                    </div>
+                                                </div>
+                                                <div class="col s2">
+                                                    <div class="control-field">
+                                                        <mat-form-field class="cs-input">
+                                                            <input matInput [matDatepicker]="date" placeholder="Invoce Date"  [(ngModel)]="vendorData.invoice_date" (click)="_openCalendar(date)" name="invoice_date" #invoice_date="ngModel" readonly>
+                                                            <mat-datepicker-toggle matSuffix [for]="date"></mat-datepicker-toggle>
+                                                            <mat-datepicker #date></mat-datepicker>
+                                                        </mat-form-field>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>            
+                                </div>
+                            </div>
+                        </div>
+                        <div *ngIf="itemList?.length" class="row">
+                            <div class="col s12 padding0">
+                                <div class="row">
+                                    <div class="col s12 padding0">
+                                        <div class="sprate-box pt0">
+                                            <div class="col s12 padding0 main-bdr">
+                                                <div class="cs-heading">
+                                                    <h2>ITEM INFORMATION</h2>
+                                                </div>
+                                                <div class="row mt15">
+                                                    <div class="cs-table ss-scroll" style="height: calc(100vh - 370px); height: auto;">
+                                                        <table>
+                                                            <tr>
+                                                                <div class="ss-sticky">
+                                                                    <div class="table-head">
+                                                                        <table>
+                                                                            <tr>
+                                                                                <th class="w50"></th>
+                                                                                <th >Product Code</th>
+                                                                                <th class="w80">Qty</th>
+                                                                                <th class="w90">Rate</th>
+                                                                                <th class="w90">Discount</th>
+                                                                                <th class="w110">Total Amount</th>
+                                                                                <th class="w110">Pending QTY</th>
+                                                                                <th class="w110">Recived QTY</th>
+                                                                                <th class="w100">Accept QTY</th>
+                                                                            </tr>
+                                                                        </table>
+                                                                    </div>
+                                                                </div>
+                                                            </tr>
+                                                            <tr>
+                                                                <div class="table-container">
+                                                                    <div class="table-content">
+                                                                        <table>
+                                                                            <ng-container *ngFor="let row of itemList; let i = index">
+                                                                                <tr *ngIf="row.pending_qty!=0" >
+                                                                                    <td class="w50 border-right-none">{{i+1}}</td>
+                                                                                    <td >{{row.product_code}}</td>
+                                                                                    <td class="w80">{{row.qty}}</td>
+                                                                                    <td class="w90">₹ {{row.rate}}</td>
+                                                                                    <td class="w90">₹ {{row.discount_amt}}</td>
+                                                                                    <td class="w110">₹ {{row.total_amount}}</td>
+                                                                                    <td class="w110">
+                                                                                        {{row.pending_qty}}
+                                                                                    </td>
+                                                                                    <td class="w110">
+                                                                                        {{row.receive_qty}}
+                                                                                    </td>
+                                                                                    <td class="w100">
+                                                                                        <div class="from-fields">
+                                                                                            <div class="cntrol-fields">
+                                                                                                <input type="number" class="w60" name="accept_qty{{i}}" #accept_qty="ngModel" (change)="recivedQty(i,row.accept_qty)" [(ngModel)]="row.accept_qty">
+                                                                                            </div>
+                                                                                        </div>
+                                                                                    </td>
+                                                                                </tr>
+                                                                            </ng-container>
+                                                                            
+                                                                        </table>
+                                                                    </div>
+                                                                </div>
+                                                            </tr>
+                                                        </table>
+                                                    </div>
+                                                </div>
+                                            </div> 
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col s12 padding0">
+                                    <div class="sprate-box pt0">
+                                        <div class="col s12 padding0 main-bdr">
+                                            <div class="cs-heading">
+                                                <h2>INFORMATION</h2>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col s4 pl15">
+                                                    <div class="control-field">
+                                                        <div class="cs-file-bdr">
+                                                            <!-- <label>Select file</label> -->
+                                                            <input type="file"  (change)="select_file($event)" name="image"  class="file-cs" multiple accept=".png,.jpeg,.jpg,.doc,.docx,.pdf">
+                                                            <ul>
+                                                                <li *ngFor="let file of selectedFile;let i = index;">{{file.name}}
+                                                                    <span><button (click)="delFile(file.name,i)"><i class="material-icons">delete_sweep</i></button></span>
+                                                                </li>
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col s4">
+                                                    <div class="from-fields">
+                                                        <div class="control-field">
+                                                            <mat-form-field class="cs-input">
+                                                                <input matInput placeholder="Shipping Charge" required  name="shipping_charge " [(ngModel)]="vendorData.shipping_charge ">
+                                                            </mat-form-field>
+                                                        </div>
+                                                    </div>
+                                                    
+                                                </div>
+                                                <div class="col s4 pl8 pr15">
+                                                    <div class="from-fields">
+                                                        <div class="control-field">
+                                                            <mat-form-field class="cs-input">
+                                                                <textarea class="h101" matInput placeholder="Receive note" name="receive_note" #receive_note="ngModel" [(ngModel)]="vendorData.receive_note" ></textarea>
+                                                            </mat-form-field>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            
+                            <div class="cs-btn fixedd mt32 text-right pr20">
+                                <div class="in-btn">
+                                    <button mat-raised-button color="accent" >Save</button>
+                                </div>
+                            </div>            
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="h70">
+            </div>
+        </div>
+    </form>
+</div>

@@ -1,0 +1,140 @@
+<div class="main-container" >
+  <div *ngIf="loader" class="center-loder cs-loader">
+    <div class="outer">
+      <div class="innear">
+        <mat-spinner class="loader"></mat-spinner>
+      </div>
+    </div>
+  </div>
+  
+  <div class="main-outer">
+    <div class="main-inner">
+      <div class="middle-container">
+        <div class="page-heading">
+          <div class="heading-text w250">
+            <h2>System Users</h2>
+            <p>Total System Users :{{user_list.length}}</p>
+            
+          </div>
+        </div>
+        
+        <div class="top-pagination">
+          <ul>
+            <li>
+              <div class="tabs">
+                <ul>
+                  <li ><a routerLink="/user-master/">SALES USERS</a></li>
+                  <li class="active"><a routerLink="" routerLinkActive="active">SYSTEM USERS</a></li>
+                </ul>
+              </div>
+            </li>
+            <li class="refresh-area">
+              <a class="refresh-btn" mat-raised-button  matTooltip="Refresh" (click)="getSaleUserList()"><i class="material-icons"> refresh</i></a>
+            </li>
+            <li class="add-btn">
+              <button matTooltip="Add User" routerLink="/user-master/user-add" routerLinkActive="active">Add New</button>
+            </li>
+          </ul>
+        </div>
+      </div>
+      
+      
+      <div class="container-outer padding0">
+        <div class="container" >
+          <div class="row">
+            <div class="cs-table ss-scroll">
+              <table>
+                <tr>
+                  <div class="ss-sticky">
+                    <div class="table-head">
+                      <table class="sno-border">
+                        <tr>
+                          <th  class="w30">&nbsp;</th>
+                          <th class="w110">Date</th>
+                          <th class="w160">Name</th>
+                          <th class="w160">Role</th>
+                          <th>Email</th>
+                          <th class="w200">Username</th>
+                          <th class="w180">Password</th>
+                          <th class="w80 text-center">Action</th>
+                        </tr>
+                      </table>
+                    </div>
+                  </div>
+                  
+                  <div class="table-head bdrt">
+                    <table>
+                      <tr>
+                        <th class="w30">&nbsp;</th>
+                        <th class="w110"> </th>
+                        <th class="w160">
+                          <div class="th-search-acmt">
+                            <mat-form-field class="example-full-width cs-input select-input">
+                              <input  matInput placeholder="Search By Name" (keyup.enter)="getSaleUserList()"  name="name" #name="ngModel" [(ngModel)]="search.name">
+                            </mat-form-field>
+                          </div>
+                        </th>  
+                        <th class="w160">
+                          <div class="th-search-acmt">
+                            <mat-form-field class="example-full-width cs-input select-input">
+                              <input  matInput placeholder="Search By Role" (keyup.enter)="getSaleUserList()"  name="sys_user_role" #sys_user_role="ngModel" [(ngModel)]="search.sys_user_role">
+                            </mat-form-field>
+                            
+                          </div>
+                        </th>  
+                        <th></th>
+                        <th class="w200">
+                        </th>
+                        <th class="w180"></th>
+                        <th class="w80 text-center"></th>
+                      </tr>
+                    </table>
+                  </div>
+                </tr>
+                <tr>
+                  <div class="table-container">
+                    <div class="table-content">
+                      <table class="sno-border">
+                        <tr *ngFor="let system of user_list; let i=index;">
+                          <td class="w30">{{i+1}}.</td>
+                          <td class="w110">{{system.date_created | date:'d MMM y'}}</td>
+                          <td class="w160"><a class="link-btn" mat-button routerLink="/user-master/system-user-detail/{{system.id}}" routerLinkActive="active">{{system.name | titlecase}}</a></td>
+                          <td class="w160">{{system.role_name| titlecase}}</td>
+                          <td>{{system.email ? system.email : '----'}}</td>
+                          <td class="w200">{{system.user_name}}</td>
+                          <!-- [ngClass]="{'active':active.password==true}" -->
+                          <!-- type="{{row.active? 'password' : 'text'}}" -->
+                          <td class="w180">
+                            <div class="td-input" [ngClass]="{'active':system.show == true}">
+                              <i class="material-icons password show-pass" (click)="toggleterritory(system.show,system)" >visibility</i>
+                              <i class="material-icons password show-hide" (click)="toggleterritory(system.show,system)">visibility_off</i>
+                              <input type="{{system.show == true ? 'password' : 'text'}}" readonly [(ngModel)]="system.user_password">
+                              
+                            </div>
+                            
+                            
+                          </td>
+                          <td class="w80">
+                            <div class="action-btns default-action">
+                              <!-- <button mat-button class="view" (click)="update(data.id)"><i class="material-icons" >remove_red_eye</i> Edit</button> -->
+                              <button mat-button class="delete" (click)="delete(system.id)"><i class="material-icons">delete_sweep</i></button>
+                            </div>
+                          </td>
+                          <!-- <td class="w60">
+                            <mat-slide-toggle class="switch-toggle" name="user_status" color="warn"></mat-slide-toggle>
+                          </td> -->
+                        </tr>
+                        
+                      </table>
+                    </div>
+                  </div>
+                </tr>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="h70"></div>

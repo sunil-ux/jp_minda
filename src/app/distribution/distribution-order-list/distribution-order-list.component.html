@@ -1,0 +1,100 @@
+<div class="main-container" [@routerTransition]>
+  <div class="middle-container">
+    <div class="page-heading">
+      <div class="heading-text bc-space">
+        <div class="back-btn">
+          <a mat-button><i class="material-icons">arrow_right_alt</i></a>
+        </div>
+        <h2>Punit</h2>
+        <p class="light">Retailer</p>
+      </div>
+    </div>
+    <div class="tabs right-tab">
+      <ul>
+        <li><a routerLink="/distribution-detail" routerLinkActive="active">DETAIL</a></li>
+        <li><a>IMAGE & DOCUMENTS</a></li>
+        <li><a routerLink="/distribution-order-list" routerLinkActive="active">ORDERS</a></li>
+        <li><a>POP & GIFT</a></li>
+        <li><a>PAYMASTER</a></li>
+      </ul>
+    </div>
+  </div>
+  
+  
+  <div class="container-outer">
+    <div class="container" >
+      <div class="row">
+        <div class="col s12">
+          <div class="cs-table left-right-20">
+            <div class="table-head">
+              <table>
+                <tr>
+                  <th class="w200">Created By & Date</th>
+                  <th class="w150">Order ID</th>
+                  <th>Product Description</th>
+                  <th class="w150 text-right">Order Value</th>
+                  <th class="w100 text-center">Status</th>
+                </tr>
+              </table>
+            </div>
+            
+            <div class="table-container">
+              <div class="table-content">
+                <table>
+                  <tr *ngFor="let v of order">
+                    <td class="w200">{{v.date_created}}/{{v.created_name}}</td>
+                    <td class="w150" *ngFor="let i of v.item"><a class="link-btn" mat-button>{{i.order_id}}</a></td>
+                    <td *ngFor="let i of v.item">{{i.category}} {{i.sub_category}} {{i.series}} {{i.model_code}}</td>
+                    <td class="w150 text-right">{{v.order_total}}</td>
+                    <td class="w100 text-center green-clr">{{v.order_status}}</td>
+                  </tr>
+                  <!-- <tr>
+                    <td>2 Jan 2018 / Rahul Dubey</td>
+                    <td><a class="link-btn" mat-button>#AB58472</a></td>
+                    <td>Product Description</td>
+                    <td class="text-right">25000</td>
+                    <td class="text-center red-clr">PENDING</td>
+                  </tr>
+                  <tr>
+                    <td>2 Jan 2018 / Rahul Dubey</td>
+                    <td><a class="link-btn" mat-button>#AB58472</a></td>
+                    <td>Product Description</td>
+                    <td class="text-right">25000</td>
+                    <td class="text-center green-clr">DELIVERED</td>
+                  </tr>
+                  
+                  <tr>
+                    <td>2 Jan 2018 / Rahul Dubey</td>
+                    <td><a class="link-btn" mat-button>#AB58472</a></td>
+                    <td>Product Description</td>
+                    <td class="text-right">25000</td>
+                    <td class="text-center red-clr">PENDING</td>
+                  </tr>
+                  
+                  <tr>
+                    <td>2 Jan 2018 / Rahul Dubey</td>
+                    <td><a class="link-btn" mat-button>#AB58472</a></td>
+                    <td>Product Description</td>
+                    <td class="text-right">25000</td>
+                    <td class="text-center red-clr">PENDING</td>
+                  </tr>
+                  
+                  <tr>
+                    <td>2 Jan 2018 / Rahul Dubey</td>
+                    <td><a class="link-btn" mat-button>#AB58472</a></td>
+                    <td>Product Description</td>
+                    <td class="text-right">25000</td>
+                    <td class="text-center green-clr">DELIVERED</td>
+                  </tr> -->
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+</div>
+
+<div class="h50"></div>

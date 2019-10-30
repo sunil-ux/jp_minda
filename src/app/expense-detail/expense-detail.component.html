@@ -1,0 +1,206 @@
+<div class="main-container" >
+  <div *ngIf="loader" class="center-loder cs-loader">
+    <div class="outer">
+      <div class="innear">
+        <mat-spinner class="loader"></mat-spinner>
+      </div>
+    </div>
+  </div>
+  
+  <div class="main-outer">
+    <div class="main-inner">
+      <div class="middle-container">
+        <div class="page-heading">
+          <div class="heading-text bc-space">
+            <div class="back-btn">
+              <a mat-button (click)="backClicked()"><i class="material-icons">arrow_right_alt</i></a>
+            </div>
+            <h2>{{expenseData.name}}</h2>
+            <p>Expense Detail</p>
+          </div>
+        </div>
+      </div>
+      
+      
+      <div class="container-outer">
+        <div class="container height-fix pr5">
+          <div class="row">
+            <div class="col s12 adjust-col">
+              <div class="details-info">
+                <div class="basic-details">
+                  <div class="profile-info pt0">
+                  </div>
+                 
+                  <div class="cs-figure pl0 mt15" [ngClass]="expenseData.status=='Pending' ? 'col s6' : 'col s12'">
+                    <ul>
+                      <li >
+                        <div class="outer">
+                          <div class="inner">
+                            <span>Expense ID</span>
+                            <p >#ECN{{expenseData.id}}</p>
+                          </div>
+                        </div>
+                      </li>
+                      <li >
+                        <div class="outer">
+                          <div class="inner">
+                            <span>Date Created</span>
+                            <p >{{expenseData.date_created | date: 'd MMM y'}}</p>
+                          </div>
+                        </div>
+                      </li>
+                      <li>
+                        <div class="outer">
+                          <div class="inner">
+                            <span>Expense Amount</span>
+                            <p >&#8377;{{expenseData.amount}}</p>
+                          </div>
+                        </div>
+                      </li>
+                      <li *ngIf="expenseData.status" [ngClass]="{'orange-bg':expenseData.status=='Pending','green-bg':expenseData.status=='Approved','red-bg':expenseData.status=='Reject'}">
+                        <div class="outer">
+                          <div class="inner">
+                            <span>Expense Status</span>
+                            <p >{{expenseData.status}}</p>
+                          </div>
+                        </div>
+                      </li>
+                      <li *ngIf="expenseData.reject_reason">
+                        <div class="outer">
+                          <div class="inner">
+                            <span>Reason Reject</span>
+                            <p >{{expenseData.reject_reason}}</p>
+                          </div>
+                        </div>
+                      </li>
+                      
+                   
+                        <li *ngIf="expenseData.status!='Pending'">
+                          <div class="outer">
+                            <div class="inner">
+                              <span *ngIf="expenseData.status=='Reject'">Rejected By</span>
+                              <span *ngIf="expenseData.status=='Approved'" >Approved By</span>
+                              <p >{{expenseData.action_by_name}}</p>
+                            </div>
+                          </div>
+                        </li>
+                        <li *ngIf="expenseData.status!='Pending'">
+                          <div class="outer">
+                            <div class="inner">
+                              <span *ngIf="expenseData.status=='Approved'">Approved Date</span>
+                              <span *ngIf="expenseData.status=='Reject'" >Rejected Date</span>
+                              <p >{{expenseData.action_date | date: 'd MMM y'}}</p>
+                            </div>
+                          </div>
+                        </li>
+                      </ul>
+                  </div>
+
+                  <div  class="col s6 cs-figure pl0 mt15" *ngIf="expenseData.status=='Pending'">
+                    <div class="col s6">
+                      <div class="from-fields">
+                        <div class="control-field" >
+                          <mat-form-field class="cs-input">
+                            <mat-select  placeholder="Select Status" name="from" #from="ngModel" [(ngModel)]="statusData.from" >
+                              <mat-option value="Approved" >Approve</mat-option>
+                              <mat-option value="Reject" >Reject</mat-option>
+                            </mat-select>
+                          </mat-form-field>
+                        </div>
+                      </div>
+                    </div>
+                    
+                    <div class="col s4" *ngIf="statusData.from=='Reject'" >
+                      <div class="from-fields"  >
+                        <div class="control-field" >
+                          <mat-form-field class="cs-input">
+                            <input matInput placeholder="Reason of Reject" name="reason_reject" #reason_reject="ngModel" [(ngModel)]="statusData.reason_reject">
+                          </mat-form-field>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="cs-btn ml10">
+                      <div class="in-btn">
+                        <button class="h45" mat-raised-button color="accent" [disabled]="!statusData.from || !(statusData.from=='Reject'?statusData.reason_reject:true)" mat-stroked-button (click)="updateStatus()" >Save</button>
+                      </div>
+                    </div>
+                    
+                  </div>
+                  
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          
+          <div class="row">
+            <div class="sprate-box padding0 main-bdr">
+              <div class="cs-heading left-right-10 mb0">
+                <h2>Expense INFORMATION</h2>
+              </div>
+              <div class="cs-table ss-scroll" style="height: auto; max-height: 260px;">
+                <table>
+                  <tr>
+                    <div class="ss-sticky">
+                      <div class="table-head">
+                        <table>
+                          <tr>
+                            <th>Expense Type</th>
+                            <th >Expense Value</th>
+                          </tr>
+                        </table>
+                      </div>
+                    </div>
+                  </tr>
+                  <tr>
+                    <div class="table-container">
+                      <div class="table-content">
+                        <table>
+                          <tr *ngFor="let item of expenseData.exp_types">
+                            <td>{{item.expense_type}}</td>
+                            <td >{{item.expense_value}}</td>
+                          </tr>
+                        </table>
+                      </div>
+                    </div>
+                  </tr>
+                </table>
+                
+                
+              </div>
+            </div>
+          </div>
+          
+          <div class="row mt15" *ngIf="expenseData?.docs?.length">
+            <div class="col s12 padding0 main-bdr">
+              <div class="cs-heading">
+                <h2>Expense Bill</h2>
+              </div>
+              <div class="cs-file padding15">
+                <ul>
+                  <li class="w110 pr10" *ngFor="let urlData of expenseData.docs;let i=index">
+                    <label>
+                      <a target="_blank" href="{{image_url}}{{urlData.file_name}}">
+                        <img *ngIf="urlData.file_type!='pdf'" src={{image_url}}{{urlData.file_name}}>
+                        <img  *ngIf="urlData.file_type=='pdf'" src="assets/img/pdf.png">
+
+                      </a>
+                      
+                    </label>
+                  </li>
+                  
+                </ul>
+              </div>
+            </div>
+          </div> 
+          
+        </div>
+      </div>
+    </div>
+  </div>
+  
+</div>
+
+<div class="h50"></div>
+

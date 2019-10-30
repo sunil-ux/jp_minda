@@ -1,0 +1,262 @@
+<div class="main-container" >
+  <div *ngIf="loader" class="center-loder cs-loader">
+    <div class="outer">
+      <div class="innear">
+        <mat-spinner class="loader"></mat-spinner>
+      </div>
+    </div>
+  </div>
+  <form #f="ngForm" name="form" (ngSubmit)="f.valid && SubbmitProduct()">
+    <div class="main-outer">
+      <div class="main-inner">
+        <div class="middle-container"  mat-button routerLink="/product-list" routerLinkActive="active" style="cursor: pointer">
+          <div class="page-heading" >
+            <div class="heading-text">
+              <h2>Product</h2>
+              <p *ngIf="product_id==0">Add New</p>
+              <p *ngIf="product_id!=0">Edit</p>
+            </div>
+          </div>
+          <span class="required">INDICATES REQUIRED FIELDS ( <sup>*</sup> )</span>
+        </div>
+        <div class="container-outer padding0 hidden">
+          <div class="container" >
+            <div class="row">
+              <div class="col s12 padding0">
+                <div class="sprate-box">
+                  <div class="col s8 padding0 main-bdr">
+                    <div class="cs-heading">
+                      <h2>BASIC INFORMATION</h2>
+                    </div>
+                    <div class="from-fields field-adjust pt20">
+                      <div class="row mb15">
+                        <div class="col s6">
+                          <div class="control-field" [ngClass]="{ 'has-error' : f.submitted && !productData.type }">
+                            <mat-form-field class="cs-input">
+                              <mat-select  placeholder="Product Type"  #type="ngModel" [(ngModel)]="productData.type" id="type" name="type" required>
+                                <mat-option (click)="getSegments(data.name)" *ngFor="let data of productType; let i=index"[value]="data.name">{{data.name | titlecase}}</mat-option>
+                              </mat-select>
+                            </mat-form-field>
+                            <mat-error *ngIf="f.submitted && !productData.type">Product Type is required</mat-error>
+                          </div>
+                        </div>
+                        
+                        <div class="col s6" >
+                          <div class="control-field">
+                            <mat-form-field class="cs-input">
+                              <mat-select  placeholder="Segment" name="segment" #segment="ngModel" [(ngModel)]="productData.segment" id="segment">
+                                <mat-option *ngFor="let data of segmentsArray" [value]="data.segment_name">{{data.segment_name | titlecase}}</mat-option>
+                              </mat-select>
+                            </mat-form-field>
+                          </div>
+                        </div>
+                      </div>
+                      
+                      <div class="row mb15">
+                        
+                        <div class="col s4">
+                          <div class="control-field" [ngClass]="{ 'has-error' : f.submitted && !productData.vehicle_name }">
+                            <mat-form-field class="cs-input">
+                              <input matInput placeholder="Vehical Name" name="vehicle_name" id="vehicle_name" #vehicle_name="ngModel" [(ngModel)]="productData.vehicle_name">
+                            </mat-form-field>
+                            
+                            <!-- <mat-error *ngIf="f.submitted && !productData.vehicle_name">Vehical Name is required</mat-error> -->
+                          </div>
+                        </div>
+                        <div class="col s4">
+                          <div class="control-field" [ngClass]="{ 'has-error' : f.submitted && !productData.model }">
+                            <mat-form-field class="cs-input">
+                              <input matInput placeholder="Model" name="model" id="model" #model="ngModel" [(ngModel)]="productData.model">
+                            </mat-form-field>
+                            <!-- <mat-error *ngIf="f.submitted && !productData.model">Model is required</mat-error> -->
+                            
+                          </div>
+                        </div>
+                        <div class="col s4" >
+                          <div class="control-field">
+                            <mat-form-field class="cs-input">
+                              <mat-select placeholder="Varient" name="varient" id="varient" #varient="ngModel" [(ngModel)]="productData.varient">
+                                <mat-option value="Lxi"><small>Lxi</small></mat-option>
+                                <mat-option value="Vxi"><small>Vxi</small></mat-option>
+                                <mat-option value="Zxi"><small>Zxi</small></mat-option>
+                              </mat-select>
+                            </mat-form-field>
+                            <!-- <mat-error *ngIf="f.submitted && !productData.varient">Varient is required</mat-error> -->
+                            
+                          </div>
+                        </div>
+                        
+                      </div>
+                      <div class="row mb15">
+                        <div class="col s4">
+                          <div class="control-field">
+                            <mat-form-field class="cs-input">
+                              <input matInput placeholder="Product Name" name="product_name" id="product_name" #product_name="ngModel" [(ngModel)]="productData.product_name" required>
+                              
+                            </mat-form-field>
+                            <mat-error *ngIf="f.submitted && !productData.product_name">Product Name is required</mat-error>
+                          </div>
+                        </div>
+                        <div class="col s4">
+                          <div class="control-field">
+                            <mat-form-field class="cs-input">
+                              <input matInput placeholder="Product Code" (change)="checkCodeExistense(productData.product_code)" name="product_code" id="product_code"  #product_code="ngModel" [ngClass]="{ 'has-error' : f.submitted && !productData.type && exist==true }" [(ngModel)]="productData.product_code" required>
+                              
+                            </mat-form-field>
+                            <mat-error *ngIf="(f.submitted && !productData.product_code) || exist==true">Product Code is required</mat-error>
+                          </div>
+                        </div>
+                        <div class="col s4">
+                          <div class="control-field">
+                            <mat-form-field class="cs-input">
+                              <input type="number" matInput placeholder="MRP" name="mrp_price" id="mrp_price" #mrp_price="ngModel" [(ngModel)]="productData.mrp_price" required>
+                              
+                            </mat-form-field>
+                            <mat-error *ngIf="f.submitted && !productData.mrp_price">Product MRP is required</mat-error>
+                          </div>
+                        </div>
+                      </div>
+                      
+                      <div class="row mb15">
+                        
+                        <div class="col s4" >
+                          <div class="control-field">
+                            <mat-form-field class="cs-input">
+                              <mat-select placeholder="Discount Type" name="discount_type" id="discount_type" #discount_type="ngModel" [(ngModel)]="productData.discount_type" required>
+                                <mat-option value="percent"><small>In Percentage(%)</small></mat-option>
+                                <mat-option value="amount"><small>In Amount(₹)</small></mat-option>
+                              </mat-select>
+                            </mat-form-field>
+                            <mat-error *ngIf="f.submitted && !productData.discount_type">Discount Type is required</mat-error>
+                            
+                          </div>
+                        </div>
+                        
+                        <div *ngIf="productData.discount_type!=''" class="col s4">
+                          <div class="control-field">
+                            <mat-form-field class="cs-input">
+                              <input matInput type="number" placeholder="Discount Value" name="discount_val" id="discount_val" #discount_val="ngModel" [(ngModel)]="productData.discount_val" required>
+                            </mat-form-field>
+                            <mat-error *ngIf="f.submitted && !productData.discount_val">Discount is required</mat-error>
+                          </div>
+                        </div>
+                        <div class="col s4">
+                          <div class="control-field">
+                            <mat-form-field class="cs-input">
+                              <input matInput placeholder="UOM" name="uom" id="uom" #uom="ngModel" [(ngModel)]="productData.uom" required>
+                            </mat-form-field>
+                            <mat-error *ngIf="f.submitted && !productData.uom">UOM is required</mat-error>
+                          </div>
+                        </div>
+                      </div>
+                      
+                      <div class="row mb0">
+                        <div class="col s4">
+                          <div class="control-field">
+                            <mat-form-field class="cs-input">
+                              <input matInput placeholder="Pack Size" name="pack_size" id="pack_size" #pack_size="ngModel" [(ngModel)]="productData.pack_size" required>
+                              
+                            </mat-form-field>
+                            <mat-error *ngIf="f.submitted && !productData.pack_size">Pack Size MRP is required</mat-error>
+                          </div>
+                        </div>
+                        <div class="col s4">
+                          <div class="control-field">
+                            <mat-form-field class="cs-input">
+                              <input type="number" matInput placeholder="Min. Stock" name="min_stock" id="min_stock" #min_stock="ngModel" [(ngModel)]="productData.min_stock" required>
+                              
+                            </mat-form-field>
+                            <mat-error *ngIf="f.submitted && !productData.min_stock">Min Stockis required</mat-error>
+                          </div>
+                        </div>
+                        <div class="col s4">
+                          <div class="control-field">
+                            <mat-form-field class="cs-input">
+                              <input type="number" matInput placeholder="Max. Stock" name="max_stock" id="max_stock" #max_stock="ngModel" [(ngModel)]="productData.max_stock" required >
+                              
+                            </mat-form-field>
+                            <mat-error *ngIf="f.submitted && !productData.max_stock">Max Stockis required</mat-error>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col s4 pr0 pl15">
+                    <div class="main-bdr sprate-box padding0">
+                      
+                      
+                      <div class="cs-heading">
+                        <h2>PRODUCT IMAGE</h2>
+                        <label><input style="display: none;" type="file" accept="image/*" (change)="select_file($event)"> ADD IMAGE </label>
+                      </div>
+                      
+                      <div class="logs-outer padding0" style="max-height: 312px; padding:0px 15px !important; height: 312px; padding-top: 15px !important;">
+                        <div *ngIf="(imgurl?.length == 0|| productData?.image?.length ==0)" class="cs-not-data padding0 h280">
+                          <div class="inner-data">
+                            <p>Image not available</p>
+                          </div>
+                        </div>
+                         <div class="cs-image" *ngIf="(imgurl?.length != 0 || product_id!=0)">
+                           <!-- test{{imgurl?.length}}{{productData?.image?.length}} -->
+                          
+                          <div class="vertical-img {{(imgurl?.length == 2 || productData?.image?.length ==2)? 'double-img' : ((imgurl?.length > 2 || productData?.image?.length >2) ? 'multiple-img' : '')}}">
+                            <ul>
+                              <li class="overlay-content" *ngFor="let urlData of imgurl;let i=index">
+                                <img src="{{urlData}}">
+                                <a class="close mat-ripple" (click)="delFile(i)" mattooltip="Delete">
+                                  <i class="material-icons">delete_sweep</i>
+                                </a>
+                              </li>
+                              <li class="overlay-content" *ngFor="let urlData of productData.image;let i=index">
+                                <img src={{uploadUrl}}{{urlData.image}}>
+                                <a class="close mat-ripple" (click)="deleteImage(urlData.image,i)" mattooltip="Delete">
+                                  <i class="material-icons">delete_sweep</i>
+                                </a>
+                              </li>
+                            </ul>
+                          </div>
+                        </div> 
+                      </div>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col s12 padding0 main-bdr mt15">
+                      <div class="cs-heading">
+                        <h2>PRODUCT DESCRIPTION</h2>
+                      </div>
+                      <div class="from-fields">
+                        <div class="control-field" >
+                          <app-ngx-editor [placeholder]="'Description'"  [spellcheck]="true"  #description="ngModel" [(ngModel)]="productData.description" required="true" name="description" id="description" ></app-ngx-editor>
+                        </div>
+                      </div>
+                      <mat-error *ngIf="f.submitted &&   description.invalid">product Description is required...</mat-error>
+                      <!-- <div class="from-fields">
+                        <div class="row">
+                          <div class="col s12 pr0 padding0">
+                            <div class="control-field" >
+                              <textarea  class="bdr-none wp100 h250 padding15"   #description="ngModel" [(ngModel)]="productData.description" required="true" name="description" id="description" >
+                              </textarea>
+                            </div>
+                            
+                            <mat-error *ngIf="f.submitted &&   description.invalid">product Description is required...</mat-error>
+                          </div>
+                        </div>
+                      </div> -->
+                    </div>
+                  </div> 
+                  <div class="cs-btn fixedd mt32 text-right pr10">
+                    <div class="in-btn">
+                      <button mat-raised-button color="accent" (click)="setFocus(f.form)"  >Save</button>
+                    </div>
+                  </div>            
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="h70">
+      </div>
+    </div>
+  </form>
+</div>

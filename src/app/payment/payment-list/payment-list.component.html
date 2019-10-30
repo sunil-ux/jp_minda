@@ -1,0 +1,235 @@
+<div class="main-container" >
+  <div *ngIf="loader" class="center-loder cs-loader">
+    <div class="outer">
+      <div class="innear">
+        <mat-spinner class="loader"></mat-spinner>
+      </div>
+    </div>
+  </div>
+  
+  <div class="main-outer">
+    <div class="main-inner">
+      
+      <div class="middle-container">
+        <div class="page-heading">
+          <img class="h-icon" >
+          <div class="heading-text flex-heading">
+            <div class="content">
+              <h2>Payment</h2>
+              <p>Total Payment: <span>{{count}}</span></p>
+            </div>
+            <div class="item-filter flex-item">
+              <mat-form-field class="master-head-date">
+                <input matInput [matDatepicker]="picker" placeholder=" Date  From " [(ngModel)]="search.from" name="date_from" #date_form="ngModel" readonly>
+                <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                <mat-datepicker #picker></mat-datepicker>
+              </mat-form-field>
+              
+              <mat-form-field class="master-head-date">
+                <input matInput [matDatepicker]="date" placeholder=" Date To" [(ngModel)]="search.to" name="date_to" #date_to="ngModel" readonly>
+                <mat-datepicker-toggle matSuffix [for]="date"></mat-datepicker-toggle>
+                <mat-datepicker #date></mat-datepicker>
+              </mat-form-field>
+              
+              <div class="cs-btn">
+                <div class="in-btn">
+                  <button  mat-raised-button color="warn" class="h35-btn" (click)="search_by_date(search.to,search.from)">Go</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="left-auto">
+          <div class="tabs right-tab none-af">
+            <ul>
+              <li><a class="pr40 pending {{this.status=='Pending' ? 'active':''}}" (click)="change_status('Pending')">Pending <span class="counter">{{tab_count_data.pend_pay ? tab_count_data.pend_pay : 0}}</span></a></li>
+              <li><a class="pr40 complete {{this.status=='Verified' ? 'active':''}}" (click)="change_status('Verified')">Verified<span class="counter">{{tab_count_data.verfy_pay ? tab_count_data.verfy_pay : 0}}</span></a></li>
+              <li><a class="pr40 reject {{this.status=='Reject' ? 'active':''}}" (click)="change_status('Reject')">Reject<span class="counter">{{tab_count_data.reject_pay ? tab_count_data.reject_pay : 0}}</span></a></li>
+              
+            </ul>
+          </div>
+          <div class="top-pagination" >
+           
+            <!-- *ngIf="count>=50" -->
+            <ul>
+               
+              <li class="refresh-area">
+                <a class="refresh-btn" mat-raised-button  matTooltip="Refresh" (click)="getPaymentList(page_limit,start,'refresh')"><i class="material-icons"> refresh</i></a>
+              </li>
+              <li class="add-btn">
+                  <button  matTooltip="Add Payment" routerLink="/order-master-module/add-payment" routerLinkActive="active">Add New</button>
+                </li>
+              <li *ngIf="count>=50"><p>Pages {{pagenumber}} Of {{total_page}}</p></li>
+              <li *ngIf="count>=50"> <button mat-button class="left-btn" (click)="getPaymentList(page_limit,start-page_limit)" [disabled]="pagenumber == 1">
+                <i class="material-icons">keyboard_arrow_left</i></button></li>
+                <li *ngIf="count>=50"> <input type="text" placeholder="GO TO" name="pagenumber" (keyup.enter)="getPaymentList(page_limit,((pagenumber*page_limit)-page_limit))"  [(ngModel)]="pagenumber" min="1" max="{{total_page}}" [(ngModel)]="pagenumber" (keypress)="pagination($event)" > </li>            
+                <li *ngIf="count>=50"><button mat-button class="right-btn"  (click)="getPaymentList(page_limit,start+page_limit)" [disabled]="pagenumber == total_page">
+                  <i class="material-icons">keyboard_arrow_right</i> </button></li>
+                </ul>
+              </div>
+            </div>
+          </div>
+          
+          
+          <div class="container-outer padding0 ">
+            <div class="container" >
+              <div class="row">
+                <!-- <div class="col s12"> -->
+                  <div class="cs-table ss-scroll">
+                    <table>
+                      <tr>
+                        <div class="ss-sticky">
+                          <div class="table-head">
+                            <table> 
+                              <tr>
+                                <th class="w50">S.No.</th>
+                                <th class="w100">Date</th>
+                                <th class="w130">Created By</th>
+                                <th class="w200">Company Name</th>
+                                <th class="w80">Mode</th>
+                                <th >Payment Details</th>
+                                <th class="w150" *ngIf="this.status=='Verified'">Verification Details</th>
+                                <th class="w120" *ngIf="this.status=='Verified'">Image</th>
+                                <th class="w130" *ngIf="this.status=='Reject'">Reject Reason</th>
+                                <th class="w80 text-right">Amount</th>
+                              </tr>
+                            </table>
+                          </div>
+                          <div class="table-head bdrt">
+                            <table>
+                              <tr>
+                                <th class="w50">&nbsp;</th>
+                                <th class="w100"> </th>
+                                <th class="w130">
+                                  <div class="th-search-acmt">
+                                    <mat-form-field class="example-full-width cs-input select-input">
+                                      <input  matInput placeholder="Search Created By" (input)="searchCreatedBy(search.created_by)" name="created_by" #created_by="ngModel" [(ngModel)]="search.created_by">
+                                    </mat-form-field>
+                                  </div>
+                                </th>  
+                                <th class="w200">
+                                  <div class="th-search-acmt">
+                                    <mat-form-field class="example-full-width cs-input select-input">
+                                      <input  matInput placeholder="Search By Name" (input)="searchName(search.name)" name="name" #name="ngModel" [(ngModel)]="search.name">
+                                    </mat-form-field>
+                                  </div>
+                                </th>  
+                                <th class="w80 pr-search" >
+                                  <div class="th-search-acmt">
+                                    <mat-form-field class="wp100">
+                                      <mat-select name="mode" placeholder="Search By Mode" [(ngModel)]="search.mode" (selectionChange)="searchMode($event.value)">
+                                        <mat-option value="cash">CASH</mat-option>
+                                        <mat-option value="neft">NEFT</mat-option>
+                                        <mat-option value="cheque">CHEQUE</mat-option>
+                                      </mat-select>
+                                    </mat-form-field>
+                                  </div>
+                                </th>
+                                <th class=" pr-search"></th>   
+                                <th class="w150" *ngIf="this.status=='Verified'"></th>
+                                <th class="w120" *ngIf="this.status=='Verified'"></th>
+                                <th class="w130" *ngIf="this.status=='Reject'"></th>
+                                <th  class="w80 text-right">  </th>  
+                                <!-- <th class="w90 pr-search">
+                                  <div class="th-search-acmt">
+                                    <mat-form-field class="wp100">
+                                      <mat-select name="type" placeholder="Select Type" [(ngModel)]="search.status" (selectionChange)="searchStatus($event.value)">
+                                        <mat-option value="Pending">Pending</mat-option>
+                                        <mat-option value="Reject">Reject</mat-option>
+                                        <mat-option value="Verified">Verified</mat-option>
+                                      </mat-select>
+                                    </mat-form-field>
+                                  </div>
+                                </th> -->
+                              </tr>
+                            </table>
+                          </div>
+                        </div>
+                      </tr>
+                      <tr>
+                        
+                        <div class="table-container">
+                          <div class="table-content">
+                            <table>
+                              <tr *ngFor="let data of pay_list; let i = index">
+                                <td class="w50">{{i+1}}</td>
+                                <td class="w100">{{data.date_created | date: 'dd MMM y'}}</td>
+                                <td class="w130">{{data.user_name}}</td>
+                                <td class="w200">{{data.countername}} - {{data.type==1 ? 'Distributor' : 'Direct Dealer'}}</td>
+                                <td class="w80">{{data.mode}}</td>
+                                <td >
+                                  <!-- {{data.mode=='cash' ? ' ' : (data.mode=='cheque' ? data.cheque_no : data.transaction_id)}}  {{data.remark ? 'Remark: ' : ''}} {{data.remark ? data.remark : ''}} -->
+                                  <span *ngIf="data.remark">Remark : {{data.remark}},</span>
+                                  <span *ngIf="data.mode=='cheque'">Cheque no : {{data.cheque_no}}, Cheque date: {{data.cheque_date | date : 'd MMM y'}}</span>
+                                  <span *ngIf="data.mode=='neft'">Trans. id : {{data.transaction_id}}</span>
+                                  
+                                  
+                                </td>
+                             
+                                <td class="w150" *ngIf="this.status=='Verified'">
+                                  {{data.verify_description}}
+                                </td>
+                                <td class="w130" *ngIf="this.status=='Reject'">{{data.reject_reason}}</td>
+                                
+                                <td class="w120" *ngIf="this.status=='Verified'">
+                                  <ul class="img-secation">
+                                    <li  *ngFor="let file of data.docs">
+                                      <a *ngIf="file.file_name" href="{{constant.upload_url}}/{{file.file_name}}" download={{file.file_name}} target="_blank">
+                                        <img style="height: 35px;
+                                        width: 30px;" *ngIf="file.file_type!='doc' && file.file_type!='doc'" src="assets/img/landscape.svg">
+                                        <img *ngIf="file.file_type=='doc' || file.file_type=='docx'"src="assets/img/doc.svg">
+                                      </a>
+                                    </li>
+                                  </ul>
+                                  
+                                </td>
+                                <td class="w80 text-right"> &#x20B9;{{data.amount}}
+                                    <div class="action-btns"  *ngIf="data.payment_status!='Verified'">
+                                        <button mat-button class="edit" *ngIf="data.payment_status!='Verified'" (click)="verify_pay_status(data.id,data.order_id,i,'verify_pay_status')" type="button"><i class="material-icons">check_circle</i>Verify</button>
+                                        <!-- <button  mat-button class="delete" ><i class="material-icons">cancel</i>Reject</button> -->
+                                        <button *ngIf="data.payment_status!='Reject'" mat-button class="delete" (click)="reject(data.id,i,'payment_reason_reject')" matTooltip="Reject">  <i class="material-icons">cancel</i>Reject</button>
+                                        <button mat-button class="delete" (click)="delete_payment(data.dr_id,data.id)"><i class="material-icons">delete_sweep</i>Delete</button>
+                                      </div>
+                                </td>
+                                <!-- <td class="w10">
+                                  <div class="action-btns"  *ngIf="data.payment_status!='Verified'">
+                                    <button mat-button class="edit" *ngIf="data.payment_status!='Verified'" (click)="verify_pay_status(data.id,data.order_id,i,'verify_pay_status')" type="button"><i class="material-icons">check_circle</i>Verify</button>
+                                    <button  mat-button class="delete" ><i class="material-icons">cancel</i>Reject</button>
+                                    <button *ngIf="data.payment_status!='Reject'" mat-button class="delete" (click)="reject(data.id,i,'payment_reason_reject')" matTooltip="Reject">  <i class="material-icons">cancel</i>Reject</button>
+                                    <button mat-button class="delete" (click)="delete_payment(data.dr_id,data.id)"><i class="material-icons">delete_sweep</i>Delete</button>
+                                  </div>
+                                </td> -->
+                                <!-- <td class="w90 {{data.payment_status=='Pending' ? 'red-clr' : 'green-clr'}}">
+                                  {{data.payment_status}}
+                                  
+                                </td> -->
+                              </tr>
+                            </table>
+                          </div>
+                        </div>
+                        <div class="no-record-data-text" *ngIf="!pay_list?.length"> 
+                          <img src="assets/img/no-record-found.png">
+                        </div>
+                      </tr>
+                    </table>
+                    
+                    
+                    
+                  </div>
+                  <!-- </div> -->
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- <div class="fixed-multibtn-botm">
+          <ul>
+            <li><a  matTooltip="Add Payment" routerLink="/order-master-module/add-payment" routerLinkActive="active"><i class="material-icons">add</i></a></li>
+          </ul>
+        </div> -->
+        
+      </div>
+      
+      <div class="h50"></div>

@@ -1,0 +1,167 @@
+<div class="main-container">
+  <div *ngIf="loader" class="center-loder cs-loader">
+    <div class="outer">
+      <div class="innear">
+        <mat-spinner class="loader"></mat-spinner>
+      </div>
+    </div>
+  </div>
+
+  <div class="main-outer">
+    <div class="main-inner">
+      <div class="middle-container">
+        <div class="page-heading">
+          <div class="heading-text">
+            <h2>Payment</h2>
+            <p>Add New Payment</p>
+          </div>
+        </div>
+        <span class="required">Indicates required fields ( <sup>*</sup> )</span>
+      </div>
+      
+      <div class="container-outer">
+        <form #f="ngForm" name="form" (ngSubmit)="f.form.valid && submit(data.dr_type)">
+          <div class="container height-fix" >
+            <div class="row">
+              
+              <div class="col s12 pl0">
+                <div class="sprate-box padding0 main-bdr">
+                  <div class="cs-heading">
+                    <h2>BASIC INFORMATION</h2>
+                  </div>
+                  
+                  <div class="padding15">
+                    <div class="from-fields">
+                      <div class="col s4 pl0">
+                        <div class="control-field">
+                          <mat-form-field class="cs-input">
+                            <mat-select placeholder="Network Type" name="dr_type" [(ngModel)]="data.dr_type" #dr_type="ngModel" [ngClass]="{'has-error' : dr_type.invalid } " (selectionChange)="getUserList(data.dr_type)"  required>
+                              <mat-option [value]=1>Distributor</mat-option>
+                              <!-- <mat-option value="3">Direct Dealer</mat-option> -->
+                            </mat-select>
+                          </mat-form-field>
+                          <div *ngIf="f.submitted && dr_type.invalid" class="invalid-feedback">
+                            <mat-error *ngIf="dr_type.errors.required" >User Type is required</mat-error>
+                          </div>
+                        </div>
+                      </div>
+                      
+                      <div class="col s4">
+                        <div class="control-field">
+                          <mat-form-field class="cs-input" >
+                            <input matInput type="text" placeholder="Company Name" [matAutocomplete]="auto" name="dr_id"  (keyup)="filterusername(data.dr_id,user_list,'name')"  #dr_id="ngModel" [(ngModel)]="data.dr_id" required>
+                            <mat-autocomplete #auto="matAutocomplete" (optionSelected)="UsersName($event.option.value)">
+                              <mat-option *ngFor="let user of filter_userlist" value={{user.name}}>{{user.name}}</mat-option>
+                            </mat-autocomplete>       
+                          </mat-form-field> 
+                          <!-- <mat-form-field class="cs-input">
+                            <mat-select placeholder="Users" name="dr_id" [(ngModel)]="data.dr_id" #dr_id="ngModel" [ngClass]="{'has-error' : dr_id.invalid } " required>
+                              <mat-option *ngFor="let user of user_list;" value="{{user.id}}"> {{user.name}} </mat-option>
+                            </mat-select>
+                          </mat-form-field> -->
+                          <div *ngIf="f.submitted && dr_id.invalid" class="invalid-feedback">
+                            <mat-error *ngIf="dr_id.errors.required" >User is required</mat-error>
+                          </div>
+                        </div>
+                      </div>
+                      
+                      <div class="col s4">
+                        <div class="control-field">
+                          <mat-form-field class="cs-input">
+                            <mat-select placeholder="Payment Mode"  name="payment_mode"  #payment_mode="ngModel" [(ngModel)]="data.payment_mode" required>
+                              <mat-option value="cash">CASH</mat-option>
+                              <mat-option value="neft">NEFT</mat-option>
+                              <mat-option value="cheque">CHEQUE</mat-option>
+                            </mat-select>
+                          </mat-form-field>
+                          
+                          <div *ngIf="f.submitted && payment_mode.invalid" class="invalid-feedback">
+                            <mat-error *ngIf="payment_mode.errors.required" >Payment Mode is required</mat-error>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+  
+                    <div class="from-fields mt60">
+                      <div class="row">
+                        <div class="col s4 pl0">
+                          <div class="control-field" *ngIf="data.payment_mode" >
+                            <mat-form-field class="example-full-width cs-input">
+                              <input  matInput placeholder="Amount" (keypress)="validate($event)" name="payment_amount"  #payment_amount="ngModel" [(ngModel)]="data.payment_amount" required>
+                            </mat-form-field>
+                            <div *ngIf="f.submitted && payment_amount.invalid" class="invalid-feedback">
+                              <mat-error *ngIf="payment_amount.errors.required" > Payment Amount is required</mat-error>
+                            </div>
+                          </div>
+                        </div>
+                        
+                        <div class="col s4">
+                          <div class="control-field" *ngIf="data.payment_mode" >
+                            <mat-form-field class="example-full-width cs-input">
+                              <input  matInput placeholder="Remark" name="remark"  #remark="ngModel" [(ngModel)]="data.remark">
+                            </mat-form-field>
+                          </div>
+                        </div>
+
+                        <div class="col s4">
+                          <div  class="control-field" *ngIf="data.payment_mode=='neft'">
+                            <mat-form-field class="example-full-width cs-input">
+                              <input  matInput placeholder="Transaction ID: "  name="transaction_id"  #transaction_id="ngModel" [(ngModel)]="data.transaction_id" (keypress)="transactionID($event)"  required>
+                            </mat-form-field>
+                            <div *ngIf="f.submitted && transaction_id.invalid" class="invalid-feedback">
+                              <mat-error *ngIf="transaction_id.errors.required" >Transaction Id is required</mat-error>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+  
+                    <div class="from-fields">
+                      <div class="row">
+                        <div class="col s4 pl0">
+                          <div class="control-field"  *ngIf="data.payment_mode=='cheque'">
+                            <mat-form-field class="example-full-width cs-input">
+                              <input  matInput placeholder="Cheque No.: " name="cheque_no"  #cheque_no="ngModel" [(ngModel)]="data.cheque_no" (keypress)="validate($event)" required>
+                            </mat-form-field>
+                            <div *ngIf="f.submitted && cheque_no.invalid" class="invalid-feedback">
+                              <mat-error *ngIf="cheque_no.errors.required" >Cheque No is required</mat-error>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="col s4">
+                          <div class="control-field" *ngIf="data.payment_mode=='cheque'" >
+                            <mat-form-field class="example-full-width cs-input">
+                              <input matInput placeholder="Cheque Date:"  name="cheque_date"  #cheque_date="ngModel" [(ngModel)]="data.cheque_date" [matDatepicker]="days" [min]='currentDate'  required readonly>
+                              <mat-datepicker-toggle matSuffix [for]="days"></mat-datepicker-toggle>
+                              <mat-datepicker #days></mat-datepicker>
+                            </mat-form-field>
+                            <div *ngIf="f.submitted && cheque_date.invalid" class="invalid-feedback">
+                              <mat-error *ngIf="cheque_date.errors.required" >Cheque Date required</mat-error>
+                            </div>
+                          </div>
+                        </div>
+                        
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+            </div>
+            
+            <div class="row">
+              <div class="col s12">
+                <div class="cs-btn fixedd mt32 text-right pr10">
+                  <div class="in-btn">
+                    <button mat-raised-button color="accent" >Save</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="h50"></div>

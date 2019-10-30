@@ -1,0 +1,187 @@
+<div class="main-container" >
+  <div *ngIf="loader" class="center-loder cs-loader">
+    <div class="outer">
+      <div class="innear">
+        <mat-spinner class="loader"></mat-spinner>
+      </div>
+    </div>
+  </div>
+
+  <div class="main-outer">
+    <div class="main-inner">
+      <div class="middle-container">
+        <div class="page-heading">
+          <div class="heading-text flex-heading">
+            <div class="content">
+              <h2>Leaves</h2>
+              <p>Total: <span> {{leave_list.length}}</span></p>
+            </div>
+            <div class="item-filter flex-item">
+              <mat-form-field class="master-head-date">
+                <input matInput [matDatepicker]="picker" placeholder=" Date  From " [(ngModel)]="search.leave_from" name="leave_from" #leave_from="ngModel" readonly>
+                <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                <mat-datepicker #picker></mat-datepicker>
+              </mat-form-field>
+              
+              <mat-form-field class="master-head-date">
+                <input matInput [matDatepicker]="date" placeholder=" Date To" [(ngModel)]="search.leave_to" name="leave_to" #leave_to="ngModel" readonly>
+                <mat-datepicker-toggle matSuffix [for]="date"></mat-datepicker-toggle>
+                <mat-datepicker #date></mat-datepicker>
+              </mat-form-field>
+              
+              <div class="cs-btn">
+                <div class="in-btn">
+                  <button  mat-raised-button color="warn" class="h35-btn" (click)="search_by_date(search.leave_to,search.leave_from)">Go</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="left-auto">
+    
+          <div class="tabs right-tab none-af" >
+            <ul>
+              <li><a class="pr40 pending {{status=='Pending' ? 'active':''}}" (click)="change_status('Pending')">Pending <span class="counter">{{pending_leave ? pending_leave : 0}}</span></a></li>
+              <li><a class="pr40 complete {{status=='Approved' ? 'active':''}}" (click)="change_status('Approved')">Approved<span class="counter">{{approved_leave ? approved_leave :0}}</span></a></li>
+              <li><a class="pr40 reject {{status=='Reject' ? 'active':''}}" (click)="change_status('Reject')">Reject <span class="counter">{{reject_leave ? reject_leave : 0}}</span></a></li>
+            </ul>
+          </div>
+    
+          <div class="top-pagination">
+            <ul>
+              <li class="refresh-area">
+                <a class="refresh-btn" mat-raised-button  matTooltip="Refresh" (click)="getLeaveList(page_limit,start,'refresh')"><i class="material-icons"> refresh</i></a>
+              </li>
+              <li *ngIf="count>=100"><p>Pages {{pagenumber}} Of {{total_page}}</p></li>
+              
+              <li *ngIf="count>=100">
+                <button mat-button class="left-btn" (click)="getLeaveList(page_limit,start-page_limit)" [disabled]="pagenumber == 1">
+                  <i class="material-icons">keyboard_arrow_left</i></button>
+                </li>
+                
+                <li *ngIf="count>=100">
+                  <input type="text" placeholder="GO TO" name="pagenumber" (keyup.enter)="getLeaveList(page_limit,((pagenumber*page_limit)-page_limit))" [(ngModel)]="pagenumber">
+                </li>
+                
+                <li *ngIf="count>=100">
+                  <button mat-button class="right-btn"  (click)="getLeaveList(page_limit,(start+page_limit))" [disabled]="pagenumber == total_page">
+                    <i class="material-icons">keyboard_arrow_right</i>
+                  </button>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        
+        <div class="container-outer padding0">
+          <div class="container" >
+            <div class="row">
+              <div class="cs-table ss-scroll">
+                <table>
+                  <tr>
+                    <div class="ss-sticky">
+                      <div class="table-head">
+                        <table>
+                          <tr>
+                            <th class="w50">S. No</th>
+                            <th class="w110">Date Created</th>
+                            <th class="w200">Subject</th>
+                            <th class="w150">Sales Executive</th>
+                            <th class="w110">Leave From </th>
+                            <th class="w110">Leave To</th>
+                            <th class="w100">No. Of Days</th>
+                            <!-- <th class="w100">Status</th> -->
+                            <th class="w200" *ngIf="status=='Reject'">Reason of Reject</th>
+                            <th >Remark</th>
+                          </tr>
+                        </table>
+                      </div>
+                    </div>
+
+                    <div class="table-head bdrt">
+                      <table>
+                        <tr>
+                          <th class="w50 pr-search"></th>
+                          <th class="w110 pr-search"> </th>
+                          <th class="w200 pr-search"></th>
+                          
+                          <th class="w150 pr-search">
+                            <div class="th-search-acmt">
+                              <mat-form-field class="example-full-width cs-input select-input">
+                                <input matInput  placeholder="Search Name" (input)="searchName(search.username)" name="name" #name="ngModel" [(ngModel)]="search.username">
+                              </mat-form-field>
+                            </div>
+                          </th>  
+                          <th class="w110 pr-search">  </th>  
+                          <th class="w110"></th>
+                          <th class="w100"></th>
+                          
+                          <th class="w200" *ngIf="status=='Reject'"></th>
+                          <!-- <th class="w100 pr-search">
+                            <div class="th-search-acmt">
+                              <mat-form-field class="wp100">
+                                <mat-select name="type" placeholder="Select Type" [(ngModel)]="search.status" (selectionChange)="searchStatus($event.value)">
+                                  <mat-option value="Pending">Pending</mat-option>
+                                  <mat-option value="Reject">Reject</mat-option>
+                                  <mat-option value="Approved">Approved</mat-option>
+                                </mat-select>
+                              </mat-form-field>
+                            </div>
+                          </th> -->
+                          <th ></th>
+                        </tr>
+                      </table>
+                    </div>
+                  </tr>
+                  <tr>
+                    <div class="table-container">
+                      <div class="table-content">
+                        <table>
+                          <tr *ngFor="let data of leave_list;let i=index">
+                            <td class="w50">{{i+1}}</td>
+                            <td class="w110">{{data.date_created | date:'d MMM, y'}}</td>
+                            <td class="w200">{{data.subject}}</td>
+                            <td class="w150">{{data.name | titlecase}}</td>
+                            <td class="w110">{{data.holiday_start_date | date:'d MMM, y'  }}</td>
+                            <td class="w110">{{data.holiday_end_date | date:'d MMM, y'  }}</td>
+                            <td class="w100">{{data.days}}</td>
+                            <!-- <td class="w100 {{data.status=='Reject' ? 'red-clr' : 'green-clr'}}">{{data.status| titlecase}} 
+                              
+                            </td> -->
+                            <td class="w200" *ngIf="status=='Reject'">{{data.reason_reject }}
+                             
+                            </td> 
+                            <td >{{data.remark}}
+                              <div class="action-btns">
+                                <button  *ngIf="data.status!='Approved'"  mat-button class="edit" matTooltip="Verify" (click)="Accept(data.id,i)"><i class="material-icons">check_circle</i>Verify</button>
+                                <button *ngIf="data.status!='Reject'"  mat-button class="delete" matTooltip="Reject" (click)="reject(data.id,i,'leave_reason_reject')"><i class="material-icons">cancel</i>Reject</button>
+                                <button mat-button class="delete" matTooltip="Delete" (click)="delete(data.id,i)" *ngIf="data.status!='Approved'"><i class="material-icons">delete_sweep</i></button>
+                              </div>
+                            </td>
+
+                            <!-- <td class="w150" *ngIf="data.status!='Reject'">N/A
+                              <div class="action-btns">
+                                <button  *ngIf="data.status!='Approved'"  mat-button class="edit" matTooltip="Verify" (click)="Accept(data.id,i)"><i class="material-icons">check_circle</i>Verify</button>
+                                <button *ngIf="data.status!='Reject'"  mat-button class="delete" matTooltip="Reject" (click)="reject(data.id,i,'leave_reason_reject')"> <i class="material-icons">cancel</i>Reject</button>
+                                <button mat-button class="delete" matTooltip="Delete" (click)="delete(data.id,i)" *ngIf="data.status!='Approved'"><i class="material-icons">delete_sweep</i></button>
+                              </div>
+                            </td> -->
+                          </tr>
+                        </table>
+                      </div>
+                    </div>
+                    <div class="no-record-data-text" *ngIf="!leave_list?.length"> 
+                        <img src="assets/img/no-record-found.png">
+                      </div>
+                  </tr>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+    </div>
+  </div>
+   
+  </div>
+  <div class="h50"></div>

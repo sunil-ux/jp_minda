@@ -1,0 +1,22 @@
+<header>
+    <div class="logo" (click)="toggleNav()" >
+        <img src="assets/img/theme/anupum/logo.svg">
+    </div>
+    <div class="right-data">
+        <div class="outer">
+            <div class="innear">    
+                <ul>
+                    <li class="af-none">
+                        <p class="welcome-note">
+                            <strong>Welcome</strong> : <span class="ng-binding">{{tokenInfo.name}}</span>
+                        </p>
+                    </li>
+                    <button matTooltip="Logout" mat-button (click)="logout()" class="lo-gout">
+                        <i class="material-icons">power_settings_new</i>
+                    </button>
+                </ul>
+            </div>
+        </div>
+    </div>
+</header>
+

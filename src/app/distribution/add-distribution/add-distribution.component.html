@@ -1,0 +1,508 @@
+<div class="main-container">
+  <div *ngIf="loader" class="center-loder cs-loader">
+    <div class="outer">
+      <div class="innear">
+        <mat-spinner class="loader"></mat-spinner>
+      </div>
+    </div>
+  </div>
+  
+  <div class="main-outer">
+    <div class="main-inner">
+      <div class="middle-container">
+        <div class="page-heading">
+          <div class="heading-text">
+            <h2>Distribution Network</h2>
+            <p>Add New Network</p>
+          </div>
+        </div>
+        <span class="required">Indicates required fields ( <sup>*</sup> )</span>
+      </div>
+      
+      <div class="container-outer">
+        <form #f="ngForm" name="form" (ngSubmit)="f.form.valid && submit(data.type)">
+          <div class="container pr5 height-fix" >
+            <div class="row mb15">
+              <div class="sprate-box padding0 main-bdr">
+                <div class="cs-logs">
+                  <div class="cs-heading">
+                    <h2>SELECT TYPE</h2>
+                  </div>
+                  <div class="logs-outer" (click)="ChangePage(data.type)">
+                    <div class="logs-list pr0" >
+                      <div class="lead-type" >
+                        <mat-radio-group style="display: flex; align-items:center;" class="select-type" id="type" name="type" [(ngModel)]="data.type" >
+                          <mat-radio-button value="1" >Distributor</mat-radio-button>
+                          <mat-radio-button value="2" >Retailer</mat-radio-button>
+                          <mat-radio-button value="3">OEM</mat-radio-button>
+                        </mat-radio-group>  
+                      </div>
+                    </div>
+                  </div>
+                  
+                </div>
+              </div>
+            </div>
+            
+            <div class="row mb15">
+              <div class="sprate-box padding0 main-bdr" style="overflow: inherit;">
+                <div class="cs-heading">
+                  <h2>BASIC INFORMATION</h2>
+                </div>
+                
+                <div class="from-fields">
+                  <div class="row adjust-row">
+                    <div class="col s3 pl0">
+                      <div class="control-field">
+                        <mat-form-field class="cs-input">
+                          <input matInput placeholder="Counter Name" id="counter_name" name="counter_name" [(ngModel)]="data.counter_name" #counter_name="ngModel" [ngClass]="{'has-error' : counter_name.invalid } " (keypress)="namecheck($event)"  required>
+                        </mat-form-field>
+                        <mat-error *ngIf="f.submitted && counter_name.invalid" class="invalid-feedback">
+                          <mat-error *ngIf="counter_name.errors.required">Name is Required</mat-error>
+                        </mat-error>
+                      </div>
+                    </div>
+                    <div class="col s3">
+                      <div class="control-field">
+                        <mat-form-field class="cs-input">
+                          <input matInput placeholder="Email-Id" id="email" name="email" [(ngModel)]="data.email" #email="ngModel" [ngClass]="{'has-error' : email.invalid } " pattern="[A-Za-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,3}$" required>
+                        </mat-form-field>
+                        <mat-error  *ngIf="!email.valid && email.touched">
+                          Enter Valid Email-Id
+                        </mat-error>
+                        <mat-error *ngIf="f.submitted && email.invalid" class="invalid-feedback">
+                          <mat-error *ngIf="email.errors.required">Email-Id is Required</mat-error>
+                        </mat-error>
+                      </div>
+                    </div>
+                    <div class="col s3">
+                      <div class="control-field">
+                        <mat-form-field class="cs-input">
+                          <input matInput placeholder="Landline No." id="mobile" name="mobile" minlength="10" maxlength="12" [(ngModel)]="data.mobile" #mobile="ngModel" [ngClass]="{'has-error' : mobile.invalid } " (keypress)="MobileNumber($event)" >
+                        </mat-form-field>
+                      </div>
+                    </div>
+                    <div class="col s3 pr0">
+                      <div class="control-field">
+                        <mat-form-field class="cs-input">
+                          <input matInput placeholder="GST No." id="gst" name="gst" [(ngModel)]="data.gst" #gst="ngModel" minlength="15" maxlength="15" [ngClass]="{'has-error' : gst.invalid } " required>
+                        </mat-form-field>
+                        <mat-error *ngIf="!gst.valid && gst.touched">
+                          Invalid GST No.
+                        </mat-error>
+                        <mat-error *ngIf="f.submitted && gst.invalid" class="invalid-feedback">
+                          <mat-error *ngIf="gst.errors.required">GST No. is Required</mat-error>
+                        </mat-error>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <div *ngIf="data.type==1" class="row mb15">
+              <div class="col s3">
+                <div class="sprate-box main-bdr padding0">
+                  <div class="cs-heading" >
+                    <h2>ASSIGN PRODUCT TYPE</h2>
+                  </div>
+                  <div class="from-fields">
+                    <div class="row adjust-row">
+                        <div class="control-field">
+                            <mat-form-field class="cs-input infix-bodr8">
+                              <mat-select placeholder="Product Type" multiple name="assigned_product_type" id="assigned_product_type" [(ngModel)]="data.assigned_product_type"  #assigned_product_type="ngModel" [ngClass]="{ 'is-invalid': f.submitted && assigned_product_type.invalid }">
+                                <mat-option *ngFor="let p_type of productType; let i=index;" [value]="p_type.name" >{{p_type.name | titlecase}}</mat-option>
+                              </mat-select>
+                            </mat-form-field>
+                          </div>
+                    </div>
+                    
+                    <!-- <mat-error *ngIf="f.submitted && assigned_product_type.invalid" class="invalid-feedback">
+                      <mat-error *ngIf="assigned_product_type.errors.required">Product Type is required</mat-error>
+                    </mat-error> -->
+                  </div>
+                </div>
+                
+              </div>
+              <div class="col s9" *ngIf="data.assigned_product_type?.length!=0">
+                <div class="sprate-box main-bdr padding0">
+                  <div class="cs-heading" >
+                    <h2>ASSIGN DISCOUNT</h2>
+                  </div>
+                  <div class="from-fields">
+                    <div class="row adjust-row">
+                      <div *ngIf="data.assigned_product_type?.length!=0" class="control-field col s4 pl0" >
+                        <mat-form-field class=" cs-input  infix-bodr8 select-input">
+                          <input matInput placeholder="Product Code" [matAutocomplete]="product_code" (input)="getProductCode(product_code_value.product_code)" name="product_code" id="product_code" #product_code="ngModel" [(ngModel)]="product_code_value.product_code">
+                          <mat-autocomplete #product_code="matAutocomplete">
+                            <mat-option  *ngFor="let data of productCodeList; let i=index" [value]="data.product_code">
+                              <small>{{data.product_code}}</small>
+                            </mat-option>
+                          </mat-autocomplete>
+                        </mat-form-field>
+                        <mat-error *ngIf="productCodeList.length==0 && div ==true">No Product Found</mat-error>
+                      </div>
+                      <div *ngIf="productCodeList.length!=0 && div==true && product_code_value.product_code"  class="col s4">
+                        <div class="control-field">
+                          <mat-form-field class="cs-input">
+                            <mat-select placeholder="Discount Type" name="discount_type" id="discount_type" #discount_type="ngModel" [(ngModel)]="product_code_value.discount_type">
+                              <mat-option value="percent"><small>In Percentage(%)</small></mat-option>
+                              <mat-option value="amount"><small>In Amount(₹)</small></mat-option>
+                            </mat-select>
+                          </mat-form-field>
+                        </div>
+                      </div>
+                      <div  *ngIf="productCodeList.length!=0 && div==true && product_code_value.product_code" class="col s4 pr0"> 
+                        <div class="control-field pr80">
+                          <mat-form-field class="cs-input">
+                            <input matInput placeholder="Discount value" id="discount_val" name="discount_val" [(ngModel)]="product_code_value.discount_val"(keypress)="MobileNumber($event)" #discount_val="ngModel">
+                          </mat-form-field>
+                          <div class="plus-btn">
+                            <button mat-raised-button color="accent" type="button" [disabled]="!product_code_value.product_code || !product_code_value.discount_type || !product_code_value.discount_val" (click)="addToCodeList()" >
+                              <i class="material-icons" >add</i>
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div class="row" *ngIf="product_assign_data.length !=''">
+                    <div class="col s12 padding0">
+                      <div class="cs-table" style="max-height: 160px; overflow: auto">
+                        <table>
+                          <tr>
+                            <div class="ss-sticky">
+                              <div class="table-head">
+                                <table>
+                                  <tr>
+                                    <th>Product Code</th>
+                                    <th class="w200">Discount Type</th>
+                                    <th class="w200 bdr0">Discount Value</th>
+                                    <th class="w130">&nbsp;</th>
+                                  </tr>
+                                </table>
+                              </div>
+                            </div>
+                          </tr>
+                          <tr>
+                            <div class="table-container">
+                              <div class="table-content">
+                                <table>
+                                  <tr *ngFor="let value of product_assign_data;let index=index">
+                                    <td>{{value.product_code}}</td>
+                                    <td class="w200">{{value.discount_type}}</td>
+                                    <td class="w200">{{value.discount_val}}</td>
+                                    <td class="w130">
+                                      <a mat-button class="del-btn" (click)="deleteCodeFromList(index)">Delete</a>
+                                    </td>
+                                  </tr>            
+                                </table>
+                              </div>
+                            </div>
+                          </tr>
+                        </table>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <div class="row mb15">
+              <div class="sprate-box padding0 main-bdr">
+                <div class="cs-heading">
+                  <h2>CONTACT PERSON INFORMATION</h2> 
+                  <mat-error *ngIf="f.submitted && !cp_person_data.length" style="color: red">Atleast one contact person is required</mat-error>
+                </div>
+                
+                <div class="from-fields">
+                  <div class="row adjust-row">
+                    <div class="col s4 pl0">
+                      <div class="control-field">
+                        <mat-form-field class="cs-input">
+                          <input matInput placeholder="Name" name="cp_name" [(ngModel)]="form.cp_name" #cp_name="ngModel">
+                        </mat-form-field>
+                        
+                      </div>
+                    </div>
+                    
+                    <div class="col s4">
+                      <div class="control-field">
+                        <mat-form-field class="cs-input">
+                          <input matInput placeholder="Mobile No. 1" name="cp_mobile_1" [(ngModel)]="form.cp_mobile_1"  minlength="10" maxlength="10" #cp_mobile_1="ngModel" (keypress)="MobileNumber($event)">
+                        </mat-form-field>
+                        <mat-error *ngIf="showError==true && f.submitted && !form.cp_mobile_1">Invalid mobile no.</mat-error>
+                      </div>
+                    </div>
+                    
+                    <div class="col s4 pr0">
+                      <div class="control-field pr80">
+                        <mat-form-field class="cs-input">
+                          <input matInput placeholder="Mobile No. 2" name="cp_mobile_2" [(ngModel)]="form.cp_mobile_2" minlength="10" maxlength="10" #cp_mobile_2="ngModel" (keypress)="MobileNumber($event)">
+                        </mat-form-field>
+                        
+                        <div class="plus-btn">
+                          <button mat-raised-button color="accent" type="button" name="add" [disabled]="!form.cp_name || !(form.cp_mobile_1 && form.cp_mobile_1.length==10 ) " (click)="push_cp_table()"> 
+                            <i class="material-icons">add</i>
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                    <!-- <mat-error *ngIf="f.submitted && !form.cp_mobile_1 && !form.cp_name">*Contact person information is required</mat-error> -->
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <div class="row mb15" *ngIf="cp_person_data.length !=''">
+              <div class="col s12 padding0">
+                <div class="cs-table left-right-20">
+                  <div class="table-head">
+                    <table>
+                      <tr>
+                        <th>Name</th>
+                        <th class="w200">Mobile No. 1</th>
+                        <th class="w200 bdr0">Mobile No. 2</th>
+                        <th class="w130">&nbsp;</th>
+                      </tr>
+                    </table>
+                  </div>
+                  
+                  <div class="table-container">
+                    <div class="table-content">
+                      <table>
+                        <tr *ngFor="let cp of cp_person_data;let index of index">
+                          <td>{{cp.cp_name}}</td>
+                          <td class="w200">{{cp.cp_mobile_1}}</td>
+                          <td class="w200">{{cp.cp_mobile_2}}</td>
+                          <td class="w130">
+                            <a mat-button class="del-btn" (click)="delete_cp(index)">Delete</a>
+                          </td>
+                        </tr>
+                      </table>
+                    </div>
+                  </div>
+                  
+                </div>
+              </div>
+            </div>
+            
+             
+            <div class="row mb15" *ngIf="data.type=='1'">
+              <div class="sprate-box padding0 main-bdr">
+                <div class="cs-heading">
+                  <h2>TARGET INFORMATION</h2>
+                </div>
+                
+                <div class="from-fields">
+                  <div class="row adjust-row">
+                    <div class="col s4 pl0">
+                      <div class="control-field">
+                        <mat-form-field class="cs-input">
+                          <mat-select placeholder="Target Duration" id="target_duration" name="target_duration" [(ngModel)]="data.target_duration" #target_duration="ngModel" [ngClass]="{'has-error' : target_duration.invalid } " required>
+                            <mat-option value="2019-2020">2019-2020 </mat-option>
+                            <mat-option value="2020-2021">2020-2021 </mat-option>
+                            <mat-option value="2021-2022">2021-2022 </mat-option>
+                            <mat-option value="2022-2023">2022-2023 </mat-option>
+                            <mat-option value="2023-2024">2023-2024 </mat-option>
+                          </mat-select>
+                        </mat-form-field>
+                        <!-- <div class="alert alert-danger" *ngIf="!target_duration.valid && target_duration.touched">
+                          Target Duration is Required
+                        </div> -->
+                        <mat-error *ngIf="f.submitted && target_duration.invalid" class="invalid-feedback">
+                          <mat-error *ngIf="target_duration.errors.required">Target Duration is Required</mat-error>
+                        </mat-error>
+                      </div>
+                    </div>
+                    <div class="col s4">
+                      <div class="control-field">
+                        <mat-form-field class="cs-input inr-input">
+                          <input matInput placeholder="Price" id="target_amount" type="number" name="target_amount" [(ngModel)]="data.target_amount" #target_amount="ngModel" [ngClass]="{'has-error' : target_amount.invalid }"  (keypress)="Price($event)" required >
+                        </mat-form-field>
+                        <!-- <mat-error class="alert alert-danger" *ngIf="!target_amount.valid && target_amount.touched">
+                          Price is Required
+                        </mat-error> -->
+                        <mat-error *ngIf="f.submitted && target_amount.invalid" class="invalid-feedback">
+                          <mat-error *ngIf="target_amount.errors.required">Target Amount is Required</mat-error>
+                        </mat-error>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            
+            <div class="row mb15">
+              <div class="sprate-box padding0 main-bdr">
+                <div class="cs-heading">
+                  <h2>ADDRESS INFORMATION</h2>
+                </div>
+                
+                <div class="from-fields">
+                  <div class="row adjust-row">
+                    <div class="col s8 padding0">
+                      <div class="row mb15">
+                        <!-- <div class="col s4 pl0">
+                          <div class="control-field">
+                            <mat-form-field class="cs-input">
+                              <mat-select placeholder="Country"  id="country" name="country" [(ngModel)]="data.country" #country="ngModel" [ngClass]="{'has-error' : country.invalid } " required>
+                                <mat-option [value]="India" selected>India</mat-option>
+                              </mat-select>
+                            </mat-form-field>
+                            
+                            <mat-error *ngIf="f.submitted && country.invalid" class="invalid-feedback">
+                              <mat-error *ngIf="country.errors.required">Country is Required</mat-error>
+                            </mat-error>
+                          </div>
+                        </div> -->
+                        
+                        <div class="col s6 pl0">
+                          <div class="control-field">
+                            
+                            <mat-form-field class="cs-input select-input auto-select">
+                              <input matInput type="text" id="state_name" placeholder="State" [matAutocomplete]="auto" name="state_name" #state_name="ngModel" (keyup)="filterstate(data.state_name,state_data,'state_name')"  [(ngModel)]="data.state_name" required>
+                              <mat-autocomplete #auto="matAutocomplete" (optionSelected)="get_district($event.option.value)" > 
+                                <mat-option *ngFor="let data of filter_state_arr" [value]="data.state_name">
+                                  <small>{{data.state_name | titlecase}}</small>
+                                </mat-option>
+                              </mat-autocomplete>
+                            </mat-form-field>
+                            <mat-error *ngIf="f.submitted && state_name.invalid" class="invalid-feedback">
+                              <mat-error *ngIf="state_name.errors.required">State is Required</mat-error>
+                            </mat-error>
+                            
+                          </div>
+                        </div>
+                        
+                        <div class="col s6 pr0" >
+                          <div class="control-field">
+                            <mat-form-field class="cs-input select-input auto-select">
+                              <input matInput type="text" id="district_name" placeholder="District" [matAutocomplete]="auto1" name="district" (keyup)="filterDistrict(data.district_name,district_data,'district_name')" [(ngModel)]="data.district_name" #district="ngModel"required>
+                              <mat-autocomplete #auto1="matAutocomplete"  (optionSelected)="get_city($event.option.value)"> 
+                                <mat-option *ngFor="let data of filter_district_array"  [value]="data.district_name">
+                                  <small>{{data.district_name | titlecase}}</small>
+                                </mat-option>
+                              </mat-autocomplete>
+                            </mat-form-field>
+                            <mat-error *ngIf="f.submitted && district.invalid" class="invalid-feedback">
+                              <mat-error *ngIf="district.errors.required">District is Required</mat-error>
+                            </mat-error>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="row mb0">
+                        <div class="col s6 pl0" >
+                          <div class="control-field">
+                            <mat-form-field class="cs-input select-input auto-select">
+                              <input matInput type="text" id="city" placeholder="City" [matAutocomplete]="asmauto2" name="city" [(ngModel)]="data.city" (keyup)="filterCity(data.city,city_data,'city')" #city="ngModel" required>
+                              <mat-autocomplete #asmauto2="matAutocomplete" (optionSelected)="get_pincode($event.option.value)"> 
+                                <mat-option *ngFor="let data of filter_city_array"  [value]="data.city">
+                                  <small>{{data.city | titlecase}}</small>
+                                </mat-option>
+                              </mat-autocomplete>
+                            </mat-form-field>
+                            <mat-error *ngIf="f.submitted && city.invalid" class="invalid-feedback">
+                              <mat-error *ngIf="city.errors.required">City is Required</mat-error>
+                            </mat-error>
+                          </div>
+                        </div>
+                        
+                        <div class="col s6 pr0" >
+                          <div class="control-field">
+                            <mat-form-field class="cs-input select-input auto-select">
+                              <input matInput type="text" id="pincode" placeholder="Pincode" [matAutocomplete]="asmauto3" name="pincode" [(ngModel)]="data.pincode" #pincode="ngModel"  (input)="input_get_sales_team_data(data.pincode)"  (keypress)="MobileNumber($event)" maxlength="6" minlength="0" required>
+                              <mat-autocomplete #asmauto3="matAutocomplete" (optionSelected)="get_sales_team_data($event.option.value)"> 
+                                <mat-option *ngFor="let pincode of pincode_data" [value]="pincode.pincode">
+                                  <small>{{pincode.pincode | titlecase}}</small>
+                                </mat-option>
+                              </mat-autocomplete>
+                            </mat-form-field>
+                            <mat-error *ngIf="f.submitted && pincode.invalid" class="invalid-feedback">
+                              <mat-error *ngIf="pincode.errors.required">Pincode is Required</mat-error>
+                            </mat-error>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    
+                    <div class="col s4 pr0">
+                      <div class="col s12 pr0">
+                        <div class="control-field">
+                          <mat-form-field class="cs-input">
+                            <textarea class="h106" matInput placeholder="Address" id="address" name="address" [(ngModel)]="data.address" #address="ngModel" [ngClass]="{'has-error' : address.invalid } " required></textarea>
+                          </mat-form-field>
+                          
+                          <mat-error *ngIf="f.submitted && address.invalid" class="invalid-feedback">
+                            <mat-error *ngIf="address.errors.required">Address is Required</mat-error>
+                          </mat-error>
+                        </div>
+                      </div>
+                    </div>
+                    
+                  </div>
+                </div>
+              </div>
+            </div>
+           
+            
+            <div class="row mb15" *ngIf="data.type!=2 && data.pincode">
+              <div class="sprate-box padding0 main-bdr over-inherit">
+                <div class="cs-heading"  >
+                  <h2>ASSIGN SALES TEAM</h2>
+                </div>
+                
+                <div class="from-fields" >
+                  <div class="row adjust-row">
+                    <div class="col s4 pl0">
+                      <div class="control-field">
+                        <div class="multi-all-select">
+                          <ng-multiselect-dropdown
+                          name="sales_team_name"
+                          [placeholder]="'Name & Position'"
+                          [data]="sales_team_data"
+                          [(ngModel)]="data.sales_team_name"
+                          [settings]="dropdownSettings"
+                          (onSelect)="onItemSelect($event)"
+                          (onSelectAll)="onSelectAll($event)"
+                          #sales_team_name="ngModel">
+                        </ng-multiselect-dropdown>
+                      </div>
+                      <!-- <mat-form-field class="cs-input">
+                        <mat-select placeholder="Name & Position" name="sales_team_name" [(ngModel)]="data.sales_team_name" #sales_team_name="ngModel" [ngClass]="{'has-error' : sales_team_name.invalid } " required multiple>
+                          <mat-option *ngFor="let data of sales_team_data" value="{{data.id}}">{{data.name | titlecase}} - {{data.access_labeal | titlecase}}</mat-option>
+                        </mat-select>
+                      </mat-form-field> -->
+                      
+                      <mat-error *ngIf="f.submitted && sales_team_name.invalid" class="invalid-feedback">
+                        <mat-error *ngIf="sales_team_name.errors.required">Name & Position is Required</mat-error>
+                      </mat-error>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          
+          <div class="row">
+            <div class="col s12">
+              <div class="cs-btn fixedd mt32 text-right pr5">
+                <div class="in-btn">
+                  <button mat-raised-button color="accent" (click)="setFocus(f.form)" name="submit">Save</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+</div>
+
+<div class="h50"></div>
+

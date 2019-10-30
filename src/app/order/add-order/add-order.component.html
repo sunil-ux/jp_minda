@@ -1,0 +1,545 @@
+<div class="main-container" >
+  <div *ngIf="loader" class="center-loder cs-loader">
+    <div class="outer">
+      <div class="innear">
+        <mat-spinner class="loader"></mat-spinner>
+      </div>
+    </div>
+  </div>
+  <div class="middle-container">
+    <div class="page-heading">
+      <img src="assets/img/order_icon.svg" class="h-icon">
+      <div class="heading-text">
+        <h2>Order</h2>
+        <p>Add New Order</p>
+      </div>
+    </div>
+  </div>
+  
+  <form name="form" #f="ngForm" (ngSubmit)="f.valid && Add_multiple_item(f)">
+    
+    <div class="container-outer">
+      <div class="container" >
+        <div class="row">
+          <div class="col s12">
+            <div class="sprate-box mb20">
+              <div class="cs-heading">
+                <h2>USER TYPE</h2>
+                <span class="required">Indicates required fields ( <sup>*</sup> )</span>
+              </div>
+              <mat-divider class="left-right-15 mt10"></mat-divider>
+              <div class="row">
+                <div class="col s12">
+                  <div class="select-one">
+                    <mat-radio-group (change)="getDr()" [(ngModel)]="order.type" name="type" required>
+                      <mat-radio-button value="1">Distributor</mat-radio-button>
+                      <mat-radio-button value="2">Retailer</mat-radio-button>
+                      <mat-radio-button value="3">Direct Dealer</mat-radio-button>
+                    </mat-radio-group>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="from-fields">
+                <div class="row"  *ngIf="order.type">
+                  <div class="col s6 pl0">
+                    <div class="control-field">
+                      <mat-form-field class="cs-input" >
+                        <input matInput type="text" placeholder="Customer Name" [matAutocomplete]="auto" name="dr_id"  (keyup)="filterusername(order.dr_id,dr_list,'name')"  [(ngModel)]="order.dr_id" required>
+                        <mat-autocomplete #auto="matAutocomplete" (optionSelected)="custmerName($event.option.value)">
+                          <mat-option *ngFor="let v of filter_username" value={{v.name}}>{{v.name}}</mat-option>
+                        </mat-autocomplete>       
+                      </mat-form-field>          
+                    </div>
+                  </div>
+                  <div class="col s6 pl0" *ngIf="order.type == '2' ">
+                    <div class="control-field">
+                      <mat-form-field class="cs-input" >
+                        <input matInput type="text" placeholder="Assign Distributor" [matAutocomplete]="auto1" name="assign_distributor"  (keyup)="filterdistributor(order.assign_distributor,distributor_list,'name')"  [(ngModel)]="order.assign_distributor" required>
+                        <mat-autocomplete #auto1="matAutocomplete" (optionSelected)="AssignName($event.option.value)">
+                          <mat-option *ngFor="let v of filter_distributor_list" value={{v.name}}>{{v.name}}</mat-option>
+                        </mat-autocomplete>       
+                      </mat-form-field>      
+                      
+                      <!-- <mat-form-field class="cs-input" >
+                        <mat-select placeholder="Assign Distributor" name="assign_distributor" [(ngModel)]="order.assign_distributor" >
+                          <mat-option  *ngFor="let v of distributor_list" [value]=v.id>{{v.name}}</mat-option>
+                        </mat-select>
+                      </mat-form-field> -->
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <ng-container  *ngIf="order.dr_id && order.type">
+            
+            <div class="row">
+              <div class="col s3 pr15">
+                <div class="territory-info ">
+                  <div class="head" [ngClass]="{'active':active.category==true}">
+                    <h2>CATEGORY</h2>
+                    <i class="material-icons search-icon right20" (click)="toggleterritory('category','open')"  matRipple>search</i>
+                    <input type="text" placeholder="search..." class="fix-search">
+                    <i class="material-icons close-icon" (click)="toggleterritory('category','close')" matRipple>clear</i>
+                  </div>
+                  <div class="cs-checkbox">
+                    <div class="checkbox-outer">
+                      <div class="checkbox-inner">
+                        <!-- <mat-radio-group  class="checkbox-inner" name="category" [(ngModel)]="itemData.category" (change)="getMasterData('sub_category')">
+                          <mat-radio-button class="check-list category-bg" *ngFor="let v of category_list" [value]="v.category">{{v.category}}</mat-radio-button>
+                        </mat-radio-group > -->
+                        <!-- (change)="getPincodeList(dis.state_name,dist.district_name,$event)" -->
+                        <section class="checkbox-inner"  >
+                          <mat-checkbox class="check-list" *ngFor="let v of category_list;let i = index" [name]="'cat'+i" [(ngModel)]="v.selected"   (change)="getMasterData('sub_category',v.selected)">
+                            {{v.category}}
+                          </mat-checkbox>
+                        </section>
+                        
+                        
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="col s3 pr15" *ngIf="sub_category_list.length">
+                <div class="territory-info ">
+                  <div class="head" [ngClass]="{'active':active.subcategory==true}">
+                    <h2>SUB CATEGORY</h2>
+                    <i class="material-icons search-icon right20" (click)="toggleterritory('subcategory','open')"  matRipple>search</i>
+                    <input type="text" placeholder="search..." class="fix-search">
+                    <i class="material-icons close-icon" (click)="toggleterritory('subcategory','close')" matRipple>clear</i>
+                  </div>
+                  <div class="cs-checkbox">
+                    <div class="checkbox-outer">
+                      
+                      <div class="checkbox-inner">
+                        
+                        <section class="checkbox-inner"  >
+                          <mat-checkbox class="check-list" *ngFor="let v of sub_category_list;let i = index" [name]="'sub_category'+i" [(ngModel)]="v.sub_cat_selected"   (change)="getMasterData('series',v.sub_cat_selected)">
+                            {{v.sub_category ? v.sub_category : 'NO Sub Category'}}
+                          </mat-checkbox>
+                        </section>
+                        
+                        
+                        <!-- <mat-radio-group  name="sub_category" [(ngModel)]="itemData.sub_category" (change)="getMasterData('series')">
+                          <mat-radio-button class="check-list category-bg" *ngFor="let v of sub_category_list" [value]="v.sub_category">{{v.sub_category ? v.sub_category : 'Blank Sub Category'}}</mat-radio-button>
+                        </mat-radio-group> -->
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="col s3 pr15"  *ngIf="series_list.length">
+                <div class="territory-info ">
+                  <div class="head" [ngClass]="{'active':active.series==true}">
+                    <h2>SERIES</h2>
+                    <i class="material-icons search-icon right20" (click)="toggleterritory('series','open')"  matRipple>search</i>
+                    <input type="text" placeholder="search..." class="fix-search">
+                    <i class="material-icons close-icon" (click)="toggleterritory('series','close')" matRipple>clear</i>
+                  </div>
+                  <div class="cs-checkbox">
+                    <div class="checkbox-outer">
+                      <div class="checkbox-inner">
+                        
+                        <!-- <mat-radio-group class="checkbox-inner" name="series" [(ngModel)]="itemData.series" (change)="getMasterData('product_code')">
+                          <mat-radio-button class="check-list category-bg" *ngFor="let v of series_list" [value]="v.series">{{v.series?v.series:'Blank series'}}</mat-radio-button>
+                        </mat-radio-group> -->
+                        
+                        <section class="checkbox-inner"  >
+                          <mat-checkbox class="check-list" *ngFor="let v of series_list ;let i = index" [name]="'series'+i" [(ngModel)]="v.series_selected"   (change)="getMasterData('product_code',v.series_selected)">
+                            {{v.series?v.series:'No series'}}
+                          </mat-checkbox>
+                        </section>
+                        
+                        
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              
+              
+              <!-- /////////////////////////            optional       ///////////////////  -->
+              
+              <!-- *ngIf="model_list.length && ( !sub_category_list.length || !series_list.length )" -->
+              <div class="col s3"   *ngIf="model_list.length > 0" >
+                <div class="territory-info ">
+                  <div class="head" [ngClass]="{'active':active.series==true}">
+                    <h2>MODEL</h2>
+                    <i class="material-icons search-icon right20" (click)="toggleterritory('series','open')"  matRipple>search</i>
+                    <input type="text" placeholder="search..." class="fix-search">
+                    <i class="material-icons close-icon" (click)="toggleterritory('series','close')" matRipple>clear</i>
+                  </div>
+                  <div class="cs-checkbox">
+                    <div class="checkbox-outer">
+                      <div class="checkbox-inner">
+                        <!-- <mat-radio-group class="checkbox-inner"  name="model_code" [(ngModel)]="itemData.model_code" #model_code="ngModel" (change)="getProductInfo(model_code.value)"> -->
+                          
+                          <!-- <mat-radio-button class="check-list category-bg" *ngFor="let v of model_list" [value]="v.product_code">{{v.product_code}}
+                            <mat-form-field class="example-full-width cs-input">
+                              <input matInput placeholder="Dimension" name="dimension" [(ngModel)]="itemData.dimension" #dimension="ngModel" readonly>
+                            </mat-form-field>
+                          </mat-radio-button>
+                          
+                        </mat-radio-group> -->
+                        
+                        
+                        
+                        <section class="checkbox-inner">
+                          <ng-container *ngFor="let v of model_list ;let i = index">
+                            
+                            <div class="fill-check">
+                              
+                              <mat-checkbox class="check-list nowrap"  [name]="'product_code'+i" [(ngModel)]="v.product_code_selected"  (change)="getProductInfo(i, v.product_code_selected)" >
+                                {{v.product_code}}
+                              </mat-checkbox>
+                              
+                              <div class="from-fields form-flex " >
+                                <div class="control-field w50" *ngIf="v.product_code_selected">
+                                  <mat-form-field class="example-full-width cs-input infix-bodr8">
+                                    <input matInput placeholder="qty" [name]="'qty'+i" [(ngModel)]="v.qty"  (input)="cal_prod(i)">
+                                  </mat-form-field>
+                                </div>
+                                
+                                <div class="control-field w80"  *ngIf="v.product_code_selected">
+                                  <mat-form-field class="example-full-width cs-input infix-bodr8">
+                                    <input matInput placeholder="Price" [name]="'price'+i" [(ngModel)]="v.price" readonly>
+                                  </mat-form-field>
+                                </div>
+                              </div>
+                            </div>
+                          </ng-container>
+                        </section>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              
+              <!-- ///////////////////////////////////////////////////////////////////// -->
+              
+              
+              <!-- <div class="col s3 pr15">
+                <div class="territory-info " style="height: 365px;">
+                  <div class="cs-checkbox" style="padding: 010px 15px;">
+                    <div class="checkbox-outer" style="padding-right: 0px;">
+                      <section class="checkbox-inner bodr0">
+                        <div class="from-fields">
+                          <div class="control-field" *ngIf="model_list.length &&  sub_category_list.length && series_list.length ">
+                            <mat-form-field class="cs-input infix-bodr">
+                              <mat-select placeholder="MODEL" name="model_code" [(ngModel)]="itemData.model_code" #model_code="ngModel" (selectionChange)="getProductInfo()">
+                                <mat-option *ngFor="let v of model_list" [value]="v.product_code">{{v.product_code}}</mat-option>
+                              </mat-select>
+                            </mat-form-field>
+                          </div>
+                          <ul class="flex-input">
+                            <li class="wp100">
+                              <div class="control-field">
+                                <mat-form-field class="example-full-width cs-input">
+                                  <input matInput placeholder="Dimension" name="dimension" [(ngModel)]="itemData.dimension" #dimension="ngModel" readonly>
+                                </mat-form-field>
+                              </div>
+                            </li>
+                          </ul>
+                          <ul class="flex-input">
+                            
+                            <li>
+                              <div class="control-field">
+                                <mat-form-field class="example-full-width cs-input">
+                                  <input matInput placeholder="Price" name="price" [(ngModel)]="itemData.price" #price="ngModel" readonly>
+                                </mat-form-field>
+                              </div>
+                            </li>
+                            
+                            
+                            <li>
+                              <div class="control-field">
+                                <mat-form-field class="example-full-width cs-input">
+                                  <input matInput placeholder="Qty" name="qty" [(ngModel)]="itemData.qty" #qty="ngModel" (input)="cal_prod()">
+                                </mat-form-field>
+                              </div>
+                            </li>
+                            
+                          </ul>
+                          <ul class="flex-input">
+                            
+                            <li>
+                              <div class="control-field">
+                                <mat-form-field class="example-full-width cs-input">
+                                  <input matInput placeholder="Amount" name="amount" [(ngModel)]="itemData.amount" #amount="ngModel" readonly>
+                                </mat-form-field>
+                              </div>
+                            </li>
+                            
+                            
+                            
+                            
+                            <li>
+                              <div class="control-field">
+                                <mat-form-field class="example-full-width cs-input">
+                                  <input matInput placeholder="Discount" name="discount" [(ngModel)]="itemData.discount" #discount="ngModel" readonly>
+                                </mat-form-field>
+                              </div>
+                            </li>
+                            
+                          </ul>
+                          <ul class="flex-input">
+                            
+                            <li>
+                              <div class="control-field">
+                                <mat-form-field class="example-full-width cs-input">
+                                  <input matInput placeholder="Discounted Amount" name="discounted_amount" [(ngModel)]="itemData.discounted_amount" #discounted_amount="ngModel" readonly>
+                                </mat-form-field>
+                              </div>
+                            </li>
+                            
+                            
+                            <li>
+                              <div class="control-field">
+                                <mat-form-field class="example-full-width cs-input">
+                                  <input matInput placeholder="Gross Amount" name="gross_amount" [(ngModel)]="itemData.gross_amount" #gross_amount="ngModel" readonly>
+                                </mat-form-field>
+                              </div>
+                            </li>
+                            
+                            
+                            
+                          </ul>
+                          
+                        </div>
+                      </section>
+                    </div>
+                  </div>
+                </div>
+              </div> -->
+              
+            </div>
+            
+            <div class="row">
+              <div class="col s12">
+                <div class="cs-btn mt15 mb15 text-right">
+                  <div class="in-btn">
+                    <button mat-raised-button color="accent">Add To List</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            
+            <!-- *ngIf="!invoiceItemList" -->
+            <div class="row" >
+              
+              <div class="col s12">
+                <div class="cs-table left-right-20">
+                  <div class="table-head">
+                    <table>
+                      <tr>
+                        <th class="w130">Category/Sub Category/Series</th>
+                        <!-- <th class="w100">Sub Category</th>
+                          <th class="w100">Series</th> -->
+                          <th class="w100">Product Name</th>
+                          <th class="w50">GST(%)</th>
+                          <th class="w100">Price (With GST)</th>
+                          <th class="w50">QTY</th>
+                          <th class="w100">Amount</th>
+                          <th class="w80">Discount(%)</th>
+                          <th class="w80">Discount</th>
+                          <th class="w130">Net Amount</th>
+                          <th class="w50">Action</th>
+                          
+                        </tr>
+                      </table>
+                    </div>
+                    
+                    <div class="table-container">
+                      <div class="table-content">
+                        <table>
+                          <tr *ngFor="let val of invoiceItemList;let i = index;">
+                            <td class="w130">{{(val.category |titlecase) ? val.category : '---'}} / {{(val.sub_category |titlecase) ? val.sub_category :'---'}} / {{(val.series |titlecase) ? val.series :'---'}}</td>
+                            <td class="w100">{{val.product_name ? val.product_name :'N/A' }}</td>
+                            <td class="w50">{{val.gst| number}}</td>
+                            <td class="w100"> &#8377; {{val.price  | number}}</td>
+                            <!-- <td class="w50">{{val.qty}}</td> -->
+                            <!-- for qty editable -->
+                            <td class="w50"> 
+                              <div class="td-input" >
+                                <input type="number" placeholder="Qty" [name]="'qty'+i" [(ngModel)]="val.qty"  (input)="QtyEditcart(i,val.qty)" >
+                              </div>
+                              
+                            </td>
+                            <!-- end -->
+                            <td class="w100"> &#8377; {{val.amount  | number}}</td>
+                            <td class="w80">{{val.discount}}</td>
+                            <td class="w80">&#8377; {{val.discounted_amount | number}}</td>
+                            <td class="w130">&#8377; {{val.net_value  | number}}</td>
+                            <td class="w50" style="cursor:pointer; color:red"><a (click)="delete_from_cart(i)">Delete</a></td>
+                          </tr>
+                        </table>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              
+              <div class="row" *ngIf="order.type && order.dr_id && invoiceItemList.length ">
+                <div class="col-12">
+                  <div class="invoice-details">
+                    <table class="invoice-table">
+                      <tr>
+                        <td class="td">Item Total</td>
+                        <td class="w220 td">&#8377;  {{order.gross_amount}}</td>
+                      </tr>
+                      <tr>
+                        <td class="td">Discount Amount</td>
+                        <td class="td">&#8377;  {{order.discount | number}}
+                          <!-- <div class="dis-input">
+                            <span><i class="material-icons dp48">create</i></span>
+                            <input type="text">
+                          </div> -->
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="td">Total</td>
+                        <td class="td">&#8377; {{order.net_amount |number}}</td>
+                      </tr>
+                      
+                      <!-- <tr>
+                        <td class="td">GST</td>
+                        <td class="td">&#8377; 18%</td>
+                      </tr>
+                      <tr>
+                        <td class="td">Grand Total</td>
+                        <td class="td">&#8377; 5214000.00</td>
+                      </tr> -->
+                      <!-- <tr>
+                        <td class="td">Received Amount</td>
+                        <td class="td">&#8377;{{order.discount}}</td>
+                      </tr>
+                      <tr>
+                        <td class="td">Balance</td>
+                        <td class="td">&#8377; 524000.00</td>
+                      </tr> -->
+                      
+                      <!-- <tr>
+                        <td class="td">Total Amount</td>
+                        <td class="td">&#8377;{{order.discount}}</td>
+                      </tr> -->
+                      
+                    </table>
+                  </div>
+                </div>
+              </div>
+              
+              
+              
+              
+              
+              <!--             
+                <div class="sprate-box mb20">
+                  <div class="row">
+                    <div class="col s12">
+                      <div class="border-layout" *ngIf="invoiceItemList.length">
+                        <p>Do you receive any payment?</p>
+                        <div class="select-one">
+                          <mat-radio-group name="payment_info"  [(ngModel)]="order.payment_info" >
+                            <mat-radio-button (click)="get_payment_info('No')"  value="No"  color="accent" >No</mat-radio-button>
+                            <mat-radio-button  (click)="get_payment_info('Yes')" value="Yes"  color="accent">Yes</mat-radio-button>
+                          </mat-radio-group>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="from-fields" *ngIf="order.payment_info=='Yes'">
+                    <div class="row">
+                      <div class="col s4">
+                        <div class="control-field">
+                          <mat-form-field class="cs-input">
+                            <mat-select placeholder="Payment Mode"  #payment_mode="ngModel" name="payment_mode" [(ngModel)]="order.payment_mode" required>
+                              <mat-option value="cash">CASH</mat-option>
+                              <mat-option value="neft">NEFT</mat-option>
+                              <mat-option value="cheque">CHEQUE</mat-option>
+                            </mat-select>
+                          </mat-form-field>
+                        </div>
+                      </div>
+                      
+                      <div class="col s4">
+                        <div class="control-field" *ngIf="order.payment_mode">
+                          <mat-form-field class="example-full-width cs-input">
+                            <input  matInput placeholder="Amount" name="payment_amount"  #payment_amount="ngModel" [(ngModel)]="order.payment_amount" (input)="Amount(order.payment_amount)" required>
+                          </mat-form-field>
+                          <mat-error *ngIf="invalid_amount==1">Entered Amount is more than Net Amount</mat-error>
+                        </div>
+                      </div>
+                      
+                      <div class="col s4">
+                        <div class="control-field" *ngIf="order.payment_mode">
+                          <mat-form-field class="example-full-width cs-input">
+                            <input  matInput placeholder="Remark" name="remark"  #remark="ngModel" [(ngModel)]="order.remark">
+                          </mat-form-field>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col s4">
+                        <div  class="control-field" *ngIf="order.payment_mode=='neft'">
+                          <mat-form-field class="example-full-width cs-input">
+                            <input  matInput placeholder="Transaction ID: " name="transaction_id"  #transaction_id="ngModel" [(ngModel)]="order.transaction_id" (keypress)="validate($event)" required>
+                          </mat-form-field>
+                        </div>
+                      </div>
+                      <div class="col s4">
+                        <div class="control-field" *ngIf="order.payment_mode=='cheque'">
+                          <mat-form-field class="example-full-width cs-input">
+                            <input  matInput placeholder="Cheque No.: " name="cheque_no"  #cheque_no="ngModel" [(ngModel)]="order.cheque_no" (keypress)="validate($event)" required>
+                          </mat-form-field>
+                        </div>
+                      </div>
+                      <div class="col s4">
+                        <div class="control-field" *ngIf="order.payment_mode=='cheque'">
+                          <mat-form-field class="example-full-width cs-input">
+                            <input  type="date" matInput ngbDatepicker  placeholder="Cheque Date:"  name="cheque_date"  #cheque_date="ngModel" [(ngModel)]="order.cheque_date" required>
+                          </mat-form-field>
+                        </div>
+                      </div>
+                      
+                    </div>
+                  </div>
+                  
+                  <div class="row" *ngIf="order.type && order.dr_id && invoiceItemList.length ">
+                    <div class="col s12">
+                      <div class="cs-btn mt32 text-right">
+                        <div class="in-btn" color="accent" >
+                          <a mat-raised-button color="accent" (click)="submit()" [disabled]="invalid_amount==1 ||order.payment_info=='Yes' && !order.payment_amount || order.payment_mode=='neft' && !order.transaction_id || order.payment_mode=='cheque' && !order.cheque_no && !order.cheque_date " >Place order</a>
+                          
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              -->
+            </ng-container>
+          </div>
+        </div>
+      </div>
+      <div class="row" *ngIf="order.type && order.dr_id && invoiceItemList.length ">
+        <div class="col s12">
+          <div class="cs-btn mt32 text-right">
+            <div class="in-btn"  >
+              <a mat-raised-button color="accent" (click)="submit()" >Place order</a>
+              <!-- [disabled]="invalid_amount==1 ||order.payment_info=='Yes' && !order.payment_amount || order.payment_mode=='neft' && !order.transaction_id || order.payment_mode=='cheque' && !order.cheque_no && !order.cheque_date "  -->
+            </div>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+  
+  <div class="h50"></div>

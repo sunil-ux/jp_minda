@@ -1,0 +1,63 @@
+<div class="login">
+  <div class="login-container">
+    <div class="login-left">
+      <div class="outer">
+        <div class="innear">
+          
+          <div class="project-content">
+            <ul>
+              <li><p>CUSTOMER</p></li>
+              <li><p>RELATIONSHIP</p></li>
+              <li><p>MANAGEMENT</p></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="login-right">
+     <div class="outer">
+       <div class="innear">
+        <div class="login-form">
+          <div class="form-logo">
+            <!-- <img src="assets/img/company_logo.svg"> -->
+           <img src=" assets/img/jp minda.png">
+          </div>
+          <div class="short-description">
+            <p>Please enter your username and password to login.</p>
+            <!-- <p class="invalid-cnt">Please enter your username and password to login.</p> -->
+          </div>
+          <form #f="ngForm" class="form" (ngSubmit)="submit()">
+          <div>
+            <div class="control-field" [ngClass]="{ 'has-error' : !data.username }">
+              <mat-form-field class="example-full-width">
+                <input matInput placeholder="Name" name="username" [(ngModel)]="data.username" required>
+                <i class="material-icons input-icon">person</i>
+              </mat-form-field>
+              <mat-error *ngIf="submitted && !data.username" >Username is required</mat-error>
+
+            </div>
+            <div class="control-field" [ngClass]="{ 'has-error' : !data.password }">
+              <mat-form-field class="example-full-width">
+                <input type="password" matInput placeholder="Password" name="password" [(ngModel)]="data.password" min="0" minlength="10" maxlength="10" required>
+                <i class="material-icons input-icon">vpn_key</i>
+              </mat-form-field>
+              <mat-error  *ngIf="submitted && !data.password">Password is required</mat-error>
+
+            </div>
+
+
+            <div class="cs-btn text-left  fixedd140">
+              <div class="in-btn ">
+                <button mat-raised-button  matTooltipPosition="below" matTooltip="Login" class="login-btn" style="background: #00A0C1;">Login</button>
+              </div>
+            </div>
+          </div>
+        </form>
+        </div>
+       </div>
+     </div>
+
+     <!-- <p class="bootom-text">Powered by Abacusdesk</p> -->
+    </div>
+  </div>
+</div>

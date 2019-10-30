@@ -1,0 +1,338 @@
+<div class="main-container" >
+  <div *ngIf="loader" class="center-loder cs-loader">
+    <div class="outer">
+      <div class="innear">
+        <mat-spinner class="loader"></mat-spinner>
+      </div>
+    </div>
+  </div>
+  
+  <div class="main-outer">
+    <div class="main-inner">
+      <div class="middle-container">
+        <div class="page-heading">
+          <div class="heading-text bc-space">
+            <div class="back-btn">
+              <a mat-button (click)="locationBack()"><i class="material-icons">arrow_right_alt</i></a>
+            </div>
+            
+            <h2>{{lead_data.name}}2222
+              <a *ngIf="lead_data.edit=='1'" mat-button class="edit-heading" matTooltip="Edit Name" color="accent" (click)="edit_lead_name(lead_data.id,lead_data.name,'edit_lead_name')"><i class="material-icons">edit</i></a>
+            </h2>
+            <p class="light" *ngIf="lead_data.type == '1'">Distributor</p>
+            <p class="light" *ngIf="lead_data.type == '2'">Retailer</p>
+            <p class="light" *ngIf="lead_data.type == '3'">Direct Dealer</p>
+            <p class="light" *ngIf="lead_data.type == '4'">Other</p>
+            
+          </div>
+        </div>
+        
+        <div class="multi-btn" *ngIf="showdetail==1 && lead_data.edit=='1' && lead_data.type!='4'" >
+          <ul>
+            <li>
+              <a class="green-btn" matRipple (click)="convert_to_customer(lead_data.id,lead_data.type)">Convert To Customer</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+      
+      <!-- *ngIf="showdetail==1" Detail page -->
+      <div class="container-outer">
+        <div class="container height-fix">
+          <div class="row mb15">
+            <div class="col s12">
+              <div class="details-info">
+                <!-- <div class="img-box">
+                  <img src="assets/img/user.png">
+                </div> -->
+                <div class="basic-details">
+                  <div class="profile-info pt0">
+                    <ul>
+                      <li>
+                        <div class="cs-box">
+                          <img src="assets/img/gmail.svg" class="fix-img">
+                          <span>Email</span>
+                          <p *ngIf="!lead_data.email"> NA </p>
+                          <p *ngIf="lead_data.email" class="link-clr"><a [href]="'mailto:'+ lead_data.email + '?Subject=My%20Custom%20Subject'">{{lead_data.email}}</a></p>
+                          <a *ngIf="lead_data.edit=='1'" class="edit-icon" color="accent" matRipple matTooltip="Edit Email-Id" (click)="edit_email(lead_data.email,lead_data.id,'email_edit')"><i class="material-icons">create</i></a>
+                        </div>
+                      </li>
+                      <li>
+                        <div class="cs-box">
+                          <img src="assets/img/phone.svg" class="fix-img">
+                          <span>Landline No.</span>
+                          <p>{{lead_data.mobile ? lead_data.mobile : 'NA'}}</p>
+                          <a *ngIf="lead_data.edit=='1'" class="edit-icon" color="accent" matRipple matTooltip="Edit Landline No." (click)="edit_mobile(lead_data.mobile,lead_data.id,'mobile_edit')"><i class="material-icons">create</i></a>
+                        </div>
+                      </li>
+                      <li>
+                        <div class="cs-box">
+                          <img src="assets/img/gst.svg" class="fix-img">
+                          <span>GST No.</span>
+                          <p>{{lead_data.gst_no ? lead_data.gst_no : 'NA'}}</p>
+                          <a *ngIf="lead_data.edit=='1'" class="edit-icon" color="accent" matRipple matTooltip="Edit Gst No." (click)="edit_gst(lead_data.gst_no,lead_data.id,'gst_edit')"><i class="material-icons">create</i></a>
+                        </div>
+                      </li>
+                      
+                      <li>
+                        <div class="cs-box">
+                          <span>Source</span>
+                          <p>{{lead_data.source ? lead_data.source : 'NA'}}</p>
+                        </div>
+                      </li>
+                      
+                      <li *ngIf="lead_data.type == '4'">
+                        <div class="cs-box">
+                          <span>Other Type</span>
+                          <p>{{lead_data.other_type ? lead_data.other_type : 'NA'}}</p>
+                        </div>
+                      </li>
+                      
+                      <li>
+                        <div class="cs-box">
+                          <!-- <img src="assets/img/gst.svg" class="fix-img"> -->
+                          <span>Created By</span>
+                          <p>{{lead_data.created_name ? lead_data.created_name : 'NA'}} - {{lead_data.access_labeal}}</p>
+                        </div>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <div class="row">
+            <div class="col s8">
+              <div class="sprate-box padding0">
+                <a *ngIf="lead_data.edit=='1'" mat-button class="edit-btn" matTooltip="Edit Address" color="accent" (click)="edit_address(lead_data.id,'edit_address')"><i class="material-icons">edit</i></a>
+                <div class="full-address main-bdr">
+                  <div class="cs-heading">
+                    <h2>Address</h2>
+                  </div>
+                  
+                  <div class="nationality">
+                    <img src="assets/img/india.svg" alt="">
+                    <p>{{lead_data.country}}</p>
+                  </div>
+                  
+                  <div class="ds-from-fields">
+                    <div class="cs-row">
+                      <div class="static-info">
+                        <p>State</p>
+                        <p>{{data.state  ? data.state : 'NA'}}</p>
+                      </div>
+                      <div class="static-info">
+                        <p>District</p>
+                        <p>{{data.district  ? data.district : 'NA'}}</p>
+                      </div>
+                      <div class="static-info">
+                        <p>City</p>
+                        <p>{{data.city  ? data.city : 'NA'}}</p>
+                      </div>
+                      <div class="static-info w100" style="min-width: 100px;">
+                        <p>Pincode</p>
+                        <p>{{data.pincode ? data.pincode : 'NA'}} </p>
+                      </div>
+                    </div>
+                    
+                    <div class="cs-row">
+                      <div class="static-info">
+                        <p>address</p>
+                        <p>{{data.address}}</p>
+                      </div>
+                    </div>
+                  </div>
+                  
+                </div>
+              </div>
+              
+              <div class="sprate-box padding0 mt20">
+                <div class="full-address main-bdr">
+                  <div class="cs-heading">
+                    <h2>CONTACT PERSONS</h2>
+                    <a *ngIf="lead_data.edit=='1'" class="cs-add" (click)="cp_add(lead_data.id,'add_cp')"><i class="material-icons">add</i></a>
+                  </div>
+                  <div class="ds-from-fields pt0">
+                    <div class="row mb0">
+                      <div class="col s12 padding0">
+                        <div class="cs-table left-right-15">
+                          <div class="table-head">
+                            <table>
+                              <tr>
+                                <th>Name</th>
+                                <th class="w200">Mobile No. 1</th>
+                                <th class="w250 bdr0">Mobile No. 2</th>
+                              </tr>
+                            </table>
+                          </div>
+                          
+                          <div class="table-container pb0">
+                            <div class="table-content none-shadow">
+                              <table>
+                                <tr *ngFor="let cp_data of cp_data;let index=index">
+                                  <td>{{cp_data.name | titlecase}}</td>
+                                  <td class="w200">{{cp_data.mobile_01 ? cp_data.mobile_01 : '---'}}</td>
+                                  <td class="w250">{{cp_data.mobile_02 ? cp_data.mobile_02 : '---'}}
+                                    <div class="action-btns">
+                                      <a *ngIf="lead_data.edit=='1'" mat-button class="edit" (click)="cp_edit(cp_data,'edit')"><i class="material-icons">edit</i> Edit</a>
+                                      <button *ngIf="lead_data.edit=='1'" mat-button class="delete" (click)="delete_cp(cp_data.id)"><i class="material-icons">delete_sweep</i> Delete</button>
+                                    </div>
+                                  </td>
+                                </tr>            
+                              </table>
+                            </div>
+                          </div>
+                          
+                        </div>
+                      </div>
+                    </div>
+                    
+                  </div>
+                </div>
+              </div>
+              
+              
+            </div>
+            
+            <!-- Lead sales team -->
+            
+            <div class="col s4" >
+              
+              <div *ngIf="notification.length" class="sprate-box main-bdr padding0">
+                <div class="cs-logs">
+                  <div class="cs-heading">
+                    <h2>LOGS DETAIL</h2>
+                  </div>
+                  <div class="logs-outer"  style="max-height: 318px;">
+                    <div class="logs-list">
+                      <ul>
+                        <li *ngFor="let val of notification">
+                          <div class="name">
+                            {{val.created_name | titlecase}}
+                          </div>
+                          <div class="date">
+                            {{val.date_created | date : 'MMM d,y hh:mm a'}}
+                          </div>
+                          <p>
+                            {{val.remark}}
+                          </p>
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class=" mt15 pr0" >
+                <div class="territory-info sprate-box padding0">
+                  <a  *ngIf="lead_data.edit=='1' && editUserAssign==false" mat-button class="edit-btn" matTooltip="Edit Product Type" color="accent" (click)="editUserAssign=true;getSalesUserList(data.pincode,lead_data.type)"><i class="material-icons">edit</i></a>
+                  <div class="cs-heading">
+                    <h2>Assigned Sales Team</h2>
+                  </div>
+                  
+                  <div *ngIf="editUserAssign==false"  class="cs-checkbox" style="max-height: 230px;
+                  overflow: auto;">
+                  
+                  <div class="checkbox-outer" style="height: auto;" >
+                    
+                    <section class="checkbox-inner bodr0" >
+                      
+                      <mat-checkbox class="check-list remove-check" value="1" *ngFor="let data of sales_team;let i=index ">
+                        
+                        <a class="link-btn" routerLinkActive="active">
+                          
+                          <div class="name-outer">
+                            <div class="outer">
+                              <div class="inner">
+                                <div class="name-inner">
+                                  {{data.name[0]}}
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="text-box">
+                            <h2>{{data.name}}({{data.access_labeal | titlecase}})</h2>
+                            <h2>{{data.mobile}}</h2>
+                          </div>
+                        </a>
+                      </mat-checkbox>
+                    </section>
+                  </div>
+                </div>
+                
+                <div *ngIf="editUserAssign==true"  class="cs-checkbox">
+                  
+                  <div class="checkbox-outer">
+                    
+                    <section class="checkbox-inner" >
+                      
+                      <ng-container *ngFor="let list of sales_team_data;let index=index" aria-required="true">
+                        <mat-checkbox class="check-list" [(ngModel)]="list.exist" (change)="selectedUser(index,$event)" >{{list.name}}({{list.access_labeal}})</mat-checkbox>
+                        
+                      </ng-container>
+                      
+                    </section>
+                    
+                  </div>
+                  <div class="bt-box">
+                    <button class="cancel" style="background: #158700;" (click)="saveSelectedUser();editUserAssign=false">Save</button>
+                    <button class="cancel" (click)="editUserAssign=false">Cancel</button>
+                  </div>
+                </div>
+              </div>
+              
+            </div>
+          </div>
+        </div>
+       
+        <!-- <div class="row pl5 pr5">
+          <div class="sprate-box padding0 main-bdr mt15">
+            <a *ngIf="lead_data.edit=='1' " mat-button class="edit-btn" matTooltip="Edit Sales Team" color="accent"(click)="edit_sales_team(lead_data.id,lead_data.pincode,'edit_sales_team',lead_data.type)" ><i class="material-icons">edit</i></a>
+            <div class="cs-heading">
+              <h2>ASSIGN SALES TEAM</h2>
+            </div>
+            <div class="logs-outer pt0">
+              <div class="cs-figure">
+                <ul class="mt15" *ngFor="let data of sales_team"> 
+                  <li>
+                    <div class="outer">
+                      <div class="inner">
+                        <span>Name</span>
+                        <p>{{data.name | titlecase}} </p>
+                      </div>
+                    </div>
+                  </li>
+                  <li>
+                    <div class="outer">
+                      <div class="inner">
+                        <span>Mobile No.</span>
+                        <p>{{data.mobile}}</p>
+                      </div>
+                    </div>
+                  </li>
+                  <li>
+                    <div class="outer">
+                      <div class="inner">
+                        <span>Position</span>
+                        <p>{{data.access_labeal}}</p>
+                      </div>
+                      
+                      <button *ngIf="lead_data.edit=='1'" class="delete-action"(click)="delete_sales_team(data.id,i)" >
+                        <i class="material-icons">delete_sweep</i>
+                      </button>
+                    </div>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div> -->
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="h50"></div>
+</div>
+
+

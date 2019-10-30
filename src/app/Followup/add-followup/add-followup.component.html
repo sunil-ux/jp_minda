@@ -1,0 +1,144 @@
+<div class="main-container" >
+  <div *ngIf="loader" class="center-loder cs-loader">
+    <div class="outer">
+      <div class="innear">
+        <mat-spinner class="loader"></mat-spinner>
+      </div>
+    </div>
+  </div>
+  
+  <div class="main-outer">
+    <div class="main-inner">
+      <div class="middle-container">
+        <div class="page-heading">
+          <div class="heading-text">
+            <h2>Followup</h2>
+            <p>Add New Followup</p>
+          </div>
+        </div>
+        <span class="required">Indicates required fields ( <sup>*</sup> )</span>
+      </div>
+      
+      <div class="container-outer">
+        <form #f="ngForm" name="form" (ngSubmit)="f.form.valid && submit(data.dr_type)">
+          <div class="container pr5 height-fix" >
+            <div class="row">
+              <div class="sprate-box main-bdr padding0">
+                <div class="cs-heading">
+                  <h2>BASIC INFORMATION</h2>
+                </div>
+                
+                <div class="from-fields">
+                  <div class="row adjust-row">
+                    <div class="col s12 adjust-col">
+                      <div class="col s4 pl0">
+                        <div class="control-field">
+                          <mat-form-field class="cs-input">
+                            <mat-select placeholder="Type" name="cust_type" [(ngModel)]="data.cust_type" #cust_type="ngModel" [ngClass]="{'has-error' : cust_type.invalid } "  required>
+                              <mat-option value="1">Lead</mat-option>
+                              <mat-option value="2">Distribution Net.</mat-option>
+                            </mat-select>
+                          </mat-form-field>
+                          <div *ngIf="f.submitted && cust_type.invalid" class="invalid-feedback">
+                            <mat-error *ngIf="cust_type.errors.required" >Type is required</mat-error>
+                          </div>
+                        </div>
+                      </div>
+                      
+                      <div class="col s4">
+                        <div class="control-field">
+                          <mat-form-field class="cs-input">
+                            <mat-select placeholder="Network Type" name="dr_type" [(ngModel)]="data.dr_type" #dr_type="ngModel" [ngClass]="{'has-error' : dr_type.invalid } " (selectionChange)="getUserList(data.dr_type)"  required>
+                              <mat-option value="2">Retailer</mat-option>
+                              <mat-option value="1">Distributor</mat-option>
+                              <mat-option *ngIf="data.cust_type=='2'" value="3">OEM</mat-option>
+                              <mat-option *ngIf="data.cust_type=='1'" value="4">Other</mat-option>
+                              
+                            </mat-select>
+                          </mat-form-field>
+                          <div *ngIf="f.submitted && dr_type.invalid" class="invalid-feedback">
+                            <mat-error *ngIf="dr_type.errors.required" >Network Type is required</mat-error>
+                          </div>
+                        </div>
+                      </div>
+                      
+                      <div class="col s4 ">
+                        <div class="control-field">
+                          <mat-form-field class="cs-input" >
+                            <input matInput type="text" placeholder="Company Name" [matAutocomplete]="auto" name="dr_id"  (keyup)="filterusername(data.dr_id,user_list,'name')"  #dr_id="ngModel" [(ngModel)]="data.dr_id" required>
+                            <mat-autocomplete #auto="matAutocomplete">
+                              <mat-option (click)="UsersName(user.name,user.pincode)" *ngFor="let user of filter_userlist" value={{user.name}}>{{user.name}}</mat-option>
+                            </mat-autocomplete>       
+                          </mat-form-field> 
+                          <div *ngIf="f.submitted && dr_id.invalid" class="invalid-feedback">
+                            <mat-error *ngIf="dr_id.errors.required" >Company Name is required</mat-error>
+                          </div>
+                        </div>
+                      </div>
+                      
+                     
+                    </div>
+                    <div class="row">
+                     
+                      <div class="col s4 pl0 mt15">
+                        <div class="control-field">
+                          <!-- <mat-form-field class="cs-input" >
+                            <input matInput type="text" placeholder="Assigned Users" [matAutocomplete]="assigned_to" name="assigned_to"  #assigned_to="ngModel" [(ngModel)]="data.assigned_to" required>
+                            <mat-autocomplete #assigned_to="matAutocomplete">
+                              <mat-option *ngFor="let user of assignUserList" value="user.id">{{user.name}}</mat-option>
+                            </mat-autocomplete>       
+                          </mat-form-field>  -->
+                          <mat-form-field class="cs-input">
+                              <mat-select  placeholder="Assigned Users" name="assigned_to"  #assigned_to="ngModel" [(ngModel)]="data.assigned_to" required>
+                                  <mat-option *ngFor="let user of assignUserList" [value]="user.id">{{user.name}}</mat-option>
+                                
+                              </mat-select>
+                            </mat-form-field>
+                          <div *ngIf="f.submitted && assigned_to.invalid" class="invalid-feedback">
+                            <mat-error *ngIf="assigned_to.errors.required" >User is required</mat-error>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="col s4 mt15">
+                        <div class="control-field" >
+                          <mat-form-field class="example-full-width cs-input">
+                            <input matInput [matDatepicker]="picker" placeholder=" Followup Date " [(ngModel)]="data.next_follow_date" name="next_follow_date" #next_follow_date="ngModel"   min="{{today_date}}" readonly required>
+                            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                            <mat-datepicker #picker></mat-datepicker>
+                          </mat-form-field>
+                          <div *ngIf="f.submitted && next_follow_date.invalid" class="invalid-feedback">
+                            <mat-error *ngIf="next_follow_date.errors.required" > Next follow date is required</mat-error>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="col s4 mt15">
+                          <div class="control-field" >
+                            <mat-form-field class="example-full-width cs-input">
+                              <textarea matInput placeholder="Description" name="description"  #description="ngModel" [(ngModel)]="data.description" ></textarea>
+                            </mat-form-field>
+                          </div>
+                      </div> 
+                    </div>
+                    
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <div class="row">
+              <div class="col s12">
+                <div class="cs-btn fixedd mt32 text-right pr5">
+                  <div class="in-btn">
+                    <button mat-raised-button color="accent" >Save</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="h50"></div>

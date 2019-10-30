@@ -1,0 +1,169 @@
+
+<div *ngIf="service.loader" class="center-loder cs-loader">
+    <div class="outer">
+        <div class="innear">
+            <mat-spinner class="loader"></mat-spinner>
+        </div>
+    </div>
+</div>
+<div class="navigation">
+    <div class="main-logo">
+        <img src="assets/img/jp minda.png">
+    </div>
+    <!-- <div class="three-tabs " >
+        <a routerLink="/lead-master-module/" routerLinkActive="active" (click)="toggleDropdown(4);">
+            <div class="tr-tab">
+                <h1>83</h1>
+                <p>Lead Network</p>
+            </div>
+        </a>
+        
+        <a routerLinkActive="active" routerLink="/distribution-module/distribution-list/1" (click)="toggleDropdown(4);">
+            <div class="tr-tab">
+                <h1>83</h1>
+                <p>Distribution Network</p>
+            </div>
+        </a>
+        
+        <div class="tr-tab">
+            <h1>83</h1>
+            <p>Purchase Order</p>
+        </div>
+    </div> -->
+    <div class="menu">
+        <ul>
+            <li *ngIf="tokenInfo.Dashboard && tokenInfo.Dashboard==1">
+                <a routerLink="/dashboard/" routerLinkActive="active" (click)="toggleDropdown(4);">Dashboard<img src="assets/img/dashboard_icon.svg" class="nav-icon h16"></a>
+                
+            </li>
+            <li *ngIf="tokenInfo.Lead && tokenInfo.Lead==1">
+                <a routerLink="/lead-master-module/" routerLinkActive="active" (click)="toggleDropdown(4);">Leads<img src="assets/img/leads_icon.svg" class="nav-icon"></a>
+            </li>
+            <li  class="dropdown" *ngIf="tokenInfo.DistributionNet && tokenInfo.DistributionNet==1">
+                <a  [ngClass]="{'active':distactive }" id="distributor" (click)="toggleDropdown(1)">Distribution Net. <img src="assets/img/distribution_icon.svg " class="nav-icon h19"></a>
+                <ul>
+                    <li>
+                        <a    routerLink="/distribution-module/distribution-list/1">
+                            Distributor
+                            <i class="material-icons"> arrow_right_alt  </i>   
+                        </a>
+                    </li>
+                    <li>
+                        <a    routerLink="/distribution-module/distribution-list/2">
+                            Retailer
+                            <i class="material-icons"> arrow_right_alt  </i> 
+                        </a>
+                    </li>
+                    <li>
+                        <a    routerLink="/distribution-module/distribution-list/3">
+                            OEM
+                            <i class="material-icons"> arrow_right_alt  </i> 
+                        </a>
+                    </li>
+                </ul>
+            </li>
+            
+            <li *ngIf="tokenInfo.Followup && tokenInfo.Followup==1">
+                <a routerLink="/followUp-module/followup-list/1" routerLinkActive="active" (click)="toggleDropdown(4);" >Followups<img src="assets/img/followup.svg" class="nav-icon h19"></a>
+            </li>
+            
+            
+            <li class="dropdown" *ngIf="tokenInfo.Order && tokenInfo.Order==1">
+                <a  [ngClass]="{'active':ordersactive}" id="order" (click)="toggleDropdown(2)" routerLinkActive="active">Orders <img src="assets/img/order_icon.svg" class="nav-icon h19"></a>
+                <ul>
+                    <li>
+                        <a   routerLink="/order-master-module/order-list/1">
+                            Primary Order
+                            <i class="material-icons"> arrow_right_alt  </i>   
+                        </a>
+                    </li>
+                    <li>
+                        <a  routerLink="/order-master-module/order-list/2">
+                            Secondary Order
+                            <i class="material-icons"> arrow_right_alt  </i>   
+                        </a>
+                    </li>
+                </ul>
+            </li>
+            
+            
+            
+            <li *ngIf="tokenInfo.CheckIn && tokenInfo.CheckIn==1">
+                <a routerLink="/checkinMaster/" routerLinkActive="active" (click)="toggleDropdown(4);">Check In <img src="assets/img/checkin_icon.svg" class="nav-icon h19"></a>
+            </li>
+            <li *ngIf="tokenInfo.Attendance && tokenInfo.Attendance==1">
+                <a routerLink="/attendance-master/" routerLinkActive="active" (click)="toggleDropdown(4);">Attendance <img src="assets/img/calendar.svg" class="nav-icon h19"></a>
+            </li>
+            
+            
+            
+            <!-- *ngIf="tokenInfo.Expense && tokenInfo.Expense==1" -->
+            
+            
+            <li *ngIf="tokenInfo.Expense && tokenInfo.Expense==1">
+                <a routerLink="/order-master-module/payment-list/1" routerLinkActive="active" (click)="toggleDropdown(4);" >Payment <img src="assets/img/payment.svg" class="nav-icon h19"></a>
+            </li> 
+            
+            
+            
+            <li *ngIf="tokenInfo.Attendance && tokenInfo.Attendance==1">
+                <a routerLink="//expense-master-module//" routerLinkActive="active" (click)="toggleDropdown(4);">Expense <img src="assets/img/expensive.svg" class="nav-icon h19"></a>
+            </li>
+            <li *ngIf="tokenInfo.Leaves && tokenInfo.Leaves==1">
+                <a routerLink="/leave-application/" routerLinkActive="active" (click)="toggleDropdown(4);">Leaves <img src="assets/img/leave.svg" class="nav-icon h19"></a>
+            </li>
+            
+            <li >
+                <a routerLink="/vendor-master/" routerLinkActive="active" (click)="toggleDropdown(4);" >Vendor <img src="assets/img/vendor.svg" class="nav-icon h19"></a>
+            </li> 
+            <li>
+                <a routerLink="/purchase-order-master/" routerLinkActive="active" (click)="toggleDropdown(4);" >Purchase Order <img src="assets/img/expense.svg" class="nav-icon h19"></a>
+            </li> 
+            <li class="dropdown" *ngIf="tokenInfo.CategoryMaster && tokenInfo.CategoryMaster==1 || tokenInfo.ProductMaster && tokenInfo.ProductMaster==1 || tokenInfo.UserMaster && tokenInfo.UserMaster==1 || tokenInfo.DiscountMaster && tokenInfo.DiscountMaster==1 || tokenInfo.TerritoryMaster && tokenInfo.TerritoryMaster==1 || tokenInfo.PopGiftMaster && tokenInfo.PopGiftMaster==1 || tokenInfo.LeavesHolidayMaster && tokenInfo.LeavesHolidayMaster==1 || tokenInfo.RoleMaster && tokenInfo.RoleMaster==1" >
+                <a [ngClass]="{'active':masteractive}" id="masters" (click)="toggleDropdown(3)">Masters <img src="assets/img/master_icon.svg" class="nav-icon h19"></a>
+                <ul>
+                    
+                    <li  *ngIf="tokenInfo.ProductMaster && tokenInfo.ProductMaster==1" >
+                        <a routerLink="/product-master/" routerLinkActive="active">
+                            Products
+                            <i class="material-icons"> arrow_right_alt  </i> 
+                        </a>
+                    </li>
+                    <li  *ngIf="tokenInfo.UserMaster && tokenInfo.UserMaster==1">
+                        <a routerLink="/user-master/" routerLinkActive="active">
+                            Users
+                            <i class="material-icons"> arrow_right_alt  </i> 
+                        </a>
+                    </li>
+                    
+                    <li  *ngIf="tokenInfo.TerritoryMaster && tokenInfo.TerritoryMaster==1">
+                        <a routerLink="/territory-master/" routerLinkActive="active">
+                            Territory Master
+                            <i class="material-icons"> arrow_right_alt  </i> 
+                        </a>
+                    </li>
+                    <li  *ngIf="tokenInfo.PopGiftMaster && tokenInfo.PopGiftMaster==1">
+                        <a routerLink="/pop-gift-master/" routerLinkActive="active">
+                            POP & Gift
+                            <i class="material-icons"> arrow_right_alt  </i> 
+                        </a>
+                    </li>
+                    <li  *ngIf="tokenInfo.LeavesHolidayMaster && tokenInfo.LeavesHolidayMaster==1">
+                        <a routerLink="/leave-holiday-master/" routerLinkActive="active">
+                            Leaves & Holidays
+                            <i class="material-icons"> arrow_right_alt  </i> 
+                        </a>
+                    </li>
+                    <li  *ngIf="tokenInfo.RoleMaster && tokenInfo.RoleMaster==1">
+                        <a routerLink="/user-master/role-list" routerLinkActive="active">
+                            Role
+                            <i class="material-icons"> arrow_right_alt  </i> 
+                        </a>
+                    </li>
+                </ul>
+            </li>
+        </ul>
+        <!-- <div class="h308"></div> -->
+    </div>
+</div>
+

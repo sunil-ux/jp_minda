@@ -1,0 +1,139 @@
+<div class="main-container" >
+  <div *ngIf="loader" class="center-loder cs-loader">
+    <div class="outer">
+      <div class="innear">
+        <mat-spinner class="loader"></mat-spinner>
+      </div>
+    </div>
+  </div>
+  
+  <div class="main-outer">
+    <div class="main-inner">
+      <form [formGroup]="addRoleForm">
+        <div class="middle-container" mat-button routerLink="/role-list" routerLinkActive="active" style="cursor: pointer">
+          <div class="page-heading">
+            <div class="heading-text">
+              <h2>Stystem User Role</h2>
+              <p>Add New Role</p>
+            </div>
+          </div>
+          <span class="required">Indicates required fields ( <sup>*</sup> )</span>
+        </div>
+        
+        <div class="container-outer padding0 hidden">
+          <div class="container" >
+            <div class="row">
+              <div class="sprate-box">
+                <div class="main-bdr">
+                  <div class="cs-heading">
+                    <h2>BASIC INFORMATION</h2>
+                  </div>
+                  <mat-error *ngIf="showError==true && per_arr_for_disable.length==0" >Atleast one role is required to save</mat-error>
+                  
+                  <div class="from-fields">
+                    <div class="row adjust-row">
+                      <div class="col s4 pl0">
+                        <div class="control-field">
+                          <mat-form-field class="cs-input">
+                            <input matInput placeholder="Role Name" formControlName="role_name" (keypress)="charonly($event)"  required>
+                          </mat-form-field>
+                          <mat-error *ngIf="showError==true && !addRoleForm.value.role_name" >Role Name is required</mat-error>
+                        </div>
+                      </div>
+                      <div class="col s4">
+                        <div class="control-field" >
+                          <mat-form-field class="cs-input">
+                            <mat-select placeholder="Module" #modules_array  name="modules_array" formControlName="modules_array" (selectionChange)="getModuleAction($event)" required>
+                              <mat-option *ngFor="let row of module_list" value="{{row.id}}">{{row.module_name}}</mat-option>
+                              
+                            </mat-select>
+                          </mat-form-field>
+                          <!-- <mat-error *ngIf="showError==true" >Module is required</mat-error> -->
+                          
+                        </div>
+                      </div>
+                      <div class="col s4 pr0">
+                        <div class="control-field pr80">
+                          <mat-form-field class="cs-input">
+                            <mat-select placeholder="Action" #search_permission  name="search_permission"  (selectionChange)="getpermissionvalue(search_permission)" formControlName="search_permission"  multiple >
+                              <mat-option *ngFor="let row of module_action_list" value="{{row.id}}">{{row.action_name}}</mat-option>
+                            </mat-select>
+                          </mat-form-field>
+                          <!-- <mat-error *ngIf="showError==true || !search_permission" >Action is required</mat-error> -->
+                          
+                          <div class="plus-btn">
+                            <button mat-raised-button color="accent" (click)="addToList(modules_array)">Add</button>
+                            
+                            <!-- <button  (click)="addToList(module,search_permission)" [disabled]="per_arr_for_disable.length==0"><i >add</i></button> -->
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    
+                  </div>
+                  
+                  <div class="row mt15">
+                    <div class="cs-table">
+                      <table>
+                        <tr>
+                          <div class="ss-sticky">
+                            <div class="table-head">
+                              <table>
+                                <tr>
+                                  <th class="w60">S.No</th>
+                                  <th>MODULE</th>
+                                  <th class="w200">ACTIONS</th>
+                                  <td class="w100"></td>
+                                </tr>
+                              </table>
+                            </div>
+                          </div>
+                        </tr>
+                        <tr>
+                          <div class="table-container">
+                            <div class="table-content none-shadow">
+                              <table>
+                                <tr *ngFor="let data of cart_list_data; let i = index;">
+                                  <td class="w60">{{i+1}}</td>
+                                  <td >{{data.module_name}}</td>
+                                  <td class="w200"><span *ngFor="let row of data.permission_array">{{row.action_name}},</span>
+                                  </td>
+                                  <td class="w100">
+                                    <div class="action-btns default-action">
+                                      <div class="outer">
+                                        <div class="innear">
+                                          <button mat-button class="delete" (click)="delete(i)" ><i class="material-icons">delete_sweep</i></button>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </td>
+                                </tr>
+                              </table>
+                            </div>
+                          </div>
+                        </tr>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              <!-- [disabled]="(!feature_data.length)"  -->
+              <div class="col s12">
+                <div class="cs-btn fixedd mt32 text-right pr20">
+                  <div class="in-btn">
+                    <!-- [disabled]="cart_list_data.length==0" -->
+                    <button mat-raised-button color="accent" (click)="submitUser()" >Save</button>
+                  </div>
+                </div>
+              </div>
+              
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+  
+  
+  <div class="h50"></div>

@@ -1,0 +1,99 @@
+<div class="main-container" >
+  <div *ngIf="loader" class="center-loder cs-loader">
+    <div class="outer">
+      <div class="innear">
+        <mat-spinner class="loader"></mat-spinner>
+      </div>
+    </div>
+  </div>
+  
+  <div class="main-outer">
+    <div class="main-inner">
+      <div class="middle-container">
+        <div class="page-heading">
+          <div class="heading-text pr20">
+            <h2>Leave Rules</h2>
+            <p>Total Leave Rules: {{holiday_rule_data.length}}</p>
+          </div>
+        </div>
+        <div class="top-pagination">
+          <ul>
+            <li>
+              <div class="tabs">
+                <ul>
+                  <li><a routerLink="/leave-holiday-master/" >HOLIDAYS</a></li>
+                  <li ><a class="active">LEAVES RULES</a></li>
+                </ul>
+              </div>
+            </li>
+            <li class="refresh-area">
+              <a class="refresh-btn" mat-raised-button  matTooltip="Refresh" (click)="holiday_rules_data()"><i class="material-icons"> refresh</i></a>
+            </li>
+            <li class="add-btn">
+              <button matTooltip="Add Holiday" routerLink="/leave-holiday-master/add-leave-rules" routerLinkActive="active">Add New</button>
+            </li>
+          </ul>
+        </div>
+      </div>
+      
+      <div class="container-outer padding0">
+        <div class="container" >
+          <div class="row">
+            <div class="col s12 adjust-col">
+              <div class="cs-table ss-scroll">
+                <table>
+                  <tr>
+                    <div class="table-head">
+                      <table class="sno-border">
+                        <tr>
+                          <th  class="w30">&nbsp;</th>
+                          <th class="w200">Date</th>
+                          <th class="w200"> subject</th>
+                          <th class="w200">Total Leave</th>
+                          <th>Description</th>
+                        </tr>
+                      </table>
+                    </div>
+                  </tr>
+                  <tr>
+                    <div class="table-container">
+                      <div class="table-content">
+                        <table class="sno-border">
+                          <tr *ngFor="let data of holiday_rule_data;let i=index">
+                            <td class="w30">{{i+1}}.</td>
+                            <td class="w200">{{data.date_created | date:'d MMM, y'}}</td>
+                            <td class="w200">{{data.subject}}</td>
+                            <td class="w200">{{data.holiday_count}}</td>
+                            <td >{{data.description}}
+                              <div class="action-btns">
+                                <button mat-button class="delete" (click)="delete(data.id)"><i class="material-icons">delete_sweep</i> Delete</button>
+                              </div>
+                            </td>
+                            
+                            <!-- <td class="green-clr" >------
+                              <div class="action-btns">
+                                <a mat-button class="view"><i class="material-icons">remove_red_eye</i> View</a>
+                                <button *ngIf="data.delete" mat-button class="delete" (click)="delete(data.id)"><i class="material-icons">delete_sweep</i> Delete</button>
+                              </div>
+                            </td> -->
+                          </tr>
+                          
+                        </table>
+                      </div>
+                    </div>
+                    <div class="no-record-data-text" *ngIf="!holiday_rule_data?.length"> 
+                        <img src="assets/img/no-record-found.png">
+                      </div>
+                  </tr>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+</div>
+
+<div class="h50"></div>

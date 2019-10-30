@@ -1,0 +1,121 @@
+<div class="main-container" >
+  <div *ngIf="loader" class="center-loder cs-loader">
+    <div class="outer">
+      <div class="innear">
+        <mat-spinner class="loader"></mat-spinner>
+      </div>
+    </div>
+  </div>
+
+  <div class="main-outer">
+    <div class="main-inner">
+      <div class="middle-container" mat-button routerLink="/gift-list" routerLinkActive="active" style="cursor: pointer">
+        <div class="page-heading">
+          <div class="heading-text">
+            <h2>Gift</h2>
+            <p>Add New Pop & Gift</p>
+          </div>
+        </div>
+        <span class="required">Indicates required fields ( <sup>*</sup> )</span>
+      </div>
+      
+      <div class="container-outer padding0 hidden">
+        <div class="container" >
+          <form #f="ngForm" (ngSubmit)="f.valid && onsubmit()">
+            <div class="row">
+              <div class="sprate-box">
+                <div class="main-bdr mb15">
+                  <div class="cs-heading">
+                    <h2>POP & GIFT</h2>
+                  </div>
+                  
+                  <div class="from-fields">
+                    <div class="row adjust-row">
+                      <div class="col s8 pl0" [ngClass]="{ 'has-error' : f.submitted && !data.name }">
+                        <div class="control-field">
+                          <mat-form-field class="cs-input">
+                            <input matInput placeholder="NAME"  name="name" #name="ngModel" [(ngModel)]="data.name" required>
+                          </mat-form-field>
+                          <mat-error *ngIf="f.submitted && !data.name">Name is required</mat-error>
+                        </div>
+                        
+                      </div>
+                      <!-- <div class="col s4 pr0" [ngClass]="{ 'has-error' : f.submitted && !data.quantity }">
+                        <div class="control-field">
+                          <mat-form-field class="cs-input">
+                            <input matInput placeholder="Quantity" name="quantity" type="number" #quantity="ngModel" [(ngModel)]="data.quantity" required>
+                          </mat-form-field>
+                          <mat-error *ngIf="f.submitted && !data.quantity">Quantity is required</mat-error>
+                          
+                        </div>
+                      </div> -->
+                    </div>
+                  </div>
+                </div>
+                <div class="main-bdr">
+                  <div class="cs-heading">
+                    <h2>DESCRIPTION *</h2>
+                  </div>
+    
+                  <div class="col s12 padding15">
+                    <div class="control-field" [ngClass]="{ 'has-error' : f.submitted && !data.description }">
+                      <textarea placeholder="DESCRIPTION" cols="100" rows="5" name="description" [(ngModel)]="data.description" class="wp100 padding15" style="outline: none;"></textarea>
+                    </div>
+                    <mat-error *ngIf="f.submitted && !data.description">Description is required</mat-error>
+                  </div>
+                  <div class="row adjust-row">
+                    <div class="col s12 pl0">
+                      <div class="cs-file">
+                        <p>Upload Image</p>
+                        <ul>
+                          <li *ngFor="let image of urls;let index=index">
+                            <label>
+                              <!-- src="assets/img/product.png" -->
+                              <img [src]="image || 'http://placehold.it/180'" alt="your image" >
+                              <a class="close">
+                                <i class="material-icons cut-ic" (click)="remove_image(index)">delete_sweep</i>
+                              </a>
+                            </label>
+                            
+                          </li>
+                          <li *ngFor="let images of image_data;let index=index">
+                            <label>
+                              <img src={{image_url.upload_url}}{{images.image}}>  
+                              <a class="close">
+                                <i class="material-icons cut-ic" (click)="delete_image(images.id,index)">delete_sweep</i>
+                              </a>
+                            </label>
+                          </li>
+                          <li>
+                            <div class="cs-file">
+                              <label>
+                                <input type="file" style="display:none;" placeholder="Upload Product Image" (change)="img_upload_func($event)" name="image" multiple>
+                                <i class="material-icons add-file-icon" >add</i>
+                              </label>
+                            </div>
+                          </li>
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                
+              </div>
+              
+              
+              <div class="col s12">
+                <div class="cs-btn fixedd mt32 text-right">
+                  <div class="in-btn">
+                    <button mat-raised-button color="accent">Save</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="h50"></div>

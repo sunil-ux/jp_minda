@@ -1,0 +1,218 @@
+<div class="main-container" >
+  <div *ngIf="loader" class="center-loder cs-loader cs-loader">
+    <div class="outer">
+      <div class="innear">
+        <mat-spinner></mat-spinner>
+      </div>
+    </div>
+  </div>
+  
+  
+  <!-- <div class="ng-tns-c9-9 ng-star-inserted">
+    <div class="cs-loader">
+      <img class="rotate" src="assets/img/calendar.svg">
+    </div>
+  </div> -->
+  <div class="main-outer">
+    <div class="main-inner">
+      <div class="middle-container">
+        <div class="page-heading">
+          <div class="heading-text bc-space">
+            <div class="back-btn">
+              <a mat-button (click)="locationBack()"><i class="material-icons">arrow_right_alt</i></a>
+            </div>
+            <h2>Product</h2>
+            <p class="light">Detail</p>
+          </div>
+        </div>
+        
+      </div>
+      
+      
+      <div class="container-outer padding0">
+        <div class="container">
+          <div class="row">
+            <div class="col s12 pr15">
+              <div class="col s8 pr0">
+                <div class="details-info">
+                  <div class="basic-details">
+                    <div class="profile-info no-padding">
+                      <ul class="flex-start">
+                        <li>
+                          
+                          <div class="cs-box">
+                            
+                            <span>Product Type</span>
+                            
+                            <p class="">{{product_data.type}}</p>
+                            
+                            
+                          </div>
+                          
+                        </li>
+                        <li>
+                          
+                          <div class="cs-box">
+                            
+                            
+                            <span>Segment</span>
+                            
+                            <p>{{product_data.segment}}</p>
+                            
+                            
+                          </div>
+                          
+                        </li>
+                      </ul>
+                    </div>
+                    <div class="profile-info no-padding">
+                      <ul class="flex-start">
+                        <li>
+                          
+                          <div class="cs-box">
+                            
+                            <span>Name of Vehical</span>
+                            
+                            <p>{{product_data.vehicle_name}}</p>
+                            
+                          </div>
+                          
+                        </li>
+                        <li>
+                          
+                          <div class="cs-box">
+                            
+                            
+                            <span>Model</span>
+                            
+                            <p>{{product_data.model}}</p>
+                            
+                          </div>
+                          
+                        </li>
+                        <li>
+                          
+                          <div class="cs-box">
+                            
+                            
+                            <span>Veriant</span>
+                            
+                            <p>{{product_data.varient}}</p>
+                            
+                          </div>
+                          
+                        </li>
+                      </ul>
+                    </div>
+                    <div class="profile-info no-padding">
+                      <ul class="flex-start">
+                        <li>
+                          <div class="cs-box">
+                            <span>Product Name</span>
+                            <p>{{product_data.product_name}}</p>
+                          </div>
+                          
+                        </li>
+                        <li>
+                          <div class="cs-box">
+                            <span>Product Code</span>
+                            <p>{{product_data.product_code}}</p>
+                          </div>
+                        </li>
+                        <li>
+                          <div class="cs-box">
+                            <span>MRP Price</span>
+                            <p>{{product_data.mrp_price}}</p>
+                          </div>
+                          
+                        </li>
+                        <li>
+                          <div class="cs-box">
+                            <span>Discount {{product_data.discount_type=='amount'?'₹':'%'}}</span>
+                            <p>{{product_data.discount_val}}</p>
+                          </div>
+                        </li>
+                      </ul>
+                      
+                    </div>
+                    <div class="profile-info no-padding">
+                      <ul class="flex-start">
+                        <li>
+                          <div class="cs-box">
+                            <span>UOM</span>
+                            <p>{{product_data.uom}}</p>
+                          </div>
+                        </li>
+                        <li>
+                          <div class="cs-box">
+                            <span>Pack Size</span>
+                            <p>{{product_data.pack_size}}</p>
+                          </div>
+                        </li>
+                        <li>
+                          <div class="cs-box">
+                            <span>Min. Stock</span>
+                            <p>{{product_data.min_stock}}</p>
+                          </div>
+                        </li>
+                        <li>
+                          <div class="cs-box">
+                            <span>Max. Stock</span>
+                            <p>{{product_data.max_stock}}</p>
+                          </div>
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+                  <mat-divider class="mt15 mb15"></mat-divider>
+                </div>
+                
+                <div class="col s12 adjust-col">
+                  <div class="cs-description">
+                    <h2>Description</h2>
+                    <p [innerHTML]="product_data.description">{{product_data.description}}</p>
+                  </div>
+                </div>
+                
+                
+              </div>
+              <div class="col s4 pr0 pl15 pt15">
+                <div class="main-bdr sprate-box padding0">
+                  
+                  <div class="cs-heading">
+                    <h2>PRODUCT IMAGE</h2>
+                  </div>
+                  
+                  <div class="logs-outer padding0" style="max-height: 300px; padding:0px 15px !important; height: 300px; padding-top: 15px !important;">
+                    <div *ngIf="(imgurl?.length == 0|| productData?.image?.length ==0)" class="cs-not-data padding0 h280">
+                      <div class="inner-data">
+                        <p>Image not available</p>
+                      </div>
+                    </div>
+                    <div class="cs-image" *ngIf="product_data?.image?.length !=0">
+                      <div class="vertical-img {{(product_data?.image?.length ==2)? 'double-img' : ((product_data?.image?.length >2) ? 'multiple-img' : '')}}">
+                        <ul>
+                          <li class="overlay-content" *ngFor="let urlData of product_data.image;let i=index">
+                            <a href="{{image_url}}{{urlData.image}}" target="_blank">
+                              <img src={{image_url}}{{urlData.image}}>
+                            </a>
+                          </li>
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+            </div>
+          </div>
+          
+          <div class="row">
+            
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <div class="h50"></div>

@@ -1,0 +1,279 @@
+<div class="main-container" >
+  <div *ngIf="loader" class="center-loder cs-loader">
+    <div class="outer">
+      <div class="innear">
+        <mat-spinner class="loader"></mat-spinner>
+      </div>
+    </div>
+  </div>
+  <form #f="ngForm" name="form" (ngSubmit)="SubbmitOrder()">
+    <div class="main-outer">
+      <div class="main-inner">
+        <div class="middle-container"  mat-button routerLink="/product-list" routerLinkActive="active" style="cursor: pointer">
+          <div class="page-heading" >
+            <div class="heading-text">
+              <h2>Purchase Order</h2>
+              <p >Add New</p>
+            </div>
+          </div>
+          <span class="required">INDICATES REQUIRED FIELDS ( <sup>*</sup> )</span>
+        </div>
+        <div class="container-outer padding0 hidden">
+          <div class="container">
+            <div class="row mb0">
+              <div class="col s12 padding0">
+                <div class="sprate-box pb0">
+                  <div class="col s12 padding0 main-bdr">
+                    <div class="from-fields field-adjust pt20">
+                      <div class="row mb0">
+                        <div class="col s4">
+                          <div class="control-field">
+                            <mat-form-field class="cs-input">
+                              <mat-select  placeholder="Select WareHouse" name="warehouse_id" [(ngModel)]="vendorData.warehouse_id" required>
+                                <mat-option value="{{row.id}}" (click)="vendorData.WareHouseLocation=row.location;getGSTPercentage()" *ngFor="let row of wareHoseList;let i=index">{{row.name}}</mat-option>
+                              </mat-select>
+                            </mat-form-field>
+                            <!-- <mat-error>Product Type is required</mat-error> -->
+                          </div>
+                        </div>
+                        <div class="col s4">
+                          <div class="control-field">
+                            <mat-form-field class="cs-input">
+                              <mat-select  placeholder="Select Vendor" id="vendor" name="vendor" [(ngModel)]="vendorData.vendor_id" required>
+                                <mat-option (click)="getProductTypeList(row.id);vendorData.vendorLocation=row.state;getGSTPercentage()" value="{{row.id}}" *ngFor="let row of vendorList">{{row.name}}</mat-option>
+                              </mat-select>
+                            </mat-form-field>
+                            <mat-error *ngIf="vendorList.length==0">No vendor Found...</mat-error>
+                          </div>
+                        </div>
+                        <div class="col s4" *ngIf="vendorData.vendor_id">
+                          <div class="control-field">
+                            <mat-form-field class="cs-input">
+                              <mat-select  placeholder="Select Product Type" id="product_type" name="product_type" required>
+                                <mat-option (click)="getProductList(row.type);" value="row.type" *ngFor="let row of productType">{{row.type}}</mat-option>
+                              </mat-select>
+                            </mat-form-field>
+                            <!-- <mat-error>Product Type is required</mat-error> -->
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>            
+                </div>
+              </div>
+            </div>
+            <div *ngIf="productList.length" class="row">
+              <div class="col s12 padding0">
+                <div class="row">
+                  <div class="col s12 padding0">
+                    <div class="sprate-box">
+                      <div class="col s12 padding0 main-bdr">
+                        <div class="cs-heading">
+                          <h2>PRODUCT INFORMATION</h2>
+                        </div>
+                        <div class="from-fields field-adjust pt20">
+                          <div class="row mb0">
+                            <div class="col s2">
+                              <div class="control-field">
+                                <mat-form-field class="cs-input">
+                                  <mat-select  placeholder="Select Product code" id="product_code" name="product_code" [(ngModel)]="PO_List.product_code" required>
+                                    <mat-option *ngFor="let row of productList;let i=index" (click)="PO_List.qty=1;PO_List.purchase_price=row.mrp_price;PO_List.product_name=row.product_name;PO_List.discount=0;calculateAmount(1,0)" value="{{row.product_code}}">{{row.product_code}}</mat-option>
+                                  </mat-select>
+                                </mat-form-field>
+                              </div>
+                            </div>
+                            <div class="col s1">
+                              <div class="control-field">
+                                <mat-form-field class="cs-input">
+                                  <input matInput placeholder="Quantity" required  (change)="calculateAmount(PO_List.qty,PO_List.discount)" name="qty" id="qty" [(ngModel)]="PO_List.qty" type="number">
+                                </mat-form-field>
+                              </div>
+                            </div>
+                            <div class="col s2">
+                              <div class="control-field">
+                                <mat-form-field class="cs-input">
+                                  <input matInput placeholder="Rate" readonly required  name="purchase_price" id="purchase_price" [(ngModel)]="PO_List.purchase_price" type="number">
+                                </mat-form-field>
+                              </div>
+                            </div>
+                            <div class="col s2">
+                              <div class="control-field">
+                                <mat-form-field class="cs-input">
+                                  <input matInput placeholder="Amount" name="amount"  required id="amount" [(ngModel)]="PO_List.amount" readonly>
+                                </mat-form-field>
+                              </div>
+                            </div>
+                            <div class="col s2">
+                              <div class="control-field">
+                                <mat-form-field class="cs-input">
+                                  <input matInput type="number" placeholder="Discount Amount" required  (change)="calculateAmount(PO_List.qty,PO_List.discount)" name="discount" id="discount" [(ngModel)]="PO_List.discount">
+                                </mat-form-field>
+                              </div>
+                            </div>
+                            <div class="col s3">
+                              <div class="control-field pr80">
+                                <mat-form-field class="cs-input">
+                                  <input matInput placeholder="Gross Amount" required  name="grossAmount" id="grossAmount" [(ngModel)]="PO_List.grossAmount" readonly>
+                                </mat-form-field>
+                                <div class="plus-btn">
+                                  <button mat-raised-button color="accent" [disabled]="!PO_List.product_code ||!PO_List.qty ||!PO_List.purchase_price ||!PO_List.amount || !PO_List.grossAmount" (click)="addToList()"><i class="material-icons"></i>add</button>
+                                </div>
+                                
+                                <!-- <mat-error *ngIf="f.submitted && !productData.vehicle_name">Vehical Name is required</mat-error> -->
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <div *ngIf="poListArray.length" class="row">
+                          <div class="cs-table ss-scroll" style="height: calc(100vh - 370px); height: auto;">
+                            <table>
+                              <tr>
+                                <div class="ss-sticky">
+                                  <div class="table-head">
+                                    <table>
+                                      <tr>
+                                        <th class="w50"></th>
+                                        <th class="w150">Product Code</th>
+                                        <th >Product Name</th>
+                                        <th class="w80">Qty</th>
+                                        <th class="w80">Rate</th>
+                                        <th class="w90">Amount</th>
+                                        <th class="w60">Discount</th>
+                                        <th class="w90">Gross Amt</th>
+                                        <th class="w70">IGST</th>
+                                        <th class="w70">CGST</th>
+                                        <th class="w70">SGST</th>
+                                        <th class="w80">Net Amt.</th>
+                                        <th class="w50">Action</th>
+                                      </tr>
+                                    </table>
+                                  </div>
+                                </div>
+                              </tr>
+                              <tr>
+                                <div class="table-container">
+                                  <div class="table-content">
+                                    <table>
+                                      <tr *ngFor="let row of poListArray; let i = index">
+                                        <td class="w50 border-right-none">{{i+1}}</td>
+                                        <td class="w150">{{row.product_code}}</td>
+                                        <td>{{row.product_name}}</td>
+                                        <td class="w80">
+                                          <div class="from-fields">
+                                            <div class="cntrol-fields">
+                                              <input class="w60" name="qty{{i}}" #qty="ngModel" (change)="reCalculateAmount(i)" [(ngModel)]="row.qty">
+                                            </div>
+                                          </div>
+                                        </td>
+                                        <td class="w80">₹ {{row.purchase_price}}</td>
+                                        <td class="w90">₹ {{row.amount}}</td>
+                                        <td class="w60">₹ {{row.discount}}</td>
+                                        <td class="w90">₹ {{row.grossAmount}}</td>
+                                        <td class="w70">₹ {{row.igst}}</td>
+                                        <td class="w70">₹ {{row.cgst}}</td>
+                                        <td class="w70">₹ {{row.sgst}}</td>
+                                        <td class="w80">₹ {{row.net_amount}}</td>
+                                        <td class="w50">
+                                          <a class="del-btn" (click)="removeFromList(i)">
+                                            <i class="material-icons">delete_sweep</i></a>
+                                          </td>
+                                        </tr>
+                                      </table>
+                                    </div>
+                                  </div>
+                                </tr>
+                              </table>
+                            </div>
+                          </div>
+                        </div> 
+                        
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div class="section"> 
+                    <div class="invoice-details">
+                      <table class="invoice-table">
+                        <tbody>
+                          <tr>
+                            <td class="td" style="width:750px;">Total Quantity : </td>
+                            <td class="w120 td">{{vendorData.total_qty}}</td>
+                          </tr>
+                          <tr>
+                            <td class="td" style="width:750px;">Basic Total : </td>
+                            <td class="td">₹ {{vendorData.total_amount}}</td>
+                          </tr>
+                          <tr>
+                            <td class="td" style="width:750px;">Discount : </td>
+                            <td class="td">₹ {{vendorData.discountAmount}}</td>
+                          </tr>
+                          <tr>
+                            <td class="td" style="width:750px;">IGST Amount : </td>
+                            <td class="td">₹ {{vendorData.igst_amount}}</td>
+                          </tr>
+                          <tr>
+                            <td class="td" style="width:750px;">CGST Amount : </td>
+                            <td class="td">₹ {{vendorData.cgst_amount}}</td>
+                          </tr>
+                          <tr>
+                            <td class="td" style="width:750px;">SGST Amount : </td>
+                            <td class="td">₹ {{vendorData.sgst_amount}}</td>
+                          </tr>
+                          <tr>
+                            <td class="td" style="width:750px;">Grand Total : </td>
+                            <td class="td">₹ {{vendorData.net_amount}}</td>
+                          </tr>
+                        </tbody>
+                      </table>
+                      
+                    </div>
+                    
+                    <!-- <div class="col s4 pl0">
+                      <div class="col s12 pl0">
+                        <div class="control-field">
+                          <mat-form-field class="cs-input">
+                            <textarea class="h101" matInput placeholder="Address" id="address" name="address" [(ngModel)]="data.address" #address="ngModel" [ngClass]="{'has-error' : address.invalid } " required ></textarea>
+                          </mat-form-field>
+                        </div>
+                      </div>
+                    </div> -->
+                    
+                    <!-- <div class="from-fields field-adjust pt20">
+                      <div class="row mb15">
+                        <div class="col s2">
+                          <div class="control-field">
+                            <textarea name="remark" #remark="ngModel" [(ngModel)]="vendorData.remark" required ></textarea>
+                          </div>
+                        </div>
+                      </div>
+                    </div> -->
+                    
+                    <div class="row" style="display: flex;">
+                      <div class="col s4 pl0">
+                        <div class="from-fields">
+                          <div class="control-field">
+                            <mat-form-field class="cs-input">
+                              <textarea class="h101" matInput placeholder="Remark" name="remark" #remark="ngModel" [(ngModel)]="vendorData.remark" ></textarea>
+                            </mat-form-field>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div> 
+                  
+                  <div class="cs-btn fixedd mt32 text-right pr20">
+                    <div class="in-btn">
+                      <button mat-raised-button color="accent" >Save</button>
+                    </div>
+                  </div>            
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="h70">
+        </div>
+      </div>
+    </form>
+  </div>
+  

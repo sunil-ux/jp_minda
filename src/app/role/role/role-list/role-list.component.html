@@ -1,0 +1,150 @@
+<div class="main-container" >
+  <div *ngIf="loader" class="center-loder">
+    <div class="outer">
+      <div class="innear">
+        <mat-spinner class="loader"></mat-spinner>
+      </div>
+    </div>
+  </div>
+  
+  <div class="main-outer">
+    <div class="main-inner">
+      <div class="middle-container">
+        <div class="page-heading">
+          <div class="heading-text">
+            <h2>System User Role</h2>
+            <p>Total Role ({{rolelistlength}})</p>
+          </div>
+        </div>
+        <div class="top-pagination">
+          <ul>
+            <li class="refresh-area">
+              <a class="refresh-btn" mat-raised-button  matTooltip="Refresh" (click)="refresh()"><i class="material-icons"> refresh</i></a>
+            </li>
+            <li class="add-btn">
+              <button  matTooltip="Add Role" routerLink="/user-master/add-role" routerLinkActive="active">Add New</button>
+            </li>
+          </ul>
+        </div>
+      </div>
+      
+      <div class="container-outer padding0">
+        <div class="container" >
+          <div class="row">
+            <div class="cs-table ss-scroll">
+              <table>
+                <tr>
+                  <div class="ss-sticky">
+                    <div class="table-head">
+                      <table class="sno-border">
+                        <tr>
+                          <th class="padding0">
+                            <table class="sno-border">
+                              <tr>
+                                <th class="w40">&nbsp;</th>
+                                <th class="w230">Role Name</th>
+                                <th class="w230">Modules</th>
+                                <th>Permission</th>
+                                <th class="w230 text-center">Action</th>
+                              </tr>
+                            </table>
+                          </th>
+                        </tr>
+                      </table>
+                    </div>
+                    <div class="table-head bdrt">
+                      <table>
+                        <tr>
+                          <th class="w40">&nbsp;</th>
+                          <th class="w230">
+                            <div class="th-search-acmt">
+                              <mat-form-field class="example-full-width cs-input select-input">
+                                <input  matInput placeholder="Search By Role" (keyup.enter)="getRoleList()"  name="role_name" #role_name="ngModel" [(ngModel)]="search.role_name">
+                              </mat-form-field>
+                            </div>
+                          </th>  
+                          <th class="w230">
+                            <!-- <div class="th-search-acmt">
+                              <mat-form-field class="example-full-width cs-input select-input">
+                                <input  matInput placeholder="Search By Module"  (keyup.enter)="getRoleList()" #module_name="ngModel" [(ngModel)]="search.module_name">
+                              </mat-form-field>
+                            </div> -->
+                          </th>  
+                          
+                          <th></th>
+                          <th class="w230 text-center"></th>
+                        </tr>
+                      </table>
+                    </div>
+                  </div>
+                </tr>
+                <tr>
+                  <div class="table-container ">
+                    <div class="table-content  none-shadow">
+                      <table>
+                        <tr *ngFor="let row of role_list;let i = index">
+                          <td class="padding0">
+                            <table class="sno-border">
+                              <tr >
+                                <td class="w40" style="vertical-align:top;"> {{i+1}}</td>
+                                <td class="w230" style="vertical-align:top;">{{row.role_name}}</td>
+                                <td class="padding0">
+                                  <table class="inner-table">
+                                    <tr *ngFor="let row1 of row.modules;let mod_index=index;">
+                                      <td  class="w230" style="vertical-align:top;">
+                                        <div class="tags">
+                                          <ul>
+                                            <li>
+                                              <span>
+                                                {{row1.module_name}}
+                                                <a  (click)="delete_role_modules(i,mod_index,row.id,row1.module_id,row1.action_id)"><i class="material-icons">close</i></a>
+                                              </span>
+                                            </li>
+                                          </ul>
+                                        </div>
+                                      </td>
+                                      <td>
+                                        <div class="tags">
+                                          <ul>
+                                            <li *ngFor="let row2 of row1.permission_array;let perm_index = index;">
+                                              <span>
+                                                {{row2.action_name}} 
+                                                <a (click)="delete_role_permission(i,mod_index,perm_index,row.id,row1.id,row2.action_id)"><i class="material-icons">close</i></a>
+                                              </span>
+                                            </li>
+                                          </ul>
+                                          <a class="plus-item" style="cursor: pointer" (click)="openAddPermissionDialog(i,mod_index,row.id,row1.id,row1.module_id,'edit_permission')"><i class="material-icons">add</i></a>
+                                        </div>
+                                      </td>
+                                    </tr>
+                                  </table>
+                                </td>
+                              </tr>
+                            </table>
+                          </td>
+                          <td class="w230 text-center">
+                            <div class="cs-btn">
+                              <div class="in-btn">
+                                <button mat-raised-button class="h35-btn" color="accent" (click)="openAddModulesDialog(i,mod_index,row.id,row.modules,'edit_modules')"><i class="material-icons">add</i>
+                                </button>
+                                <button *ngIf="!row.assigned_id" mat-raised-button class="h35-btn del" color="warn" (click)="delete_role(i,row.id)" ><i class="material-icons">add</i></button>
+                              </div>
+                            </div>
+                          </td>
+                        </tr>
+                        
+                      </table>
+                      
+                    </div>
+                  </div>
+                </tr>
+              </table>
+              
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="h70"></div>

@@ -1,0 +1,327 @@
+<div class="main-container" >
+  <div *ngIf="loader" class="center-loder cs-loader">
+    <div class="outer">
+      <div class="innear">
+        <mat-spinner class="loader"></mat-spinner>
+      </div>
+    </div>
+  </div>
+  
+  <div class="main-outer">
+    <div class="main-inner">
+      <div class="middle-container">
+        <div class="page-heading">
+          <div class="heading-text bc-space">
+            <div class="back-btn" >
+              <a (click)="locationBack()"><i class="material-icons">arrow_right_alt</i></a>
+            </div>
+            
+            <h2>{{user_data.name | titlecase}}
+              
+              <a mat-button class="edit-heading" matTooltip="Edit Name" color="accent" (click)="edit_user_name(user_data.id,user_data.name,'edit_user_name')"><i class="material-icons">edit</i></a>
+            </h2>
+            <!-- name -->
+            
+            <p class="light">{{user_data.user_type | titlecase }}</p>
+            <!-- <p class="light">{{user_data.user_type | titlecase}}-{{user_data.access_labeal | titlecase}}</p> -->
+          </div>
+        </div>
+        <!-- <div class="tabs right-tab">
+          <ul>
+            <li><a routerLink="/sale-user-detail" routerLinkActive="active">DETAIL</a></li>
+            <li><a>ORDERS</a></li>
+            <li><a>LEADS</a></li>
+            <li><a>FOLLOWUP</a></li>
+          </ul>
+        </div> -->
+      </div>
+      
+      <div class="container-outer">
+        <div class="container height-fix" >
+          <div class="row mb15">
+            <div class="col s12">
+              <div class="details-info">
+                <div class="basic-details">
+                  <div class="profile-info pt0">
+                    <ul>
+                      <li>
+                        <div class="cs-box">
+                          <img src="assets/img/gmail.svg" class="fix-img">
+                          <span>Email</span>
+                          <a class="edit-icon" matTooltip="EDIT" color="accent" (click)="editEmail(user_data.id,user_data.email,'edit_email')"><i class="material-icons">edit</i></a>
+                          <p class="link-clr">{{user_data.email}}</p>
+                          
+                        </div>
+                      </li>
+                      <li>
+                        <div class="cs-box">
+                          <img src="assets/img/phone.svg" class="fix-img">
+                          <span>Mobile No.</span>
+                          <a class="edit-icon" matTooltip="EDIT" color="accent" (click)="editMobile(user_data.id,user_data.mobile,'edit_mobile')"><i class="material-icons">edit</i></a>
+                          <p>{{user_data.mobile}}</p>
+                        </div>
+                      </li>
+                      
+                      <li>
+                        <div class="cs-box">
+                          <!-- <img src="assets/img/phone.svg" class="fix-img"> -->
+                          <span>Role</span>
+                          <!-- (click)="editMobile(user_data.id,user_data.mobile,'edit_mobile')" -->
+                          <a *ngIf="user_data.user_type=='SALES USER'" (click)="editSalesUserRole(user_data.id,user_data.access_labeal,'edit_sales_user_role')" class="edit-icon" matTooltip="EDIT" color="accent" ><i class="material-icons">edit</i></a>
+                          <p>{{user_data.access_labeal}}</p>
+                        </div>
+                      </li>
+                      
+                      <li *ngIf="user_data.access_labeal!='NSM'">
+                        <div class="cs-box">
+                          <img src="assets/img/group.svg" class="fix-img">
+                          <span>Reporting Manager</span>
+                          <a class="edit-icon" matTooltip="EDIT" color="accent" (click)="editManager(user_data.id,user_data.parent_id,'edit_reporting_manager',user_data.parent_access_labeal)"><i class="material-icons">edit</i></a>
+                          <p>{{user_data.parent_name | titlecase}}</p>
+                        </div>
+                      </li>
+                      <li>
+                        <div class="cs-box">
+                          <!-- <img src="assets/img/gmail.svg" class="fix-img"> -->
+                          <span>Target {{user_data.target_duration}}</span>
+                          <!-- <a class="edit-icon" matTooltip="EDIT" color="accent" (click)="editEmail(user_data.id,user_data.email,'edit_email')"><i class="material-icons">edit</i></a> -->
+                          <p >{{user_data.target_value}}</p>
+                          
+                        </div>
+                      </li>
+                      
+                    </ul>
+                    
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <div class="row mb15">
+            <div class="col s8">
+              <div class="sprate-box padding0">
+                <a mat-button class="edit-btn" matTooltip="EDIT" color="accent" (click)="editDetails(user_data.id,'edit_user')"><i class="material-icons">edit</i></a>
+                <div class="full-address main-bdr">
+                  <div class="cs-heading">
+                    <h2>ADDRESS</h2>
+                  </div>
+                  <div class="nationality">
+                    <img src="assets/img/india.svg" alt="">
+                    <p>India</p>
+                  </div>
+                  
+                  <div class="ds-from-fields">
+                    <div class="cs-row">
+                      <div class="static-info">
+                        <p>State</p>
+                        <p>{{data.state  ? data.state : 'NA'}}</p>
+                      </div>
+                      <div class="static-info">
+                        <p>District</p>
+                        <p>{{data.district  ? data.district : 'NA'}}</p>
+                      </div>
+                      <div class="static-info">
+                        <p>City</p>
+                        <p>{{data.city  ? data.city : 'NA'}}</p>
+                      </div>
+                      <div class="static-info w100" style="min-width: 100px;">
+                        <p>Pincode</p>
+                        <p>{{data.pincode ? data.pincode : 'NA'}} </p>
+                      </div>
+                    </div>
+                    
+                    <div class="cs-row">
+                      <div class="static-info">
+                        <p>address</p>
+                        <p>{{data.address}}</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- Assinged team start -->
+            <div class="col s4 " *ngIf="user_data.access_labeal!='ASM'"> 
+              <div class="sprate-box padding0">
+                <a mat-button class="edit-btn" matTooltip="EDIT" color="accent" (click)="editSalesInfo(user_data.id,user_data.access_labeal,user_data.parent,'edit_sales')"><i class="material-icons">edit</i></a>
+                <div class="full-address main-bdr">
+                  <div class="cs-heading ">
+                    <h2>ASSIGN SALES TEAM</h2>
+                  </div>
+                  <div class="cs-figure padding15" style="max-height: 176px; overflow: auto;">
+                    <ul *ngFor="let data of sales_team_data; let i = index;" > 
+                      <li>
+                        <div class="outer" >
+                          <div class="inner">
+                            <span>Name</span>
+                            <p>{{data.name}}</p>
+                          </div>
+                        </div>
+                      </li>
+                      <li >
+                        <div class="outer">
+                          <div class="inner">
+                            <span>Mobile No.</span>
+                            <p>{{data.mobile}}</p>
+                          </div>
+                        </div>
+                      </li>
+                      <li >
+                        <div class="outer">
+                          <div class="inner">
+                            <span>Position</span>
+                            <p>{{data.access_labeal}}</p>
+                          </div>
+                        </div>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div  class="row mb15">
+            <div class="col s8">
+              <div class="sprate-box padding0">
+                <a mat-button class="edit-btn" matTooltip="EDIT" color="accent" (click)="edit_assign_distribution(user_data.id,'edit_distribution')"><i class="material-icons">add</i></a>
+                <div class="full-address main-bdr">
+                  <div class="cs-heading">
+                    <h2>ASSIGN DISTRIBUTION NETWORK</h2>
+                  </div>
+                  <div *ngIf="distibutor_retrailer.length!=0" class="cs-table ss-scroll" style="height: auto;">
+                    <table>
+                      <tr>
+                        <div class="ss-sticky">
+                          <div class="table-head">
+                            <table>
+                              <tr>
+                                <th>Distributor</th>
+                                <th>OEM</th>
+                              </tr>
+                            </table>
+                          </div>
+                        </div>
+                      </tr>
+                      <tr>
+                        <div class="table-container">
+                          <div class="table-content">
+                            <table>
+                              <tr  >
+                                <td class="padding0" >
+                                  <table>
+                                    <ng-container> 
+                                      <tr >
+                                        <td>
+                                          <div class="chips" *ngFor="let val of distibutor_retrailer; let i = index;" >
+                                            <span  *ngIf="val.type == 'distributor'"> 
+                                              {{val.parent_name}}
+                                              <a >
+                                                <i (click)="delete(i,val.id,val.type,val.user_id)" class="material-icons">close</i>
+                                              </a>
+                                            </span>
+                                          </div>
+                                        </td>
+                                        <!-- <button mat-button class="delete" (click)="delete(i,val.id)"><i class="material-icons">delete_sweep</i></button> -->
+                                      </tr>
+                                    </ng-container>
+                                  </table>
+                                </td>
+                                
+                                <td class="padding0" >
+                                  <table>
+                                    <ng-container>
+                                      <tr>
+                                        <td>
+                                          <div class="chips" *ngFor="let val of distibutor_retrailer;let i = index;">
+                                            <span  *ngIf="val.type == 'OEM' "> 
+                                              {{val.parent_name}}<a (click)="delete(i,val.id,val.type,val.user_id)"><i class="material-icons">close</i></a>
+                                            </span>
+                                          </div>
+                                        </td>
+                                        <!-- <button mat-button class="delete" (click)="delete(i,val.id)"><i class="material-icons">delete_sweep</i></button> -->
+                                      </tr>
+                                    </ng-container>
+                                  </table>
+                                </td>
+                              </tr>
+                            </table>
+                          </div>
+                        </div>
+                      </tr>
+                    </table>
+                  </div>
+                </div>
+              </div>
+              
+            </div>
+            <div class=" col s4" >
+              <div class="territory-info sprate-box padding0">
+                <a  *ngIf="territoryEdit==false" mat-button class="edit-btn" matTooltip="Edit Territory" color="accent" (click)="territoryEdit=true;getTerritoryList()"><i class="material-icons">edit</i></a>
+                <div class="cs-heading">
+                  <h2>Assigned Territory</h2>
+                </div>
+                
+                <div *ngIf="territoryEdit==false"  class="cs-checkbox" style="max-height: 230px;
+                overflow: auto;">
+                
+                <div class="checkbox-outer" style="height: auto;" >
+                  
+                  <section class="checkbox-inner bodr0" >
+                    
+                    <mat-checkbox class="check-list remove-check" value="1" *ngFor="let data of userTerritoryData;let i=index ">
+                      
+                      <a class="link-btn" routerLinkActive="active">
+                        
+                        <div class="name-outer">
+                          <div class="outer">
+                            <div class="inner">
+                              <div class="name-inner">
+                                {{data.territory_name[0]}}
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="text-box">
+                          <h2>{{data.territory_name}}</h2>
+                        </div>
+                      </a>
+                    </mat-checkbox>
+                  </section>
+                </div>
+              </div>
+              <div *ngIf="territoryEdit==true"  class="cs-checkbox">
+                
+                <div class="checkbox-outer">
+                  
+                  <section class="checkbox-inner" >
+                    
+                    <ng-container *ngFor="let list of territorylisting;let index=index" aria-required="true">
+                      <mat-checkbox class="check-list" [(ngModel)]="list.exist" (change)="selectedterritory(index,$event)" >{{list.territory_name}}</mat-checkbox>
+                      
+                    </ng-container>
+                    
+                  </section>
+                  
+                </div>
+                <div class="bt-box">
+                  <button class="cancel" style="background: #158700;" (click)="saveSelectedTerritory();territoryEdit=false">Save</button>
+                  <button class="cancel" (click)="territoryEdit=false">Cancel</button>
+                </div>
+              </div> 
+            </div>
+            
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+
+</div>
+
+<div class="h50"></div>
+

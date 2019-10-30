@@ -1,0 +1,259 @@
+<div class="main-container" >
+    <div *ngIf="loader" class="center-loder cs-loader">
+        <div class="outer">
+            <div class="innear">
+                <mat-spinner class="loader"></mat-spinner>
+            </div>
+        </div>
+    </div>
+    
+    <div class="main-outer">
+        <div class="main-inner">
+            <div class="middle-container">
+                <div class="page-heading">
+                    <div class="heading-text bc-space">
+                        <div class="back-btn">
+                            <a mat-button (click)="locationBack()"><i class="material-icons">arrow_right_alt</i></a>
+                        </div>
+                        
+                        <h2>{{vendorDetail.company_name}}
+                            <!-- <a ><i class="material-icons">edit</i></a> -->
+                        </h2>
+                        <p class="light">Vendor</p>
+                        
+                    </div>
+                </div>
+                
+            </div>
+            
+            <div class="container-outer">
+                <div class="container height-fix">
+                    <div class="row mb15">
+                        <div class="col s12">
+                            <div class="details-info">
+                                <div class="basic-details">
+                                    <div class="profile-info pt0">
+                                        <ul>
+                                            <li>
+                                                <div class="cs-box">
+                                                    <img src="assets/img/gmail.svg" class="fix-img">
+                                                    <span>Email</span>
+                                                    <p class="link-clr"><a [href]="'mailto:'+ vendorDetail.email_id + '?Subject=My%20Custom%20Subject'">{{vendorDetail.email_id}}</a></p>
+                                                    <a class="edit-icon" color="accent" matRipple matTooltip="Edit Email-Id" (click)="editBasicDetail(vendorDetail.email_id,'email_id')"><i class="material-icons">create</i></a>
+                                                </div>
+                                            </li>
+                                            <li>
+                                                <div class="cs-box">
+                                                    <img src="assets/img/phone.svg" class="fix-img">
+                                                    <span>Landline No.</span>
+                                                    <p>{{vendorDetail.phone ? vendorDetail.phone : 'NA'}}</p>
+                                                    <a  class="edit-icon" color="accent" matRipple matTooltip="Edit Landline No." (click)="editBasicDetail(vendorDetail.phone,'phone')"><i class="material-icons">create</i></a>
+                                                </div>
+                                            </li>
+                                            <li>
+                                                <div class="cs-box">
+                                                    <img src="assets/img/gst.svg" class="fix-img">
+                                                    <span>GST No.</span>
+                                                    <p>{{vendorDetail.gst_no ? vendorDetail.gst_no : 'NA'}}</p>
+                                                    <a  class="edit-icon" color="accent" matRipple matTooltip="Edit Gst No." (click)="editBasicDetail(vendorDetail.gst_no,'gst_no')"><i class="material-icons">create</i></a>
+                                                </div>
+                                            </li>
+                                            
+                                            <li>
+                                                <div class="cs-box">
+                                                    <!-- <img src="assets/img/gst.svg" class="fix-img"> -->
+                                                    <span>Created By</span>
+                                                    <p>{{vendorDetail.created_by_name ? vendorDetail.created_by_name : 'NA'}}</p>
+                                                </div>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col s8">
+                            <div class="sprate-box padding0">
+                                <a  mat-button class="edit-btn" matTooltip="Edit Address" color="accent" (click)="edit_address(vendorDetail.id,'edit_address')"><i class="material-icons">edit</i></a>
+                                <div class="full-address main-bdr">
+                                    <div class="cs-heading">
+                                        <h2>Address</h2>
+                                    </div>
+                                    
+                                    <div class="nationality">
+                                        <img src="assets/img/india.svg" alt="">
+                                        <p>{{vendorDetail.country}}</p>
+                                    </div>
+                                    
+                                    <div class="ds-from-fields">
+                                        <div class="cs-row">
+                                            <div class="static-info">
+                                                <p>State</p>
+                                                <p>{{vendorDetail.state  ? vendorDetail.state : 'NA'}}</p>
+                                            </div>
+                                            <div class="static-info">
+                                                <p>District</p>
+                                                <p>{{vendorDetail.district  ? vendorDetail.district : 'NA'}}</p>
+                                            </div>
+                                            <div class="static-info">
+                                                <p>City</p>
+                                                <p>{{vendorDetail.city  ? vendorDetail.city : 'NA'}}</p>
+                                            </div>
+                                            <div class="static-info w100" style="min-width: 100px;">
+                                                <p>Pincode</p>
+                                                <p>{{vendorDetail.pin_code ? vendorDetail.pin_code : 'NA'}} </p>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="cs-row">
+                                            <div class="static-info">
+                                                <p>address</p>
+                                                <p>{{vendorDetail.address}}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                </div>
+                            </div>
+                            
+                            <div class="sprate-box padding0 mt20">
+                                <div class="full-address main-bdr">
+                                    <div class="cs-heading">
+                                        <h2>CONTACT PERSONS</h2>
+                                        <a  class="cs-add" (click)="cp_add(vendorDetail.id,'add_cp')"><i class="material-icons">add</i></a>
+                                    </div>
+                                    <div class="ds-from-fields pt0">
+                                        <div class="row mb0">
+                                            <div class="col s12 padding0">
+                                                <div class="cs-table left-right-15">
+                                                    <div class="table-head">
+                                                        <table>
+                                                            <tr>
+                                                                <th>Name</th>
+                                                                <th class="w200">Mobile No. 1</th>
+                                                                <th class="w250 bdr0">Mobile No. 2</th>
+                                                            </tr>
+                                                        </table>
+                                                    </div>
+                                                    
+                                                    <div class="table-container pb0">
+                                                        <div class="table-content none-shadow">
+                                                            <table>
+                                                                <tr *ngFor="let cp_data of vendorDetail.contact_info;let index=index">
+                                                                    <td>{{cp_data.name | titlecase}}</td>
+                                                                    <td class="w200">{{cp_data.phone1 ? cp_data.phone1 : '---'}}</td>
+                                                                    <td class="w250">{{cp_data.phone2 ? cp_data.phone2 : '---'}}
+                                                                        <div class="action-btns">
+                                                                            <a  mat-button class="edit" (click)="cp_edit(cp_data,'edit')"><i class="material-icons">edit</i> Edit</a>
+                                                                            <button  mat-button class="delete" (click)="delete_cp(cp_data.id)"><i class="material-icons">delete_sweep</i> Delete</button>
+                                                                        </div>
+                                                                    </td>
+                                                                </tr>            
+                                                            </table>
+                                                        </div>
+                                                    </div>
+                                                    
+                                                </div>
+                                            </div>
+                                        </div>
+                                        
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            
+                        </div>
+                        
+                        <div class="col s4"  >
+                            
+                            <div *ngIf="vendorDetail?.type_assigned?.length" class="sprate-box padding0" >
+                                <div class="territory-info">
+                                    <a mat-button class="edit-btn" matTooltip="Edit" color="accent" (click)="editProductDeal=true;getProductType()"><i class="material-icons">edit</i></a>
+                                    <div class="cs-heading">
+                                        <h2>Deals With Product Type</h2>
+                                    </div>
+                                    
+                                    <div  *ngIf="editProductDeal==false" class="cs-checkbox" style="max-height: 230px;
+                                    overflow: auto;">
+                                    
+                                    <div  class="checkbox-outer" style="height: auto;" >
+                                        <section class="checkbox-inner bodr0" >
+                                            <mat-checkbox class="check-list remove-check" value="1" *ngFor="let list of vendorDetail.type_assigned">
+                                                <a class="link-btn" routerLinkActive="active">
+                                                    <div class="name-outer">
+                                                        <div class="outer">
+                                                            <div class="inner">
+                                                                <div class="name-inner">
+                                                                    {{list.type[0]}}
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="text-box">
+                                                        <h2>{{list.type}}</h2>
+                                                    </div>
+                                                </a>
+                                            </mat-checkbox>
+                                        </section>
+                                    </div>
+                                </div>
+                                <div *ngIf="editProductDeal==true"  class="cs-checkbox">
+                                    
+                                    <div class="checkbox-outer">
+                                        
+                                        <section class="checkbox-inner" >
+                                            
+                                            <ng-container *ngFor="let list of allProductType;let index=index" aria-required="true">
+                                                <mat-checkbox class="check-list" [(ngModel)]="list.exist" (change)="selectProductType(index,$event)" >{{list.name}}</mat-checkbox>
+                                                
+                                            </ng-container>
+                                            
+                                        </section>
+                                        
+                                    </div>
+                                    <div class="bt-box">
+                                        <button class="cancel" style="background: #158700;" (click)="saveSelectedProdectType();editProductDeal=false">Save</button>
+                                        <button class="cancel" (click)="editProductDeal=false">Cancel</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        
+                        <div *ngIf="vendorDetail?.vendor_logs?.length" class="sprate-box main-bdr padding0">
+                            <div class="cs-logs">
+                                <div class="cs-heading">
+                                    <h2>LOGS DETAIL</h2>
+                                </div>
+                                <div class="logs-outer"  style="max-height: 318px;">
+                                    <div class="logs-list">
+                                        <ul>
+                                            <li *ngFor="let val of vendorDetail.vendor_logs">
+                                                <div class="name">
+                                                    {{val.created_name | titlecase}}
+                                                </div>
+                                                <div class="date">
+                                                    {{val.date_created | date : 'MMM d,y hh:mm a'}}
+                                                </div>
+                                                <p>
+                                                    {{val.remark}}
+                                                </p>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="h50"></div>
+</div>
+
+

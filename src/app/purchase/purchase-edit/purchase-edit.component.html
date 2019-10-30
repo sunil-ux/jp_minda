@@ -1,0 +1,263 @@
+<div class="main-container">
+  <div class="cs-spinner full-page" *ngIf = "loading_list">
+    <div class="outer">
+      <div class="innear">
+        <mat-spinner></mat-spinner>
+        <P>LOADING . . .</P>
+      </div>
+    </div>
+  </div>
+  <div class="cs-container">    
+    <div class="row">
+      <div class="col-12">
+        <div class="cs-heading pb10">
+          <h2>CREATE NEW PURCHASE ORDER</h2>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-12">
+        <div class="right-data pl0">
+          <div class="contst height-calc padding0" style="overflow: hidden;">
+            <mat-dialog-content class="convert-franchies-modle">              
+              
+              <div class="m-body">
+                <div class="row">
+                  <div class="col-3 plan-list step1 h650 shadow-none">
+                    <div class="head">
+                      <div class="csn-heading"  [ngClass]="{'active':active.user1==true}">
+                        
+                        <h2>VENDOR</h2>
+                        
+                        <button class="search-icon" (click)="toggleterritory1('user1','open')" >
+                          <i class="material-icons">search</i>
+                        </button>
+                        
+                        <div class="search">
+                          
+                          <i class="material-icons sc-icon">search</i>
+                          <input style="width: 100% !important;" type="text" placeholder="search..."  (input)="getItemscheckin('con2',search2.search1)" #search1="ngModel" [(ngModel)]="search2.search1">
+                          
+                          <button (click)="toggleterritory1('user1','close')">
+                            <i class="material-icons">clear</i>
+                          </button>
+                        </div>
+                      </div>                    
+                    </div>
+                    <!-- {{row.plan?row.name[0].toUpperCase():''}} -->
+                    <div class="listing">
+                      <mat-radio-group class="step1"  (change)="clear()" [(ngModel)]="purchase_form.vendor_id">                        
+                        <mat-radio-button [value]="row.id" *ngFor="let row of vendor; let i = index;">
+                          <span class="name-counter">{{vendor.length ? row.name[0].toUpperCase():''}}</span>
+                          <div class="txt-box">
+                            <p>{{row.name}}     ({{row.total_deals}})</p>
+                            <p>{{row.phone}}</p>
+                          </div>
+                        </mat-radio-button>                        
+                      </mat-radio-group>
+                    </div>
+                  </div>
+                  <div class="col-9">  
+                    
+                    <div class="row">
+                      <div class="col-4  pl0 pr0 ">
+                          <div class="form-field">
+                        <div class="row">
+                          <div class="col-6 pl0 pr0">
+                            <div class="control-field">
+                              <input type="text" placeholder="HSN Code" [(ngModel)]="purchase_form.hsn_code" name="hsn_code" class="cs-inputs"  matInput   >
+                            </div>
+                          </div>
+                          
+                          <div class="col-6 pr31">
+                            <div class="control-field">
+                              <input type="text" placeholder="Material Code" [(ngModel)]="purchase_form.material_type" name="material_type" class="cs-inputs"  matInput  >
+                            </div>
+                          </div>
+                        </div>
+                        </div>
+                      </div>
+                      <div class="col-8 pl0">
+                        <div class="form-field " *ngIf="purchase_form.vendor_id">
+                          <form name="forms" (ngSubmit)="s.form.valid ? AddItem(s) : '' " #s="ngForm">
+                            <div class="row padding15 pt0 ">
+                              
+                              <!-- <div class="control-field col-3">
+                                <div class="ng-autocomplete wp100 mt12">
+                                  <label>
+                                      Equipment Id*
+                                  </label>
+                                  <ng-autocomplete 
+                                  [data]="categoryList"
+                                  [searchKeyword]="keyword"
+                                  (selected)='selectEvent($event)'
+                                  (inputChanged)='onChangeSearch($event)'
+                                  (inputFocused)='onFocused($event)'
+                                  [itemTemplate]="itemTemplate"
+                                  [notFoundTemplate]="notFoundTemplate">    
+                                </ng-autocomplete>
+                                
+                                <ng-template #itemTemplate let-item>
+                                  <a [innerHTML]="item.part_number"></a>
+                                </ng-template>
+                                
+                                <ng-template #notFoundTemplate let-notFound>
+                                  <div [innerHTML]="notFound"></div>
+                                </ng-template>
+                              </div>
+                            </div> -->
+                            <div class="control-field col-2">
+                              <mat-form-field class="example-full-width cs-input">
+                                <input matInput placeholder="QTY." (input)="GetAmount(data.qty,data.purchase_price)" name="qty" [(ngModel)]="data.qty" required>
+                              </mat-form-field>
+                            </div>
+                            <div class="control-field col-3">
+                              <mat-form-field class="example-full-width cs-input">
+                                <input matInput placeholder="Purchase Price" (input)="GetAmount(data.qty,data.purchase_price)" (keypress)="db.numeric_Number($event)" name="purchase_price" [(ngModel)]="data.purchase_price" required>
+                              </mat-form-field>
+                            </div>
+                            <div class="control-field col-2">
+                              <mat-form-field class="example-full-width cs-input">
+                                <input matInput placeholder="Size" readonly name="dimensions" [(ngModel)]="data.dimensions" >
+                              </mat-form-field>
+                            </div> 
+                            <div class="control-field col-1">
+                              <div class="plus-btn" style="right: inherit;">
+                                <button type="submit" mat-raised-button color="warn" class="mt2">
+                                  <i class="material-icons">add</i>
+                                </button>
+                              </div>
+                            </div>
+                            
+                          </div>
+                        </form>
+                      </div>
+                      
+                      
+                    </div>
+                    
+                    
+                  </div>  
+                  
+                  
+                  <div class="row" *ngIf="purchase_list.length">
+                    <div class="col-12">
+                      <div class="cs-table ">
+                        <div class="header" style="padding: 0px 15px;">
+                          <table>
+                            <tr>
+                              <th class="w140">Equipment Id</th>
+                              <th class="w140">Size</th>
+                              <th class="w140">Description</th>
+                              <th class="w140">Price</th>
+                              <th class="w150">Qty</th>
+                              <th class="w140">Amount</th>
+                            </tr>
+                          </table>
+                        </div>
+                        <div class="table-container edit-scroll">
+                          <div class="table-body">
+                            <table>
+                              <tr *ngFor="let raw of purchase_list; let d = index">
+                                <td class="w140">{{ raw.part_number }}</td>
+                                <td class="w140">{{ raw.dimensions }}</td>
+                                <td class="w140">{{ raw.description }}</td>
+                                <td class="w140 ">{{raw.purchase_price}}
+                                  <td class="w150">
+                                    <div class="edit-td-input active">
+                                      <input  placeholder="TRANSFER QTY." [name]="'qty'+raw.id"  [(ngModel)]="raw.qty"   (input)="update_qty(d,raw.qty,raw.purchase_price)" class="wp100 pr0">
+                                    </div>
+                                  </td>
+                                  <td class="w140 ">{{raw.amount}}
+                                      <div class="action-btns">
+                                          <a type="submit" (click)="RemoveItem(d, raw.id, raw.purchase_order_id)" mat-button class="delete"><i class="material-icons">delete_sweep</i> Delete</a>
+                                      </div>
+                                  </td>
+                                </tr>
+                              </table>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>  
+                  </div>
+                </div>
+              </div>
+            </mat-dialog-content>
+          </div>
+        </div>
+      </div>
+    </div>   
+    
+    <div class="row" *ngIf="purchase_list.length">
+      <div class="col-8 empty"></div>
+      <div class="col-4">
+        <div class="invoice-details" style="padding: 15px 30px 15px 15px;">
+          <table class="invoice-table">   
+            <tr>
+              <td class="w200 td">Total Amount</td>
+              <td class="td"> {{purchase_form.total_amount}}</td>
+            </tr>    
+            
+            <tr>
+              <td class="w200 td">Total Qty	</td>
+              <td class="td"> {{purchase_form.total_qty}}</td>
+            </tr>                        
+            <tr>
+              
+              <td class="w200 td">GST	</td>
+              <td class="td">
+                <div class="edit-td-input active">
+                  <input  placeholder="GST %" name="gst"  [(ngModel)]="purchase_form.gst_per"  name="gst_per"  (input)="cal()" class="wp30 pr0">
+                </div>
+              </td>
+              
+            </tr> 
+            
+            <tr *ngIf="purchase_form.igst_amount">
+              <td class="w200 td">IGST	</td>
+              <td class="td">&#8377; {{purchase_form.igst_amount}}</td>
+            </tr> 
+            
+            <tr *ngIf="purchase_form.cgst_amount">
+              <td class="w200 td">CGST	</td>
+              <td class="td">&#8377; {{purchase_form.cgst_amount}}</td>
+            </tr>   
+            <tr *ngIf="purchase_form.sgst_amount">
+              <td class="w200 td">SGST	</td>
+              <td class="td">&#8377; {{purchase_form.sgst_amount}}</td>
+            </tr> 
+            
+            <!-- <tr>
+              
+              <td class="w200 td">Shipping charge	</td>
+              <td class="td">
+                <div class="edit-td-input active">
+                  <input  placeholder="Shipping Charge" name="shipping_charge"  [(ngModel)]="purchase_form.shipping_charge"  name="shipping_charge"  (input)="cal()" class="wp30 pr0">
+                </div>
+              </td>
+              
+            </tr>  -->
+            
+            <tr>
+              <td class="w200 td">Total Amount	</td>
+              <td class="td">&#8377; {{purchase_form.net_amount}}</td>
+            </tr>                            
+          </table>
+        </div>
+      </div>
+    </div>
+    <div class="row" *ngIf="purchase_list.length">
+      <div class="col-12">
+        <div class="dubble-btn">
+          <div class="cs-btn mt32 mr12 text-right" [ngClass]="{loading: sendingData}">
+            <div class="in-btn ">
+              <button [disabled]="sendingData" type="submit"  (click)="submit_po()" mat-raised-button color="warn">SAVE</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="h100"></div>

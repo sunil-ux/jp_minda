@@ -1,0 +1,98 @@
+<div class="main-container">
+  <div *ngIf="loader" class="center-loder cs-loader">
+    <div class="outer">
+      <div class="innear">
+        <mat-spinner class="loader"></mat-spinner>
+      </div>
+    </div>
+  </div>
+  <div class="middle-container">
+    <div class="page-heading">
+      <img src="assets/img/master_icon.svg" class="h-icon">
+      <div class="heading-text">
+        <h2>Discount/GST</h2>
+        <p>Total Discounts ({{count}})</p>
+      </div>
+    </div>
+    
+    <div class="top-pagination">
+      <ul>
+        <li class="refresh-area">
+          <a class="refresh-btn" mat-raised-button  matTooltip="Refresh" (click)="refersh()"><i class="material-icons"> refresh</i></a>
+        </li>
+        <li *ngIf="count>100"><p>Pages {{pagenumber}} Of {{total_page}}</p></li>
+        
+        <li *ngIf="count>100">
+          <button mat-button class="left-btn" (click)="pagination(page_limit,start-page_limit)" [disabled]="pagenumber == 1">
+            <i class="material-icons">keyboard_arrow_left</i></button>
+          </li>
+          
+          <li *ngIf="count>100">
+            <input type="text" placeholder="GO TO" name="pagenumber" (keyup.enter)="pagination(page_limit,((pagenumber*page_limit)-page_limit))" [(ngModel)]="pagenumber">
+          </li>
+          
+          <li *ngIf="count>100">
+            <button mat-button class="right-btn"  (click)="pagination(page_limit,(start+page_limit))" [disabled]="pagenumber == total_page">
+              <i class="material-icons">keyboard_arrow_right</i>
+            </button>
+          </li>
+        </ul>
+      </div>
+    </div>
+    <!-- <div class="tabs">
+      <ul>
+        <li><a routerLink="/dis-list" routerLinkActive="active">SALES USERS</a></li>
+        <li><a routerLink="/system-user-list" routerLinkActive="active">SYSTEM USERS</a></li>
+      </ul>
+    </div> -->
+    
+    
+    
+    <div class="container-outer">
+      <div class="container" >
+        <div class="row">
+          <div class="col s12">
+            <div class="cs-table left-right-20">
+              <div class="table-head">
+                <table>
+                  <tr>
+                    <!-- <th class="w30">&nbsp;</th> -->
+                    <th>Category</th>
+                    <!-- <th class="w200 text-center">Discount Type</th> -->
+                    <th class="w200 text-center">GST(%)</th>
+                    <th class="w200 text-center">Distributor (%)</th>
+                    <th class="w200 text-center">Direct Dealer(%)</th>
+                  </tr>
+                </table>
+              </div>
+              
+              <div class="table-container">
+                <div class="table-content">
+                  <table>
+                    <tr *ngFor="let data of discounts_data;let i=index">
+                      <!-- <td class="w30">{{i+1}}</td> -->
+                      <td>{{data.category | titlecase}}</td>
+                      <!-- <td class="w200 text-center">{{data.discount_type | titlecase}}</td> -->
+                      <td class="w200 text-center">{{data.gst? data.gst : '----'}}</td>
+                      
+                      <td class="w200 text-center">{{data.distributor ? data.distributor : '-----'}}</td>
+                      <td class="w200 text-center">{{data.direct_dealer ? data.direct_dealer : '-----'}}</td>
+                    </tr>
+                    
+                  </table>
+                </div>
+              </div>
+              
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="fixed-multibtn-botm">
+    <ul>
+      <li><a  matTooltip="Add Discount" routerLink="/add-discount" routerLinkActive="active"><i class="material-icons">add</i></a></li>
+    </ul>
+  </div>
+  <div class="h70"></div>

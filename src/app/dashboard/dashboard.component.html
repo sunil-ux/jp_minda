@@ -1,0 +1,414 @@
+
+<div class="main-container">
+	<div class="main-outer">
+		<div class="main-inner">
+			<div class="custom-dashboad " style="background: #fff;">
+				<div class="cc-dash">
+					<div class="dash-counter pb0">
+						<div *ngIf="loading" class="center-loder cs-loader">
+							<div class="outer">
+								<div class="innear">
+									<mat-spinner class="loader"></mat-spinner>
+								</div>
+							</div>
+						</div>
+						<div class="row mb0">
+							<div class="col s9 pl0">
+								<ul>
+									<!-- /lead network -->
+									<li>
+										<div class="upper">
+											<div class="circle">
+												<img src="assets/img/network.svg">
+											</div>
+											<div class="dash-value">
+												
+												<div class="tags">
+													<a (click)="get_lead_type(2)">
+														<h1>{{all_lead_count?.retailer_lead}}</h1>
+														<p>Retailer</p>
+													</a>
+												</div>
+												
+												<div class="tags">
+													<a  (click)="get_lead_type(1)">	
+														<h1>{{all_lead_count?.dist_lead}}</h1>
+														<p>Distributors</p>
+													</a>
+												</div>
+												
+												<div class="tags">
+													<a  (click)="get_lead_type(3)">
+														<h1>{{all_lead_count?.direct_lead}}</h1>
+														<p>OEM</p>
+													</a>
+												</div>
+												
+												
+											</div>
+										</div>
+										<div class="lower">
+											<p>Lead Network</p>
+										</div>
+									</li>
+									
+									
+									<!-- /distribution network -->
+									<li class="green">
+										<div class="upper">
+											<div class="circle">
+												<img src="assets/img/group.svg">
+											</div>
+											<div class="dash-value">
+												<div class="tags">
+													<a  routerLink="/distribution-list/2">
+														<h1>{{all_distnet_count?.retailer_cust}}</h1>
+														<p>Retailer</p>
+													</a>
+												</div>
+												
+												<div class="tags">
+													<a  routerLink="/distribution-list/1">
+														<h1>{{all_distnet_count?.dist_cust}}</h1>
+														<p>Distributors</p>
+													</a>
+												</div>
+												
+												<div class="tags">
+													<a routerLink="/distribution-list/3">
+														<h1>{{all_distnet_count?.direct_cust}}</h1>
+														<p>OEM</p>
+													</a>
+												</div>
+											</div>
+										</div>
+										<div class="lower">
+											<p>Distribution Network</p>
+										</div>
+									</li>
+									
+									<!--orders-->
+									<li class="skyblue">
+										<div class="upper">
+											<div class="circle">
+												<img src="assets/img/order_icon1.svg">
+											</div>
+											<div class="dash-value">
+												
+												<div class="tags">
+													<a routerLink="/order-list/1" >
+														<h1>{{order_count.primary_count ? order_count.primary_count : 0}}</h1>
+														<p>Primary</p>
+													</a>
+												</div>
+												
+												<div class="tags">
+													<a routerLink="/order-list/2" >	
+														<h1>{{order_count.secondary_count ? order_count.secondary_count	: 0}}</h1>
+														<p>Secondary </p>
+													</a>
+												</div>
+												
+											</div>
+										</div>
+										<div class="lower">
+											<p>Orders</p>
+										</div>
+									</li>
+									
+									<!-- /leaves -->
+									<li class="blue">
+										<a routerLink="/leaves" >
+											<div class="upper">
+												<div class="circle">
+													<img src="assets/img/leave1.svg">
+												</div>
+												<div class="dash-value">
+													<div class="tags">
+														<h1>{{todayleave}}</h1>
+													</div>
+												</div>
+											</div>
+											<div class="lower">
+												<p>Today Leaves</p>
+											</div>
+										</a>
+									</li>
+									
+									<!-- /expense -->
+									
+									<li class="red">
+										<a routerLink="/expenses" >
+											<div class="upper">
+												<div class="circle">
+													<img src="assets/img/expensive1.svg">
+												</div>
+												<div class="dash-value">
+													<div class="tags">
+														<h1>{{todayexpense}}</h1>
+													</div>
+												</div>
+											</div>
+											<div class="lower">
+												<p>Today Expenses</p>
+											</div>
+										</a>
+									</li>
+									
+									<!-- /checkin  -->
+									
+									<li class="pink">
+										<a routerLink="/check-in-list" >
+											<div class="upper">
+												<div class="circle">
+													<img src="assets/img/checkin_icon1.svg">
+												</div>
+												<div class="dash-value">
+													<div class="tags">
+														<h1>{{todaycheckin_count}}</h1>
+													</div>
+												</div>
+											</div>
+											<div class="lower">
+												<p>Today Check-Ins</p>
+											</div>
+										</a>
+									</li>
+									
+								</ul>
+								<div class="dash-calender row">
+									<div class="col s12 pr0">
+										<fusioncharts type="mscolumn2d" height="50%" width="100%"  [dataFormat]="dataFormat"
+										[dataSource]="dataSource"></fusioncharts>
+									</div>
+								</div>
+							</div>
+							<div class="col s3 pl0">
+								<div class="listing pr0">
+									<!-- routerLink="/followup-list/1" -->
+									<a (click)="get_followup_type('Today')" >
+										<div class="repeat">
+											<div class="list-both">
+												<div class="img">
+													<img src="assets/img/clock.svg">
+												</div>
+												<div class="ds-cont">
+													<h1>{{pendingfollowup}}</h1>
+													<p>Pending Follow up</p>
+												</div>
+											</div>
+											<div class="errow">
+												<i class="material-icons">keyboard_arrow_right</i>
+											</div>
+										</div>
+									</a>
+									<a  (click)="get_followup_type('Upcoming')"  >
+										<div class="repeat">
+											<div class="list-both">
+												<div class="img">
+													<img src="assets/img/date.svg">
+												</div>
+												<div class="ds-cont">
+													<h1>{{upcoming_followup}}</h1>
+													<p>Upcoming Follow up</p>
+												</div>
+											</div>
+											<div class="errow">
+												<i class="material-icons">keyboard_arrow_right</i>
+											</div>
+										</div>
+									</a>
+									<a  routerLink="/check-in-list">
+										<div class="repeat">
+											<div class="list-both">
+												<div class="img">
+													<img src="assets/img/alarm-clock.png">
+												</div>
+												<div class="ds-cont">
+													<h1>{{current_monthcheckin}}</h1>
+													<p>Checkin</p>
+												</div>
+											</div>
+											<div class="errow">
+												<i class="material-icons">keyboard_arrow_right</i>
+											</div>
+										</div>
+									</a>
+									<a  routerLink="/check-in-list">
+										<div class="repeat">
+											<div class="list-both">
+												<div class="img">
+													<img src="assets/img/alarm-clock.png">
+												</div>
+												<div class="ds-cont">
+													<h1>{{previousmonthcheckin}}</h1>
+													<p>Last Month Checkin</p>
+												</div>
+											</div>
+											<div class="errow">
+												<i class="material-icons">keyboard_arrow_right</i>
+											</div>
+										</div>
+									</a>
+									<!-- routerLink="/attendance" -->
+									<a   (click)="get_attendence_type('Today')" >
+										<div class="repeat">
+											<div class="list-both">
+												<div class="img">
+													<img src="assets/img/checkin.png">
+												</div>
+												<div class="ds-cont">
+													<h1>{{todayattendence}}</h1>
+													<p>Today Attendance</p>
+												</div>
+											</div>
+											<div class="errow">
+												<i class="material-icons">keyboard_arrow_right</i>
+											</div>
+										</div>
+									</a>
+									<a (click)="get_attendence_type('All')" >
+										<div class="repeat">
+											<div class="list-both">
+												<div class="img">
+													<img src="assets/img/checkin.png">
+												</div>
+												<div class="ds-cont">
+													<h1>{{yesterdayattendence}}</h1>
+													<p>Yesterday's Attendance</p>
+												</div>
+											</div>
+											<div class="errow">
+												<i class="material-icons">keyboard_arrow_right</i>
+											</div>
+										</div>
+									</a>
+								</div>
+							</div>
+						</div>
+					</div>
+					
+					<div class="dash-tables">
+						<div class="table-one">
+							<div class="tablehead">
+								<p>Sales Executive Information     ({{current_month}})</p>
+							</div>
+							<div class="tablebody dash-scroll">
+								<div class="strip dash-sticky">
+									<div class="tags1">
+										<p>Check-in</p>
+									</div>
+									<div class="tags1">
+										<p>Lead</p>
+									</div>
+									<div class="tags1">
+										<p>Order</p>
+									</div>
+								</div>
+								<div class="">
+									<a *ngFor="let row of executive_info">
+										<div class="content">
+											<div class="left">
+												<h1>{{row.name | titlecase}} - {{row.access_level}}</h1>
+												<p>{{row.attendance}} Day's Present</p>
+											</div>
+											<div class="right">
+												<div class="tags1">
+													<span>{{row.checkin}}</span>
+												</div>
+												<div class="tags1 ">
+													<span class="yellow">{{row.lead_count}}</span>
+												</div>
+												<div class="tags1 ">
+													₹ {{row.order_total ? row.order_total : 0}}
+												</div>
+											</div>
+										</div>
+										
+									</a>
+									<div class="h35"></div>
+								</div>
+								<!-- <div style="height: 50px;"></div> -->
+							</div>
+						</div>
+						<div class="table-one br-chery">
+							<div class="tablehead chery">
+								<p>Latest Checkin</p>
+							</div>
+							<div class="tablebody p-15 dash-scroll" style="height: 340px; padding-bottom: 0px !important;">
+								<a *ngFor="let row of latest_checkin">
+									<div class="info pt-0"> 
+										<div class="upr">
+											<div class="dates">
+												<p><i class="material-icons">date_range</i>{{row.date_created | date: 'd MMM y'}}</p>
+											</div>
+											<div class="dates">
+												<p>Start : <span>{{row.visit_start}}</span></p>
+											</div>
+											<div class="dates">
+												<p>End : <span>{{row.visit_end ? row.visit_end : 'InProccess'}}</span></p>
+											</div>
+										</div>
+										<div class="mid">
+											<div class="mid-circle">
+												<span>{{row.dr_name | slice:0:1 |uppercase}}</span>
+											</div>
+											<div class="cont">
+												<h1>{{row.dr_name | titlecase}}</h1>
+												<p>{{row.drtype==1 ? 'Distributor' : (row.drtype==2 ? 'Retailer' : 'Direct Dealer')}}</p>
+											</div>
+										</div>
+										<div class="lwr">
+											<p><strong>Remark : </strong>{{row.remark ? row.remark : 'N/A'}}</p>
+										</div>
+									</div>
+								</a>
+								
+								<div class="h35"></div>
+								
+							</div>
+						</div>
+						<div class="table-one br-orange">
+							<div class="tablehead orange">
+								<p>Latest Order </p>
+							</div>
+							<div class="tablebody p-15 dash-scroll" style="height: 340px; padding-bottom: 0px !important;">
+								<a *ngFor="let row of latest_orders">
+									<div class="info pt-0">
+										<div class="upr">
+											<div class="dates">
+												<p><i class="material-icons">date_range</i>{{row.date_created | date: 'd MMM y'}}</p>
+											</div>
+											<div class="dates">
+												<p><span>{{row.created_by_name | titlecase}}</span></p>
+											</div>
+										</div>
+										<div class="mid">
+											<div class="mid-circle">
+												<span>{{row.name | slice:0:1 |uppercase}}</span>
+											</div>
+											<div class="cont">
+												<h1><a class="link-clr" routerLink="/distribution-detail/{{row.dr_id}}/{{row.dr_type}}" routerLinkActive="active">{{row.name | titlecase}}</a></h1>
+												<p><span>Distributor : </span><strong>{{(row.delivery_from_name ? row.delivery_from_name : '') | titlecase}}</strong></p>
+											</div>
+										</div>
+										<div class="lwr">
+											<div class="amt">
+												<p><strong>Order ID : </strong><span><a class="link-clr" routerLink="/order-detail/{{row.order_id}}" routerLinkActive="active">#ORD{{row.order_id}}</a></span></p>
+												<h1>₹ {{row.order_value}}</h1>
+											</div>
+										</div>
+									</div>
+								</a>
+								
+								<div class="h35"></div>
+								
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			
+		</div>
+	</div>
+</div>

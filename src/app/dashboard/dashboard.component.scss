@@ -1,0 +1,473 @@
+
+
+.ds-counter 
+{
+    width: 100%;
+    height: 120px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    border-radius: 6px;
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    
+    p
+    {
+        font-size: 16px;
+        color: #fff;
+        padding: 0px 0px 10px 0px;
+    }
+    
+    .mdlcont
+    {
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        
+        .ds-figure
+        {
+            width: 50%;
+            text-align: center;
+            padding-left: 10px;
+            padding-right: 10px;
+            position: relative;
+            
+            h1
+            {
+                color: #fff;
+                font-size: 17px;
+            }
+            
+            p
+            {
+                padding: 0;
+                font-size: 12px;
+                color: #fff;
+                opacity: 0.8;
+            }
+            
+            &:after
+            {
+                content: "";
+                position: absolute;
+                width: 2px;
+                height: 28px;
+                right: 0px;
+                top: 10px;
+                background: rgba(0, 0, 0, 0.6);
+                opacity: 0.2;
+            }
+            
+            &:last-child
+            {
+                &:after
+                {
+                    width: 0px;
+                    background: transparent;
+                }
+            }
+        }
+    }
+    
+    &.bg1
+    {
+        background: #ba68c8 url('../../assets/img/bg1.svg') no-repeat top center;
+        background-size: contain;
+    }
+    &.bg2
+    {
+        background: #1976d2  url('../../assets/img/bg2.svg') no-repeat top center;
+        background-size: contain;
+    }
+    &.bg3
+    {
+        background: #ef6c00  url('../../assets/img/bg3.svg') no-repeat top center;
+        background-size: contain;
+    }
+    &.bg4
+    {
+        background: #00897b  url('../../assets/img/bg4.svg') no-repeat top center;
+        background-size: contain;
+    }
+    &.bg5
+    {
+        background: #388e3c  url('../../assets/img/bg5.svg') no-repeat top center;
+        background-size: contain;
+    }
+    &.bg6
+    {
+        background: #827717  url('../../assets/img/bg6.svg') no-repeat top center;
+        background-size: contain;
+    }
+    
+    &.bg7
+    {
+        background: #905c2f  url('../../assets/img/bg7.svg') no-repeat top center;
+        background-size: contain;
+    }
+    
+    &.bg8
+    {
+        background: #773990  url('../../assets/img/bg8.svg') no-repeat top center;
+        background-size: contain;
+    }
+}
+
+.ds-notice 
+{
+    box-shadow: 0px 3px 6px 0px rgba(0, 0, 0, 0.3);
+    
+    .head 
+    {
+        padding: 15px;
+        background: #ef6c00;
+        color: #fff;
+        font-size: 16px;
+        font-weight: 600;
+        letter-spacing: 1px;
+    }
+    
+    .ds-list
+    {
+        min-height: 320px;
+        max-height: 320px;
+        overflow: auto;
+        
+        ul
+        {
+            li
+            {
+                padding: 10px;
+                border-bottom: 1px solid #ccc;
+                position: relative;
+                
+                p
+                {
+                    width: 100%;
+                    display: inline-flex;
+                    font-size: 13px;
+                    
+                    a
+                    {
+                        font-size: 14px;
+                        margin-right: 10px;
+                        color: #005daf;
+                        line-height: 22px;
+                        font-weight: 500;
+                        
+                        &:last-child
+                        {
+                            margin-right: 0px;
+                        }
+                    }
+                    
+                    span
+                    {
+                        font-weight: 600;
+                        color: #afaeae;
+                        margin-right: 8px;
+                    }
+                }
+                
+                .inr-icon 
+                {
+                    position: absolute;
+                    top: 10px;
+                    right: 10px;
+                    font-weight: 500;
+                    display: flex;
+                    flex-direction: column;
+                    align-items: flex-end;
+                    
+                    p
+                    {
+                        font-size: 14px;
+                        font-weight: 500;
+                    }
+                    
+                    a
+                    {
+                        font-size: 13px;
+                        color: #005daf;
+                    }
+                }
+                
+                a
+                {
+                    cursor: pointer;
+                    
+                    &:hover
+                    {
+                        text-decoration: underline;
+                    }
+                }
+                
+                &:hover
+                {
+                    background: #f5f5f5;
+                }
+                
+                &:last-child
+                {
+                    border-bottom: 0px;
+                }
+            }
+        }
+        
+        
+        
+    }
+    
+}
+
+.graph
+{
+    width: 100%;
+    height: 320px;
+    box-shadow: 0px 3px 6px 0px rgba(0, 0, 0, 0.2);
+    
+    img
+    {
+        width: 100%;
+        height: 100%;
+    }
+}
+
+
+.table-notice
+{
+    box-shadow: 0px 3px 6px 0px rgba(0, 0, 0, 0.3);
+    
+    .head 
+    {
+        padding: 15px;
+        background: #905c2f;
+        color: #fff;
+        font-size: 16px;
+        font-weight: 600;
+        letter-spacing: 1px;
+        position: relative;
+        
+        input
+        {
+            &.search-filter {
+                width: 200px;
+                padding: 0px 10px;
+                font-size: 13px;
+                position: absolute;
+                top: 50%;
+                right: 15px;
+                transform: translateY(-50%);
+                height: 30px;
+                border: 1px solid #ccc;
+                border-radius: 20px;
+                background: #fff;
+                outline: none;
+                transition: width 0.6s;
+
+                &:after
+                {
+                    content: "search";
+                    font-family: 'Material Icons';
+                    position: absolute;
+                    top: 0;
+                    right: 0;
+                }
+
+                &:focus-within
+                {
+                    width: 230px;
+                    transition: width 0.6s;
+                    background: #f5f5f5;
+                }
+            }
+        }
+    }
+    
+    .ds-list
+    {
+        min-height: auto;
+        max-height: 400px;
+        overflow: auto;
+        
+        table
+        {
+            tr
+            {
+                td
+                {
+                    font-size: 13px;
+                    padding: 20px 10px;
+                    color: #696969;
+                    border-bottom: 1px solid #ccc;
+                    
+                    .cs-icon
+                    {
+                        position: relative;
+                        display: flex;
+                        align-items: center;
+                        
+                        span
+                        {
+                            &.icon
+                            {
+                                height: 45px;
+                                min-width: 45px;
+                                width: 45px;
+                                background: #ebebeb;
+                                border-radius: 100%;
+                                border: solid 1px #ccc;
+                                float: left;
+                                text-align: center;
+                                line-height: 45px;
+                                font-size: 18px;
+                                font-weight: 600;
+                            }
+                        }
+                        
+                        a
+                        {
+                            padding-left: 15px;
+                            color: #005daf;
+                            font-weight: 500;
+                            width: 100%;
+                            cursor: pointer;
+                            
+                            &:hover
+                            {
+                                text-decoration: underline;
+                            }
+                        }
+                        &:after
+                        {
+                            content: "";
+                            display: table;
+                            clear: both;
+                        }
+                    }
+                    
+                    .flex-address
+                    {
+                        display: flex;
+                        align-items: flex-start;
+                        
+                        p
+                        {
+                            width: 100%;
+                        }
+                        
+                        span
+                        {
+                            &.date
+                            {
+                                min-width: 150px;
+                                text-align: right;
+                                color: #ff0000;
+                                font-weight: 500;
+                            }
+                        }
+                    }
+                    
+                    ul
+                    {
+                        text-align: right;
+                        
+                        li
+                        {
+                            display: inline-block;
+                            position: relative;
+                            margin-left: 6px;
+                            vertical-align: middle;
+                            
+                            a
+                            {
+                                display: block;
+                                
+                                .pnt
+                                {
+                                    height: 40px;
+                                    border-radius: 20px;
+                                    position: relative;
+                                    padding: 0px 3px 0px 10px;
+                                    line-height: 40px;
+                                    
+                                    p
+                                    {
+                                        font-weight: 500;
+                                        text-transform: uppercase;
+                                        color: #fff;
+                                        float: left;
+                                        padding-right: 10px;
+                                    }
+                                    
+                                    .circule
+                                    {
+                                        font-weight: 600;
+                                        color: #000;
+                                        background: #fff;
+                                        height: 34px;
+                                        min-width: 34px;
+                                        border-radius: 17px;
+                                        margin-top: 3px;
+                                        padding: 0px 10px;
+                                        float: right;
+                                        line-height: 36px;
+                                    }
+                                }
+                            }
+                            
+                            &:nth-child(1)
+                            {
+                                a
+                                {
+                                    .pnt
+                                    {
+                                        background: #18c3a1;
+                                    }  
+                                }
+                            }
+                            
+                            &:nth-child(2)
+                            {
+                                a
+                                {
+                                    .pnt
+                                    {
+                                        background: #fe62ca;
+                                    }  
+                                }
+                            }
+                            
+                            &:nth-child(3)
+                            {
+                                a
+                                {
+                                    .pnt
+                                    {
+                                        background: #4ac9e3;
+                                    }  
+                                }
+                            }
+                        }
+                    }
+                }
+                
+                &:last-child
+                {
+                    td
+                    {
+                        border-bottom: 0px;
+                    }
+                }
+                
+                &:hover
+                {
+                    background: #f1f1f1;
+                }
+            }
+        }
+    }
+    
+}
+

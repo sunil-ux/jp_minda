@@ -1,0 +1,133 @@
+<div class="main-container" > 
+  <div *ngIf="loader" class="center-loder cs-loader">
+    <div class="outer">
+      <div class="innear">
+        <mat-spinner class="loader"></mat-spinner>
+      </div>
+    </div>
+  </div>
+  <div class="middle-container" mat-button routerLink="/discount-list" routerLinkActive="active" style="cursor: pointer">
+    <div class="page-heading">
+      <img src="assets/img/leads_icon.svg" class="h-icon">
+      <div class="heading-text">
+        <h2>Discount/GST</h2>
+        <p>Add New Discount Master</p>
+      </div>
+    </div>
+  </div>
+  <div class="container-outer">
+    <form #f="ngForm" (ngSubmit)="submit()">
+      <div class="container">
+        <div class="row">
+          <div class="col s12">
+            <div class="sprate-box">
+              <!-- <div class="cs-heading">
+                <h2>USER TYPE</h2>
+                <span class="required">Indicates required fields ( <sup>*</sup> )</span>
+              </div> -->
+              <mat-divider class="left-right-15 mt10"></mat-divider>
+              
+              <!-- <div class="row">
+                <div class="col s12 pr0 pl0">
+                  <div class="user-type select-one pt0">
+                    <mat-radio-group class="example-section" name="discount_type" [(ngModel)]="form.discount_type" (change)="get_category()">
+                      <mat-radio-button class="example-margin" color="accent" value="CATEGORY">CATEGORY</mat-radio-button>
+                      <mat-radio-button class="example-margin" color="accent" value="FLAT DISCOUNT">FLAT DISCOUNT</mat-radio-button> 
+                    </mat-radio-group>
+                  </div>
+                </div>
+              </div> -->
+              
+              
+              <div class="row" >
+                <div class="col s12 padding0">
+                  <div class="cs-table left-right-20">
+                    <div class="table-head">
+                      <table>
+                        <tr>
+                          <th>{{form.discount_type == 'CATEGORY' ? 'CATEGORY': 'FLAT DISCOUNT'}}
+                          </th>
+                          <th class="w150" >GST(%)</th>
+                          <th class="w150" >Distributor (%)</th>
+                          <th class="w150">Direct Dealer (%)</th>
+                        </tr>
+                      </table>
+                    </div>
+                    
+                    <div class="table-container">
+                      <div class="table-content none-shadow">
+                        <table>
+                          <tr *ngFor="let row of category_data; let i = index">
+                            <td>{{row.category | titlecase}}</td>
+                            <td class="w150"> 
+                              <div class="td-input" >
+                                <input type="text" [name]="'gst'+i" [(ngModel)]="row.gst" >
+                              </div>
+                            </td>
+                            <td class="w150">
+                              <div class="td-input" >
+                                <input type="text" [name]="'distributor'+i"  [(ngModel)]="row.distributor">
+                              </div>
+                              <!-- <div class="td-input" *ngIf="row.discount_type != 'CATEGORY'">
+                                <input type="text" name="distributors" [(ngModel)]="row.distributors">
+                              </div> -->
+                            </td>
+                            <td class="w150">
+                              <div class="td-input"  >
+                                <input type="text" [name]="'direct_dealer'+i"  [(ngModel)]="row.direct_dealer">
+                              </div>
+                              <!-- <div class="td-input" *ngIf="row.discount_type != 'CATEGORY'">
+                                <input type="text" name="direct_dealers" [(ngModel)]="row.direct_dealers">
+                              </div> -->
+                            </td>
+                          </tr>
+                        </table>
+                      </div>
+                    </div>
+<!--                     
+                    <div class="table-container" *ngIf="form.discount_type == 'FLAT DISCOUNT'">
+                      <div class="table-content none-shadow">
+                        <table style="border-bottom: 1px solid #ccc;">
+                          <tr>
+                            <td>&nbsp;</td>
+                            <td class="w150">
+                              <div class="td-input" *ngIf="flat_discount_data.discount_type == 'FLAT DISCOUNT'">
+                                <input type="text" name="distributor"  [(ngModel)]="flat_discount_data.distributor">
+                              </div>
+                              <div class="td-input" *ngIf="flat_discount_data.discount_type != 'FLAT DISCOUNT'">
+                                <input type="text" name="distributors" [(ngModel)]="form.distributors">
+                              </div>
+                            </td>
+                            <td class="w150">
+                              <div class="td-input" *ngIf="flat_discount_data.discount_type == 'FLAT DISCOUNT'">
+                                <input type="text" name="direct_dealer"  [(ngModel)]="flat_discount_data.direct_dealer">
+                              </div>
+                              <div class="td-input" *ngIf="flat_discount_data.discount_type != 'FLAT DISCOUNT'">
+                                <input type="text" name="direct_dealers" [(ngModel)]="form.direct_dealers">
+                              </div>
+                            </td>
+                          </tr>
+                        </table>
+                      </div>
+                    </div> -->
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="row">
+          <div class="col s12">
+            <div class="cs-btn fixedd mt32 text-right">
+              <div class="in-btn">
+                <button mat-raised-button color="accent">Save</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+<div class="h50"></div>

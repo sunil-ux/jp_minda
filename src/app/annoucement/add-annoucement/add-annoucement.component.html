@@ -1,0 +1,103 @@
+<div class="main-container" >
+  <div *ngIf="loader" class="center-loder cs-loader">
+    <div class="outer">
+      <div class="innear">
+        <mat-spinner class="loader"></mat-spinner>
+      </div>
+    </div>
+  </div>
+  <div class="middle-container">
+    <div class="page-heading">
+      <img src="assets/img/leads_icon.svg" class="h-icon">
+      <div class="heading-text">
+        <h2>Announcement / Notice</h2>
+        <p>Create New Notice For all Users</p>
+      </div>
+    </div>
+  </div>
+  
+  
+  <div class="container-outer">
+    <app-master-tab></app-master-tab>
+    <div class="container tab-container">
+      <form #f="ngForm" name="form" (ngSubmit)="f.valid && submit()">
+        <div class="row">
+          <div class="col s12">
+            <div class="sprate-box">
+              <div class="cs-heading">
+                <h2>ANNOUNCEMENT / NOTICE</h2>
+                
+                <span class="required">Indicates required fields ( <sup>*</sup> )</span>
+              </div>
+              
+              <mat-divider class="left-right-15 mt10"></mat-divider>
+              
+              <div class="row">
+                <div class="col s12 pl0">
+                  <div class="select-one">
+                    <p>Select Network</p>
+                    <mat-radio-group name="network_type" [(ngModel)]="data.network_type">
+                      <mat-radio-button value="Distributor">Distributor</mat-radio-button>
+                      <mat-radio-button value="Retailer">Retailer</mat-radio-button>
+                      <mat-radio-button value="Direct Dealer">Direct Dealer</mat-radio-button>
+                      <mat-radio-button value="Sales Executive">Sales Executive</mat-radio-button>
+                    </mat-radio-group>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="from-fields">
+                
+                <div class="row">
+                  <div class="col s6 pl0">
+                    <div class="control-field" [ngClass]="{ 'has-error' : f.submitted && !data.subject }">
+                      <mat-form-field class="cs-input">
+                        <input matInput placeholder="Subject" name="subject" [(ngModel)]="data.subject" required>
+                      </mat-form-field>
+                    </div>
+                  </div>
+                  <div class="col s6 empty ">
+                  </div>
+                </div>
+              </div>
+              
+              <div class="row" [ngClass]="{ 'has-error' : f.submitted && !data.description }">
+                <div class="col s12 padding0">
+                  <app-ngx-editor [placeholder]="'Enter text here...'" [spellcheck]="true" name="description" [(ngModel)]="data.description"></app-ngx-editor>
+                </div>
+              </div>
+              
+              <mat-divider class="left-right-15 mt10 mb10"></mat-divider>
+              <div class="cs-heading">
+                <h2>ACTION</h2>
+              </div>
+              <mat-divider class="left-right-15 mt10"></mat-divider>
+              
+              <div class="row">
+                <div class="col s12">
+                  <div class="select-one">
+                    <mat-radio-group class="check-list" name="action_type" [(ngModel)]="data.action_type">
+                      <mat-radio-button value="SMS">SMS</mat-radio-button>
+                      <mat-radio-button value="EMAIL">EMAIL</mat-radio-button>
+                    </mat-radio-group>
+                  </div>
+                </div>
+              </div>
+              
+            </div>
+          </div>
+          
+          <div class="col s12">
+            <div class="cs-btn fixedd mt32 text-right">
+              <div class="in-btn">
+                <button mat-raised-button color="accent">Save</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<div class="h50"></div>

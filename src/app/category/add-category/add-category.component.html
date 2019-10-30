@@ -1,0 +1,126 @@
+<div class="main-container" >
+  <div *ngIf="loader" class="center-loder cs-loader">
+    <div class="outer">
+      <div class="innear">
+        <mat-spinner class="loader"></mat-spinner>
+      </div>
+    </div>
+  </div>
+  <div class="middle-container">
+    <div class="page-heading">
+      <img src="assets/img/master_icon.svg" class="h-icon">
+      <div class="heading-text">
+        <h2>Category</h2>
+        <p>Add New Category</p>
+      </div>
+    </div>
+  </div>
+  
+  
+  <div class="container-outer">
+    <div class="container" >
+      <form name="form" #f="ngForm" (ngSubmit)="f.valid && submit()">
+        <div class="row">
+          <div class="col s12">
+            <div class="sprate-box">
+              <div class="cs-heading">
+                <h2>Add New Category, Subcategory & Series</h2>
+                <span class="required">Indicates required fields ( <sup>*</sup> )</span>
+              </div>
+              <mat-divider class="left-right-15 mt10"></mat-divider>  
+              <div class="row mb0">
+                <div class="col s12">
+                  <div class="select-one">
+                    <mat-radio-group name="cat_type" [(ngModel)]="data.cat_type">
+                      <mat-radio-button value="Category">Category</mat-radio-button>
+                      <mat-radio-button value="Subcategory">Subcategory</mat-radio-button>
+                      <mat-radio-button value="Series">Series</mat-radio-button>
+                    </mat-radio-group>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="from-fields">
+                <div class="row">
+                  
+                  <div class="col s4 pr0" *ngIf="data.cat_type == 'Category' ">
+                    <div class="control-field" [ngClass]="{ 'has-error' : f.submitted && !data.category }">
+                      <mat-form-field class="cs-input">
+                        <input matInput placeholder="Enter Category Name" name="category" [(ngModel)]="data.category" required>
+                      </mat-form-field>
+                    </div>
+                  </div>
+                  
+                  <div *ngIf="data.cat_type == 'Subcategory'">
+                    <div class="col s4 pl0">
+                      <div class="control-field" [ngClass]="{ 'has-error' : f.submitted && !data_subcategory.category }">
+                        <mat-form-field class="cs-input select-input auto-select">
+                          <input matInput type="text" placeholder="Select Category" [matAutocomplete]="category" name="category" (keyup)="category_array_filter(data_subcategory.category,category_data,'category')" required [(ngModel)]="data_subcategory.category">
+                          <mat-autocomplete #category="matAutocomplete"> 
+                            <mat-option *ngFor="let data of tem_category" (click)="get_category_id(data.category)" [value]="data.category">
+                              <small>{{data.category | titlecase}}</small>
+                            </mat-option>
+                          </mat-autocomplete>
+                        </mat-form-field>
+                      </div>
+                    </div>
+                    <div class="col s4 pr0">
+                      <div class="control-field" [ngClass]="{ 'has-error' : f.submitted && !data_subcategory.subcategory }">
+                        <mat-form-field class="cs-input">
+                          <input matInput placeholder="Enter SubCategory Name" required name="subcategory" [(ngModel)]="data_subcategory.subcategory">
+                        </mat-form-field>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div *ngIf="data.cat_type == 'Series'">
+                    <div class="col s4 pl0">
+                      <div class="control-field" [ngClass]="{ 'has-error' : f.submitted && !data_series.category }">
+                        <mat-form-field class="cs-input select-input auto-select">
+                          <input matInput type="text" placeholder="Select Category" [matAutocomplete]="category" name="category" (keyup)="category_array_filter(data_series.category,tem_category,'category')" required [(ngModel)]="data_series.category">
+                          <mat-autocomplete #category="matAutocomplete"> 
+                            <mat-option *ngFor="let data of tem_category" (click)="get_sub_category()" [value]="data.category">
+                              <small>{{data.category | titlecase}}</small>
+                            </mat-option>
+                          </mat-autocomplete>
+                        </mat-form-field>
+                      </div>
+                    </div>
+                    <div class="col s4 pl0">
+                      <div class="control-field">
+                        <mat-form-field class="cs-input select-input auto-select">
+                          <input matInput placeholder=" Select Subcategory (Optional)" [matAutocomplete]="sub_category" (keyup)="sub_category_array_filter(data_series.sub_category,sub_cat_data,'sub_category')" name="sub_category" [(ngModel)]="data_series.sub_category">
+                          <mat-autocomplete #sub_category="matAutocomplete">
+                            <mat-option *ngFor="let data of temp_sub" [value]="data.sub_category">
+                              <small>{{data.sub_category | titlecase}}</small>
+                            </mat-option>
+                          </mat-autocomplete>
+                        </mat-form-field>
+                      </div>
+                    </div>
+                    <div class="col s4 pr0">
+                      <div class="control-field" [ngClass]="{ 'has-error' : f.submitted && !data_series.series }">
+                        <mat-form-field class="cs-input">
+                          <input matInput placeholder="Enter Series Name" name="series" [(ngModel)]="data_series.series" required>
+                        </mat-form-field>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <div class="col s12">
+            <div class="cs-btn fixedd mt32 text-right">
+              <div class="in-btn">
+                <button mat-raised-button color="accent">Save</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+<div class="h70"></div>

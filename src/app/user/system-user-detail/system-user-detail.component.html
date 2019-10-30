@@ -1,0 +1,206 @@
+<div class="main-container">
+  <div *ngIf="loader" class="center-loder cs-loader">
+    <div class="outer">
+      <div class="innear">
+        <mat-spinner class="loader"></mat-spinner>
+      </div>
+    </div>
+  </div>
+  
+  <div class="main-outer">
+    <div class="main-inner">
+      <div class="middle-container">
+        <div class="page-heading">
+          <div class="heading-text bc-space">
+            <div class="back-btn">
+              <a mat-button (click)="locationBack()"><i class="material-icons">arrow_right_alt</i></a>
+            </div>
+            <h2>{{user_data.name | titlecase}}
+              <a  class="edit-heading" color="accent" matRipple matTooltip="Edit Name" (click)="edit_system_user(user_data.id,user_data.name,'edit_system_user')"><i class="material-icons">create</i></a>
+            </h2>
+            
+            <p class="light">{{user_data.user_type | titlecase }}</p>
+          </div>
+        </div>
+      </div>
+      
+      <div class="container-outer">
+        <div class="container pr5 height-fix">
+          <div class="row mb15">
+            <div class="col s12 padding0">
+              <div class="details-info">
+                <div class="basic-details">
+                  <div class="profile-info pt0">
+                    <ul>
+                      <li class="col s4">
+                        <div class="cs-box">
+                          <img src="assets/img/gmail.svg" class="fix-img">
+                          <span>Email</span>
+                          <p>{{user_data.email ? '': 'NA'}}</p>
+                          <p class="link-clr"><a *ngIf="user_data.email" [href]="'mailto:'+ user_data.email + '?Subject=My%20Custom%20Subject'">{{user_data.email}}</a></p>
+                          <a  class="edit-icon" color="accent" matRipple matTooltip="Edit Email-Id" (click)="edit_user_email(user_data.id,user_data.email,'email_user_edit')"><i class="material-icons">create</i></a>
+                          
+                          
+                        </div>
+                      </li>
+                      
+                      <li  class="col s4">
+                        <div class="cs-box">
+                          <img src="assets/img/phone.svg" class="fix-img">
+                          <span>Mobile No.</span>
+                          <p>{{user_data.mobile ? user_data.mobile : 'NA'}}</p>
+                          <a class="edit-icon" color="accent" matRipple matTooltip="Edit Mobile No." (click)="edit_user_mobile(user_data.id,user_data.mobile,'mobile_user_edit')"><i class="material-icons">create</i></a>
+                        </div>
+                      </li>
+                      
+                      <li  class="col s4">
+                        <div class="cs-box">
+                          <img src="assets/img/master_icon.svg" class="fix-img">
+                          <span>Role Name</span>
+                          <p>{{user_data.role_name ? user_data.role_name : 'NA'}}</p>
+                          <a class="edit-icon" color="accent" matRipple matTooltip="Edit Role" (click)="editSystemUserRole(user_data.id,user_data.role_id,'edit_system_user_role')"><i class="material-icons">create</i></a>
+                        </div>
+                      </li>
+                      
+                      <li  class="col s2">
+                        <div class="cs-box">
+                          <img src="assets/img/master_icon.svg" class="fix-img">
+                          <!-- <img src="assets/img/phone.svg" class="fix-img"> -->
+                          <span>Username</span>
+                          <p>{{user_data.user_name ? user_data.user_name : 'NA'}}</p>
+                          <a class="edit-icon" color="accent" matRipple matTooltip="Edit user_name" (click)="edit_username(user_data.id,user_data.user_name,'user_name_edit')"><i class="material-icons">create</i></a>
+                        </div>
+                      </li>
+                      <li  class="col s2">
+                        <div class="cs-box">
+                          <img src="assets/img/master_icon.svg" class="fix-img">
+                          <!-- <img src="assets/img/phone.svg" class="fix-img"> -->
+                          <span>Password</span>
+                          <p>{{user_data.user_password ? user_data.user_password : 'NA'}}</p>
+                          <a class="edit-icon" color="accent" matRipple matTooltip="Edit Password" (click)="edit_user_password(user_data.id,user_data.user_password,'user_password_edit')"><i class="material-icons">create</i></a>
+                        </div>
+                      </li>
+                      <!-- <li  class="col s4">
+                        <div class="cs-box">
+                          <img src="assets/img/map-location.svg" class="fix-img">
+                          <span>Assign Location</span>
+                          <p>Faridabad Golden</p>
+                        </div>
+                      </li> -->
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <div class="row">
+            <div class="col s8 pl0">
+              <div class="sprate-box padding0 main-bdr">
+                <div class="full-address">
+                  <div class="cs-heading">
+                    <h2>ADDRESS</h2>
+                  </div>
+                  <a mat-raised-button class="edit-btn" matTooltip="EDIT" color="accent" (click)="editDetails(user_data.id,'edit_user')"><i class="material-icons">edit</i></a>
+                  <div class="nationality">
+                    <img src="assets/img/india.svg" alt="">
+                    <p>India</p>
+                  </div>
+                  
+                  <div class="ds-from-fields">
+                    <!-- <div class="row">
+                      <div class="col s3 pr0">
+                        <div class="control-field">
+                          <mat-form-field class="ds-input">
+                            <input matInput placeholder="State" name="state" [(ngModel)]="user_data.state" readonly>
+                            <mat-select placeholder="State" [(ngModel)]="form.state_name" name="state_name" >
+                              <mat-option  *ngFor="let data of state_data;let i=index;"   [value]="data.state_name" (click)="get_district(data.state_name)"  >{{data.state_name}}</mat-option>
+                            </mat-select>
+                          </mat-form-field>
+                        </div>
+                      </div>
+                      
+                      <div class="col s3">
+                        <div class="control-field">
+                          <mat-form-field class="ds-input">
+                            <input matInput placeholder="District" name="district" [(ngModel)]="user_data.district" readonly>
+                            <mat-select placeholder="District" name="district_name" [(ngModel)]="form.district_name"> 
+                              <mat-option *ngFor="let dis of district_data" [value]="dis.district_name" (click)="get_city(dis.district_name)">{{dis.district_name}}</mat-option>
+                            </mat-select>
+                          </mat-form-field>
+                        </div>
+                      </div>
+                      
+                      <div class="col s3 pl0">
+                        <div class="control-field">
+                          <mat-form-field class="ds-input">
+                            <input matInput placeholder="City" name="city" [(ngModel)]="user_data.city" readonly>
+                            <mat-select placeholder="City" name="city" [(ngModel)]="form.city">
+                              <mat-option *ngFor="let data of city_data" [value]="data.city">
+                                <small>{{data.city | titlecase}}</small>
+                              </mat-option>
+                            </mat-select>
+                          </mat-form-field>
+                        </div>
+                      </div>
+                      
+                      <div class="col s3 pl0">
+                        <div class="control-field">
+                          <mat-form-field class="ds-input">
+                            <input matInput placeholder="Pincode" name="pincode" [(ngModel)]="user_data.pincode" readonly>
+                            <mat-select placeholder="City" name="city" [(ngModel)]="form.city">
+                              <mat-option *ngFor="let data of city_data" [value]="data.city">
+                                <small>{{data.city | titlecase}}</small>
+                              </mat-option>
+                            </mat-select>
+                          </mat-form-field>
+                        </div>
+                      </div>
+                      
+                      <div class="col s12 mt10">
+                        <div class="control-field">
+                          <mat-form-field class="ds-input">
+                            <textarea matInput placeholder="Address" name="address" [(ngModel)]="user_data.address" readonly></textarea>
+                          </mat-form-field>
+                        </div>
+                      </div>
+                    </div> -->
+                    
+                    <div class="cs-row">
+                      <div class="static-info">
+                        <p>State</p>
+                        <p>{{data.state  ? data.state : 'NA'}}</p>
+                      </div>
+                      <div class="static-info">
+                        <p>District</p>
+                        <p>{{data.district  ? data.district : 'NA'}}</p>
+                      </div>
+                      <div class="static-info">
+                        <p>City</p>
+                        <p>{{data.city  ? data.city : 'NA'}}</p>
+                      </div>
+                      <div class="static-info w100" style="min-width: 100px;">
+                        <p>Pincode</p>
+                        <p>{{ user_data.pincode ? user_data.pincode : 'NA'}} </p>
+                      </div>
+                    </div>
+                    
+                    <div class="cs-row">
+                      <div class="static-info">
+                        <p>address</p>
+                        <p>{{data.address ? data.address : 'NA'}}</p>
+                      </div>
+                    </div>
+                    
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="h50"></div>
+

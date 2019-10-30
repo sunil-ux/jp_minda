@@ -1,0 +1,168 @@
+<div class="main-container" > 
+  <div *ngIf="loader" class="center-loder cs-loader">
+    <div class="outer">
+      <div class="innear">
+        <mat-spinner class="loader"></mat-spinner>
+      </div>
+    </div>
+  </div>
+  
+  <div class="main-outer">
+    <div class="main-inner">
+      <div class="middle-container" mat-button routerLink="/holiday-list" routerLinkActive="active" style="cursor: pointer">
+        <div class="page-heading">
+          <div class="heading-text">
+            <h2>Holidays</h2>
+            <p>Add New Holiday</p>
+          </div>
+        </div>
+        <span class="required">Indicates required fields ( <sup>*</sup> )</span>
+      </div>
+      
+      <div class="container-outer padding0 hidden">
+        <div class="container">
+          <form #f="ngForm" name="form" (ngSubmit)="f.form.valid && holiday_data.length && submit()">
+            <div class="row">
+              <div class="sprate-box pb0">
+                <div class="main-bdr">
+                  
+                  <div class="cs-heading">
+                    <h2>ADD HOLIDAYS</h2>
+                  </div>
+                  
+                  <div class="tabs margin15">
+                    <ul>
+                      <li><a class="active" >HOLIDAYS</a></li>
+                      <li><a routerLink="/leave-holiday-master/add-leave-rules" routerLinkActive="active">LEAVES RULES</a></li>
+                    </ul>
+                  </div>
+                  
+                  
+                  <div class="row adjust-row pt0">
+                    <div class="select-one">
+                      <mat-radio-group name="type" [(ngModel)]="data.type">
+                        <mat-radio-button value="National">National</mat-radio-button>
+                        <mat-radio-button value="Regional">Regional</mat-radio-button>
+                      </mat-radio-group>
+                    </div>
+                  </div>
+                  
+                  
+                  <div class="from-fields">
+                    <div class="row adjust-row pt0">
+                      
+                      <div class="col s6 pl0" [ngClass]="{ 'has-error' : f.submitted && !data.holiday_date }">
+                        <div class="control-field">
+                          <mat-form-field class="cs-input">
+                            <input matInput [matDatepicker]="picker" placeholder="Select Date" name="holiday_date" [(ngModel)]="data.holiday_date" >
+                            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                            <mat-datepicker #picker></mat-datepicker>
+                          </mat-form-field>
+                        </div>
+                        <!-- <mat-error *ngIf="f.submitted &&  (!data.holiday_date)"> Date is required</mat-error> -->
+                        
+                      </div>
+                      <!-- [disabled]="(!data.holiday_date) || (!data.title)" -->
+                      <div class="col s6 pr0" [ngClass]="{ 'has-error' : f.submitted && !data.title }">
+                        <div class="control-field">
+                          <mat-form-field class="cs-input pr75">
+                            <input matInput placeholder="Holiday Title" name="title" [(ngModel)]="data.title" >
+                          </mat-form-field>
+                          
+                          <div class="plus-btn" *ngIf="data.type=='National'">
+                            <a class="ss-flex" mat-raised-button color="accent" name="add"  [disabled]="(!data.holiday_date) || (!data.title)" (click)="push_in_table()">
+                              <i class="material-icons">add</i>
+                            </a>
+                          </div>
+                          <!-- <mat-error *ngIf="f.submitted && (!data.title)"> Title is required</mat-error> -->
+                          
+                          <div class="plus-btn" *ngIf="data.type=='Regional'">
+                            <a class="ss-flex" mat-raised-button color="accent" name="add" (click)="push_in_table()">
+                              <i class="material-icons">add</i>
+                            </a>
+                          </div>
+                        </div>
+                      </div>
+                      <mat-error *ngIf="f.submitted && !holiday_data.length">At least one holiday is required</mat-error>
+                      
+                    </div>
+                    
+                    <div class="row pl15">
+                      <div class="col s6 pl0" *ngIf="data.type == 'Regional' ">
+                        <div>
+                          <div class="territory-info">
+                            <div class="head">
+                              <h2>States</h2>
+                            </div>
+                            <div class="cs-checkbox">
+                              <div class="checkbox-outer">
+                                <section class="checkbox-inner" name="states">
+                                  <mat-checkbox class="check-list" value="a.state_name" (change)="state_array($event,a.state_name,i)" *ngFor="let a of state_data; let i=index;">{{a.state_name | titlecase}}
+                                  </mat-checkbox>
+                                </section>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div class="row" *ngIf="holiday_data['length']">
+                    <div class="col s12">
+                      <div class="cs-table left-right-22">
+                        <div class="table-head">
+                          <table>
+                            <tr>
+                              <th class="w230">Date</th>
+                              <th class="w230">Title</th>
+                              <th>States</th>
+                              <th class="w130">&nbsp;</th>
+                            </tr>
+                          </table>
+                        </div>
+                        
+                        <div class="table-container">
+                          <div class="table-content">
+                            <table>
+                              <tr *ngFor="let data of holiday_data;let index=index">
+                                <td class="w230">{{data.holiday_date | date:'d MMM y'}}</td>
+                                <td class="w230">{{data.title}}</td>
+                                <td>
+                                  <div class="tags">
+                                    <ul>
+                                      <li>
+                                        <span >{{data.states ? data.states : '-----'}}</span>
+                                      </li>
+                                    </ul>
+                                  </div>
+                                </td>
+                                
+                                <td class="w130">
+                                  <a mat-button class="del-btn" (click)="delete_table_data(index)">Delete</a>
+                                </td>
+                              </tr>
+                            </table>
+                          </div>
+                        </div>
+                        
+                      </div>
+                    </div>
+                  </div>
+                  
+                </div>
+                <div class="cs-btn fixedd mt30 text-right pr10">
+                  <div class="in-btn">
+                    <button mat-raised-button color="accent">Save</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </form>
+          
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="h50"></div>

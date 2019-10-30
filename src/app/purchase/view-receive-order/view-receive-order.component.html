@@ -1,0 +1,44 @@
+<div class="edit-modal" style="position:relative;">
+    <div mat-dialog-content>
+        <p class="heading mb0">Received Product Detail</p>
+        <div class="from-fields padding0">
+            <div class="col s12">          
+                <div class="row" >
+                    <div class="col s12 padding0">
+                        <div class="cs-table ss-scroll" style="height: auto; max-height: 300px;">
+                            <table>
+                                <tr>
+                                    <div class="ss-sticky">
+                                        <div class="table-head">
+                                            <table>
+                                                <tr>
+                                                    <th >Product Code</th>
+                                                    <th class="w100">Received Qty</th>
+                                                </tr>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </tr>
+                                <tr>
+                                    <div class="table-container">
+                                        <div class="table-content">
+                                            <table>
+                                                <tr *ngFor="let row of itemData">
+                                                    <td >{{row.product_code}}</td>
+                                                    <td class="w100">{{row.qty}}</td>
+                                                </tr>            
+                                            </table>
+                                        </div>
+                                    </div>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div mat-dialog-actions style="padding: 0px; min-height:0px">
+        <button class="cross-icon" color="" mat-dialog-close><i class="material-icons">clear</i></button>
+    </div>
+</div>

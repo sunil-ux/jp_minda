@@ -1,0 +1,381 @@
+<div class="main-container" >
+  <div *ngIf="loader" class="center-loder cs-loader">
+    <div class="outer">
+      <div class="innear">
+        <mat-spinner class="loader"></mat-spinner>
+      </div>
+    </div>
+  </div>
+  
+  <div class="main-outer">
+    <div class="main-inner">
+      <div class="middle-container">
+        <div class="page-heading">
+          <div class="heading-text bc-space">
+            <div class="back-btn">
+              <a mat-button (click)="backClicked()"><i class="material-icons">arrow_right_alt</i></a>
+            </div>
+            <h2>{{dr.name}}</h2>
+            <p class="light" *ngIf="order.order_type == '1'">Primary Order</p>
+            <p class="light" *ngIf="order.order_type == '2'">Secondary Order</p>
+          </div>
+        </div>
+        <div class="col s6" *ngIf="order.order_type==1">
+          <div class="status-info right-data">
+            <ul> 
+              <li class="approved" *ngIf="order.order_status == 'Pending' || order.order_status=='Reject'"  style="cursor: pointer" (click)="approve_status()">Approved</li>
+              <li class="reject" *ngIf="order.order_status == 'Pending' || order.order_status=='Approved'" style="cursor: pointer" (click)="reject(dr.id,'reason_reject',order.id)"   >Reject</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      
+      
+      <div class="container-outer">
+        <div class="container height-fix pr5">
+          <div class="row">
+            <div class="col s12">
+              <div class="details-info">
+                <!-- <div class="img-box">
+                  <img src="assets/img/user.png">
+                </div> -->
+                <div class="basic-details">
+                  <div class="profile-info pt0">
+                    <ul>
+                      <li class="col s4">
+                        <div class="cs-box">
+                          <img src="assets/img/gmail.svg" class="fix-img">
+                          <span>Email</span>
+                          <p>{{dr.email? '': 'NA'}}</p>
+                          <p class="link-clr"><a [href]="'mailto:'+ dr.email + '?Subject=My%20Custom%20Subject'">{{dr.email}}</a></p>
+                          <!-- <a class="edit-icon" color="accent" matRipple matTooltip="Edit Email-Id" (click)="edit_email(dr.id,dr.email,'email_edit')"><i class="material-icons">create</i></a> -->
+                        </div>
+                      </li>
+                      <li  class="col s4">
+                        <div class="cs-box">
+                          <img src="assets/img/phone.svg" class="fix-img">
+                          <span>Landline</span>
+                          <p>{{dr.mobile ? dr.mobile : 'NA'}}</p>
+                          <!-- <a class="edit-icon" color="accent" matRipple matTooltip="Edit Mobile No." (click)="edit_mobile(dr.id,dr.mobile,'mobile_edit')"><i class="material-icons">create</i></a> -->
+                        </div>
+                      </li>
+                      <li  class="col s4">
+                        <div class="cs-box">
+                          <img src="assets/img/gst.svg" class="fix-img">
+                          <span>GST Number</span>
+                          <p>{{dr.gst_no ? dr.gst_no : 'NA' }}</p>
+                          <!-- <a class="edit-icon" color="accent" matRipple matTooltip="Edit Gst No." (click)="edit_gst(dr.id,dr.gst_no,'gst_edit')"><i class="material-icons">create</i></a> -->
+                        </div>
+                      </li>
+                    </ul>
+                  </div>
+                  
+                  <div class="col s12 cs-figure pl0 mt15">
+                    <ul>
+                      <li>
+                        <div class="outer">
+                          <div class="inner">
+                            <span>Order ID</span>
+                            <p >#ORD{{order.id}}</p>
+                          </div>
+                        </div>
+                      </li>
+                      <li>
+                        <div class="outer">
+                          <div class="inner">
+                            <span>Date Created</span>
+                            <p >{{order.date_created | date: 'd MMM y'}}</p>
+                          </div>
+                        </div>
+                      </li>
+                      <li>
+                        <div class="outer">
+                          <div class="inner">
+                            <span>Order Value</span>
+                            <p >&#8377;{{order.order_total}}</p>
+                          </div>
+                        </div>
+                      </li>
+                      <li *ngIf="order.dist_name">
+                        <div class="outer">
+                          <div class="inner">
+                            <span>Assign Distributor</span>
+                            <p >{{order.dist_name}}</p>
+                          </div>
+                        </div>
+                      </li>
+                    </ul>
+                  </div>
+                  <div  *ngIf="order.order_type == '1'" class="col s12 cs-figure pl0 mt15">
+                    <ul>
+                      <li >
+                        <div class="outer">
+                          <div class="inner">
+                            <span>Order Remark</span>
+                            <p >{{order.order_remark}}</p>
+                          </div>
+                        </div>
+                      </li>
+                      <li *ngIf="order.order_status" [ngClass]="{'orange-bg':order.order_status=='Pending','green-bg':order.order_status=='Approved','red-bg':order.order_status=='Reject'}">
+                        <div class="outer">
+                          <div class="inner">
+                            <span>Order Status</span>
+                            <p >{{order.order_status}}</p>
+                          </div>
+                        </div>
+                      </li>
+                      <li *ngIf="order.reject_reason">
+                        <div class="outer">
+                          <div class="inner">
+                            <span>Reason Reject</span>
+                            <p >{{order.reject_reason}}</p>
+                          </div>
+                        </div>
+                      </li>
+                      <li *ngIf="order.order_status!='Pending' && order.order_type==1" >
+                        <div class="outer">
+                          <div class="inner">
+                            <span *ngIf="order.order_status=='Approved'">Approved By</span>
+                            <span *ngIf="order.order_status=='Reject'">Reject By</span>
+                            <p >{{order.action_by_name}}</p>
+                          </div>
+                        </div>
+                      </li>
+                      <li *ngIf="order.order_status!='Pending'">
+                        <div class="outer">
+                          <div class="inner">
+                            <span *ngIf="order.order_status=='Approved'">Approved Date</span>
+                            <span *ngIf="order.order_status=='Reject'">Rejected Date</span>
+                            <p >{{order.action_date | date: 'MMM d,y'}}</p>
+                          </div>
+                        </div>
+                      </li>
+                      
+                      
+                      
+                      
+                    </ul>
+                  </div>
+                  
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <div class="row">
+            <div class="col s8">
+              <div class="row">
+                <div class="collaps">
+                  <div class="collaps-area">
+                    
+                    <mat-accordion>
+                      <mat-expansion-panel [expanded]="step === 0" (opened)="setStep(0)">
+                        <mat-expansion-panel-header>
+                          <mat-panel-title>
+                            ADDRESS
+                          </mat-panel-title>
+                        </mat-expansion-panel-header>
+                        <div class="sprate-box padding0">
+                          <div class="full-address">
+                            <div class="nationality">
+                              <img src="assets/img/india.svg" alt="">
+                              <p>{{dr.country ? dr.country : 'India'}}</p>
+                            </div>
+                            <div class="ds-from-fields">
+                              <div class="cs-row">
+                                <div class="static-info">
+                                  <p>State</p>
+                                  <p>{{dr.state ? dr.state :'NA'}}</p>
+                                </div>
+                                <div class="static-info">
+                                  <p>District</p>
+                                  <p>{{dr.district ? dr.district :'NA'}}</p>
+                                </div>
+                                <div class="static-info">
+                                  <p>City</p>
+                                  <p>{{dr.city? dr.city :'NA'}}</p>
+                                </div>
+                                <div class="static-info w100" style="min-width: 100px;">
+                                  <p>Pincode</p>
+                                  <p>{{dr.pincode? dr.pincode :'NA'}}</p>
+                                </div>
+                              </div>
+                              <div class="cs-row">
+                                <div class="static-info">
+                                  <p>address</p>
+                                  <p>{{dr.address? dr.address :'NA'}}</p>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </mat-expansion-panel>
+                      <mat-expansion-panel [expanded]="step === 1" (opened)="setStep(0)" *ngIf="cp_data?.length">
+                        <mat-expansion-panel-header>
+                          <mat-panel-title>
+                            CONTACT PERSONS
+                          </mat-panel-title>
+                        </mat-expansion-panel-header>
+                        <div class="sprate-box padding0">
+                          <div class="full-address">
+                            <div class="cs-table">
+                              <div class="table-head">
+                                <table>
+                                  <tr>
+                                    <th>Name</th>
+                                    <th class=" w200">Mobile No. 1</th>
+                                    <th class="w200">Mobile No. 2</th>
+                                  </tr>
+                                </table>
+                              </div>
+                              
+                              <div class="table-container">
+                                <div class="table-content none-shadow">
+                                  <table>
+                                    <tr *ngFor="let cp of cp_data">
+                                      <td>{{cp.name | titlecase}}</td>
+                                      <td class="w200">{{cp.mobile_01 ? cp.mobile_01 : 'NA'}}</td>
+                                      <td class="w200">{{cp.mobile_02 ? cp.mobile_02 : 'NA'}}
+                                      </td>
+                                    </tr>
+                                  </table>
+                                </div>
+                              </div>
+                              
+                            </div>
+                          </div>
+                        </div>
+                        
+                      </mat-expansion-panel>
+                    </mat-accordion>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <div class="col s4">
+              <div class="sprate-box padding0 main-bdr">
+                <div class="cs-logs">
+                  <div class="cs-heading">
+                    <h2>ORDER LOGS</h2>
+                  </div>
+                  <div class="logs-outer" style="max-height: 265px; height: 265px;">
+                    <div class="logs-list">
+                      <ul>
+                        <li  *ngFor="let val of notification">
+                          <div class="name">
+                            {{val.created_name}}
+                          </div>
+                          <div class="date">
+                            {{val.date_created | date: 'MMM d,y hh:mm a'}}
+                          </div>
+                          <p>
+                            <!-- <strong>Call</strong> :  -->
+                            {{val.remark}} 
+                          </p>
+                        </li>
+                        
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          
+          <div class="row">
+            <div class="sprate-box padding0 main-bdr">
+              <div class="cs-heading left-right-10 mb0">
+                <h2>PRODUCT INFORMATION</h2>
+              </div>
+              <div class="cs-table left-right-10">
+                <div class="table-head">
+                  <table>
+                    <tr>
+                      <th >Product Description</th>
+                      <th class="w130">Product Code</th>
+                      <!--<th class="w130">Product Code</th>
+                        <th class="w150">Vehical Name</th>
+                        <th class="w80 text-center">Segment</th> -->
+                        
+                        <th class="w60 text-center">QTY</th>
+                        <th class="w60">GST(%)</th>
+                        <th class="w90">Amount</th>
+                        <th class="w90">Discount</th>
+                        <th class="w100"> Net Amount</th>
+                      </tr>
+                    </table>
+                  </div>
+                  
+                  <div class="table-container">
+                    <div class="table-content">
+                      <table>
+                        <tr *ngFor="let item of order_item">
+                          <td>{{item.product_name}} {{item.product_type}} {{item.vehicle_name}} {{item.segment}}</td>
+                          <td class="w130 ellips">{{item.product_code}}</td>
+                          <!-- <td class="w130 ellips">{{item.product_code}}</td>
+                            <td class="w150 ellips ">{{item.vehicle_name}}</td>
+                            <td class="w80 text-center">{{item.segment}}</td> -->
+                            <td class="w60 text-center">{{item.qty}}</td>
+                            <td class="w60">{{item.gst}} %</td>
+                            <td class="w90">₹ {{item.item_amount}}</td>
+                            <td class="w90">₹ {{item.discount_amount}}</td>
+                            <td class="w100">₹ {{item.item_total}}</td>
+                          </tr>
+                        </table>
+                      </div>
+                    </div>
+                    
+                    <div class="section"> 
+                      <div class="invoice-details">
+                        <table class="invoice-table">
+                          <tbody>
+                            <tr>
+                              <td class="td" style="width:300px">Total Quantity</td>
+                              <td class="w120 td">{{order.totalQty}}</td>
+                            </tr>
+                            <tr>
+                              <td class="td" style="width:300px">Basic Total</td>
+                              <td class="td">₹ {{order.gross_total}}</td>
+                            </tr>
+                            <tr>
+                              <td class="td" style="width:300px">GST</td>
+                              <td class="td">₹ {{order.gst_amt}}</td>
+                            </tr>
+                            <tr>
+                              <td class="td" style="width:300px">Discount</td>
+                              <td class="td">₹ {{order.dis_amt}}</td>
+                            </tr>
+                            <tr>
+                              <td class="td" style="width:300px">Grand Total</td>
+                              <td class="td">₹ {{order.order_total}} </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </div> 
+                    
+                    <!-- <div class="row">
+                      <div class="col s12 pl15 pr15">
+                        <div class="cs-description">
+                          <h2>Remark</h2>
+                          <p></p>
+                        </div>
+                      </div>
+                    </div> -->
+                    
+                  </div>
+                </div>
+              </div>
+              
+            </div>
+          </div>
+        </div>
+      </div>
+      
+    </div>
+    
+    <div class="h50"></div>
+    
+    

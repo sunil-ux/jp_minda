@@ -1,0 +1,204 @@
+<div *ngIf="loader" class="center-loder cs-loader">
+    <div class="outer">
+      <div class="innear">
+        <mat-spinner class="loader"></mat-spinner>
+      </div>
+    </div>
+  </div>
+<div *ngIf="label=='Category'" class="edit-modal" >
+  <p class="heading">Add Category/Series</p>
+  <div class="from-fields">
+    <div class="row">
+      <div class="control-field">
+        <div class="select-one">
+          <mat-radio-group class="example-section" name="type" #type="ngModel" [(ngModel)]="categoryData.type">
+            <mat-radio-button class="example-margin pr50" color="accent" value="sub_category">Sub Category</mat-radio-button>
+            <mat-radio-button class="example-margin" color="accent" value="series">Series</mat-radio-button>
+          </mat-radio-group>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div mat-dialog-content>
+    <div class="from-fields">
+      <div class="col s12">          
+        <div *ngIf="categoryData.type=='sub_category'" >
+          <div class="row">
+            <div class="col s5 pl0">
+              <div class="control-field">
+                <mat-form-field class="cs-input">
+                  <input matInput placeholder="Sub Category *" name="sub_category" [(ngModel)]="categoryData.sub_category" >
+                </mat-form-field>
+                <mat-error *ngIf="error">
+                  <p>
+                    Field is required.....
+                  </p>
+                </mat-error>
+              </div>
+            </div>
+            
+            <div class="col s7 ">
+              <div class="control-field" >
+                <mat-form-field class="cs-input pr75">
+                  <input matInput placeholder="Series (Optional)" name="series" [(ngModel)]="categoryData.series" >
+                </mat-form-field>
+                <div class="plus-btn">
+                  <button mat-raised-button color="accent" [disabled]="!categoryData.sub_category" (click)="addSubCategory()">
+                    <i class="material-icons"  >add</i>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row" *ngIf="categorySeriesDataArray.length !=0">
+            <div class="col s12 padding0">
+              <div class="cs-table left-right-20">
+                <div class="table-head">
+                  <table>
+                    <tr>
+                      <th class="w100">Sub Category</th>
+                      <th class="w100">Series</th>
+                      <th class="w80">&nbsp;</th>
+                    </tr>
+                  </table>
+                </div>
+                
+                <div class="table-container">
+                  <div class="table-content">
+                    <table>
+                      <tr *ngFor="let value of categorySeriesDataArray" >
+                        <td class="w100">{{value.sub_category_name}}</td>
+                        <td class="w100">{{value.series_name}}</td>
+                        <td class="w80">
+                          <a mat-raised-button class="del-btn" (click)="deleteCategory(index)">Delete</a>
+                        </td>
+                      </tr>            
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div *ngIf="categoryData.type=='series'" >
+          <div   class="row">
+            <div class="col s7 ">
+              <div class="control-field" >
+                <mat-form-field class="cs-input pr75">
+                  <input matInput placeholder="Series *" name="series" [(ngModel)]="categoryData.series" >
+                </mat-form-field>
+                <mat-error *ngIf="error">
+                  <p>
+                    Field is required....
+                  </p>
+                </mat-error>
+                <div class="plus-btn">
+                  <button mat-raised-button color="accent" [disabled]="!categoryData.series" (click)="addSeries()">
+                    <i class="material-icons"  >add</i>
+                  </button>
+                </div>
+                
+              </div>
+            </div>
+          </div>
+          <div class="row" *ngIf="seriesData.length!=0">
+            <div class="col s12 padding0">
+              <div class="cs-table left-right-20">
+                <div class="table-head">
+                  <table>
+                    <tr>
+                      <th class="w100">Series</th>
+                      <th class="w130">&nbsp;</th>
+                    </tr>
+                  </table>
+                </div>
+                
+                <div class="table-container">
+                  <div class="table-content">
+                    <table>
+                      <tr *ngFor="let value of seriesData" >
+                        <td class="w100">{{value.series_name}}</td>
+                        <td class="w130">
+                          <a mat-raised-button class="del-btn" (click)="deleteSeries(index)">Delete</a>
+                        </td>
+                      </tr>            
+                    </table>
+                  </div>
+                </div>
+                
+              </div>
+            </div>
+          </div>
+        </div>
+        
+      </div>
+    </div>
+  </div>
+  <div mat-dialog-actions>
+    <button mat-raised-button mat-accent color="accent"  (click)="saveSubCategory()">Save</button>
+    <button mat-raised-button mat-warn color="warn" [mat-dialog-close]="false" >Cancel</button>
+  </div>
+</div>
+<div *ngIf="label=='Sub Category'" class="edit-modal" >
+  <p class="heading">Add Series</p>
+  <div mat-dialog-content>
+    <div class="from-fields">
+      <div class="col s12">          
+        <div>
+          <div   class="row">
+            <div class="col s7 ">
+              <div class="control-field" >
+                <mat-form-field class="cs-input pr75">
+                  <input matInput placeholder="Series" name="series" [(ngModel)]="categoryData.series" >
+                </mat-form-field>
+                <mat-error *ngIf="error">
+                    <p>
+                      Field is required....
+                    </p>
+                  </mat-error>
+                <div class="plus-btn">
+                  <button mat-raised-button color="accent" [disabled]="!categoryData.series" (click)="addSeries()">
+                    <i class="material-icons"  >add</i>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row" *ngIf="seriesData.length!=0">
+            <div class="col s12 padding0">
+              <div class="cs-table left-right-20">
+                <div class="table-head">
+                  <table>
+                    <tr>
+                      <th class="w100">Series</th>
+                      <th class="w130">&nbsp;</th>
+                    </tr>
+                  </table>
+                </div>
+                
+                <div class="table-container">
+                  <div class="table-content">
+                    <table>
+                      <tr *ngFor="let value of seriesData" >
+                        <td class="w100">{{value.series_name}}</td>
+                        <td class="w130">
+                          <a mat-raised-button class="del-btn" (click)="deleteSeries(index)">Delete</a>
+                        </td>
+                      </tr>            
+                    </table>
+                  </div>
+                </div>
+                
+              </div>
+            </div>
+          </div>
+        </div>
+        
+      </div>
+    </div>
+  </div>
+  <div mat-dialog-actions>
+    <button mat-raised-button mat-accent color="accent" (click)="saveSeries()">Save</button>
+    <button mat-raised-button mat-warn color="warn" [mat-dialog-close]="false" >Cancel</button>
+  </div>
+</div>

@@ -1,0 +1,162 @@
+<div class="main-container" >
+  <div *ngIf="loader" class="center-loder cs-loader">
+    <div class="outer">
+      <div class="innear">
+        <mat-spinner class="loader"></mat-spinner>
+      </div>
+    </div>
+  </div>
+  <div class="middle-container">
+    <div class="page-heading">
+      <img src="assets/img/master_icon.svg" class="h-icon">
+      <div class="heading-text">
+        <h2>Category</h2>
+        <p>Total Category ({{data_category?.length}})</p>
+      </div>
+    </div>
+    
+    <!-- <div class="top-pagination">
+      <ul>
+        <li class="refresh-area">
+          <a class="refresh-btn" mat-raised-button  matTooltip="Refresh" (click)="refresh()"><i class="material-icons"> refresh</i></a>
+        </li>
+        <li *ngIf="count>100"><p>Pages {{pagenumber}} Of {{total_page}}</p></li>
+        
+        <li *ngIf="count>100">
+          <button mat-button class="left-btn" (click)="pagination(page_limit,start-page_limit)" [disabled]="pagenumber == 1">
+            <i class="material-icons">keyboard_arrow_left</i></button>
+          </li>
+          
+          <li *ngIf="count>100">
+            <input type="text" placeholder="GO TO" name="pagenumber" (keyup.enter)="pagination(page_limit,((pagenumber*page_limit)-page_limit))" [(ngModel)]="pagenumber">
+          </li>
+          
+          <li *ngIf="count>100">
+            <button mat-button class="right-btn"  (click)="pagination(page_limit,(start+page_limit))" [disabled]="pagenumber == total_page">
+              <i class="material-icons">keyboard_arrow_right</i>
+            </button>
+          </li>
+        </ul>
+      </div> -->
+    </div>
+    
+    <div class="container-outer">
+      <div class="container" >
+        <div class="row">
+          <div class="col s12">
+            <div class="cs-table left-right-20">
+              <div class="table-sticky-head">
+                <div class="table-head">
+                  <table>
+                    <tr>
+                      <!-- <th class="w150">Brand</th> -->
+                      <th class="w440">Category</th>
+                      <th class="w440">Sub Category</th>
+                      <th>Series</th>
+                    </tr>
+                  </table>
+                </div>
+              </div>
+              <div class="table-container">
+                <div class="table-content">
+                  <table>
+                    <tr *ngFor="let cat_data of data_category;let i=index;">
+                      <td class="w440 ch-hover">
+                        <!-- <div class="action-btns">
+                          <a mat-button class="view" routerLink="/lead-detail/{{data.id}}" routerLinkActive="active"><i class="material-icons">remove_red_eye</i> View</a>
+                          <button mat-button class="delete"><i class="material-icons">delete_sweep</i> Delete</button>
+                        </div> -->
+                        <div class="td-input-edit {{cat_data.active == true ? 'active': ''}}"  >
+                          <input  matInput type="text"   [(ngModel)]="cat_data.input_category" *ngIf="cat_data.active==true">
+                          <span *ngIf="cat_data.active==false">{{cat_data.category}}</span>
+                          <a class="edit" >
+                            <i class="material-icons blue-clr" matTooltip="Edit Name" (click)="edit_category(i)">create </i>
+                            <i class="material-icons" matTooltip="Add Category"  (click)="addSubCategorySeries('Category',cat_data.category)">add</i>
+                            <i class="material-icons red-clr" *ngIf="cat_data.category_data && cat_data.category_data.length>1" matTooltip="Delete Category" (click)="deleteCategory(cat_data.category)">delete</i>
+                          </a>
+                          <ul class="td-action"  *ngIf="cat_data.active==true">
+                            <li><a ><i class="material-icons green-clr" (click)="updatecategory(cat_data.input_category,cat_data.category,cat_data.id,i)">save</i></a></li>
+                            <li><a><i class="material-icons red-clr" (click)="remove_cat_edit_button(i)">clear</i></a></li>
+                          </ul>
+                        </div>
+                        
+                        
+                      </td>
+                      <!-- (click)="delete_category(data.category)" -->
+                      <td class="padding0">
+                        <table class="inner-table">
+                          <tr *ngFor="let sub_category of cat_data.category_data;  let catindex=index">
+                            <td class="w440 ch-hover">
+                              <div class="td-input-edit {{sub_category.active == true ? 'active': ''}}">
+                                <input  matInput type="text"  *ngIf="sub_category.active==true" [(ngModel)]="sub_category.input_sub_category">
+                                <span *ngIf="sub_category.active==false"> {{sub_category.sub_category}}</span>
+                                
+                                <a class="edit" *ngIf="sub_category.sub_category" >
+                                  <i class="material-icons blue-clr" matTooltip="Edit Name" (click)="edit_subcategory(i,catindex)">create</i>
+                                  <i class="material-icons" matTooltip="Add Series" (click)="addSeries('Sub Category',cat_data.category,sub_category.sub_category)">add</i>
+                                  <i class="material-icons red-clr" *ngIf="sub_category.series_data && sub_category.series_data.length>1" matTooltip="Delete Sub Category" (click)="delete_sub_category(cat_data.category,sub_category.sub_category)">delete</i>
+                                </a>
+                                <ul class="td-action" *ngIf="sub_category.active==true">
+                                  <li><a  ><i class="material-icons green-clr" (click)="updatesubcategory(cat_data.category,sub_category.input_sub_category,sub_category.sub_category,sub_category.sub_id,i,catindex)">save</i></a></li>
+                                  <li><a ><i class="material-icons red-clr"  (click)="remove_subcata_edit_button(i,catindex)">clear</i></a></li>
+                                </ul>
+                              </div>
+                            </td>
+                            <td class="padding0">
+                              <table class="inner-table">
+                                <tr *ngFor="let series of sub_category.series_data;let series_index=index ">
+                                  <td class="ch-hover">
+                                    <div class="td-input-edit {{series.active==true ? 'active' :''}}">
+                                      <input matInput type="text" *ngIf="series.active==true"  [(ngModel)]="series.input_series_name">
+                                      <span *ngIf="series.active==false">{{series.series_name}}</span>
+                                      <a class="edit" *ngIf="series.series_name" >
+                                        <i class="material-icons blue-clr" matTooltip="Edit Name" (click)="edit_series(i,catindex,series_index)">create</i>
+                                        <i class="material-icons red-clr" *ngIf="sub_category.series_data && sub_category.series_data.length>1" matTooltip="Delete Series" (click)="delete_series(cat_data.category,sub_category.sub_category,series.series_name)">delete</i>
+                                      </a>
+                                      <ul class="td-action"  *ngIf="series.active==true">
+                                        <li><a  ><i class="material-icons green-clr" (click)="updateseries(cat_data.category,sub_category.sub_category,series.input_series_name,series.series_name,series.series_id,i,catindex,series_index)">save</i></a></li>
+                                        <li><a ><i class="material-icons red-clr"  (click)="remove_series_edit_button(i,catindex,series_index)">clear</i></a></li>
+                                      </ul>
+                                    </div>
+                                  </td>
+                                </tr>
+                              </table>
+                              
+                            </td>
+                          </tr>
+                        </table>
+                        
+                        
+                      </td>
+                    </tr>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+  </div>
+  
+  <div class="fixed-multibtn-botm">
+    <ul>
+      <li><a mat-button matTooltip="Add Category" routerLink="/add-category" routerLinkActive="active"><i class="material-icons">add</i></a></li>
+    </ul>
+  </div>
+  <div class="h70"></div>
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  

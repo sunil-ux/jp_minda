@@ -1,0 +1,144 @@
+<div class="main-container">
+  <div *ngIf="loader" class="center-loder cs-loader">
+    <div class="outer">
+      <div class="innear">
+        <mat-spinner class="loader"></mat-spinner>
+      </div>
+    </div>
+  </div>
+  
+  <div class="middle-container">
+    <div class="page-heading">
+      <img class="h-icon" src="assets/img/enquiry.svg">
+      <div class="heading-text flex-heading">
+        <div class="content">
+          <h2>Enquiries</h2>
+          <p>Total Enquiries: <span>{{count}}</span></p>
+        </div>
+        <div class="item-filter flex-item">
+          <mat-form-field class="master-head-date">
+            <input matInput [matDatepicker]="picker" placeholder=" Date  From " [(ngModel)]="search.from" name="date_from" #date_form="ngModel" readonly>
+            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+            <mat-datepicker #picker></mat-datepicker>
+          </mat-form-field>
+          
+          <mat-form-field class="master-head-date">
+            <input matInput [matDatepicker]="date" placeholder=" Date To" [(ngModel)]="search.to" name="date_to" #date_to="ngModel" readonly>
+            <mat-datepicker-toggle matSuffix [for]="date"></mat-datepicker-toggle>
+            <mat-datepicker #date></mat-datepicker>
+          </mat-form-field>
+          
+          <div class="cs-btn">
+            <div class="in-btn">
+              <button  mat-raised-button color="warn" class="h35-btn" (click)="search_by_date(search.to,search.from)">Go</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="left-auto">
+      <div class="top-pagination">
+        <ul>
+          <li class="refresh-area">
+            <a class="refresh-btn" mat-raised-button  matTooltip="Refresh" (click)="refresh()"><i class="material-icons"> refresh</i></a>
+          </li>
+          <li *ngIf="count>=50"><p>Pages {{pagenumber}} Of {{total_page}}</p></li>
+          
+          <li *ngIf="count>=50">
+            <button mat-button class="left-btn" (click)="getEnquiryList(page_limit,start-page_limit)" [disabled]="pagenumber == 1">
+              <i class="material-icons">keyboard_arrow_left</i></button>
+            </li>
+            
+            <li *ngIf="count>=50">
+              <input type="text" placeholder="GO TO" name="pagenumber" (keyup.enter)="getEnquiryList(page_limit,((pagenumber*page_limit)-page_limit))" [(ngModel)]="pagenumber">
+            </li>
+            
+            <li *ngIf="count>=50">
+              <button mat-button class="right-btn"  (click)="getEnquiryList(page_limit,(start+page_limit))" [disabled]="pagenumber == total_page">
+                <i class="material-icons">keyboard_arrow_right</i>
+              </button>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    
+    <div class="container-outer">
+      <div class="container" >
+        <div class="row">
+          <div class="col s12">
+            <div class="cs-table left-right-20">
+              <div class="table-sticky-head">
+                <div class="table-head">
+                  <table>
+                    <tr>
+                      <th class="w50">S.No.</th>
+                      <th class="w110">Date</th>  
+                      <th class="w150">Customer Name</th>
+                      <th class="w200 ">Email</th>
+                      <th class="w170">Mobile</th>
+                      <th class="w150"> Model No.</th>
+                      <th>Description</th>
+                    </tr>
+                  </table>
+                </div>
+                <div class="table-head bdrt">
+                  <table>
+                    <tr>
+                      <th class="w50 pr-search"> </th>
+                      <th class="w110 pr-search"> </th>
+                      <th class="w150 pr-search">
+                        <div class="w 110 th-search-acmt">
+                          <mat-form-field class="example-full-width cs-input select-input">
+                            <input  matInput placeholder="Search Customer Name" (input)="searchName(search.name)" name="customername" #customername="ngModel" [(ngModel)]="search.name">
+                          </mat-form-field>
+                        </div>
+                      </th>  
+                      <th class="w200 pr-search"></th>  
+                      <th class="w170 pr-search">
+                        <div class="w150 th-search-acmt">
+                          <mat-form-field class="example-full-width cs-input select-input">
+                            <input matInput placeholder="Search By Mobile" (input)="searchByMobile(search.mobile)" name="mobile" #mobile="ngModel" [(ngModel)]="search.mobile">
+                          </mat-form-field>
+                        </div>
+                      </th>   
+                      <th class="w150 pr-search">
+                         <div class="w 200 th-search-acmt">
+                          <mat-form-field class="example-full-width cs-input select-input">
+                            <input  matInput placeholder="Search Model No." (input)="searchModel(search.product_code)" name="searchproductcode" #searchproductcode="ngModel" [(ngModel)]="search.product_code">
+                          </mat-form-field>
+                        </div>
+                      </th>
+                      <th></th>  
+                    </tr>
+                  </table>
+                </div>
+              </div>
+              
+              <div class="table-container">
+                <div class="table-content">
+                  <table>
+                    <tr *ngFor="let data of enquiry_list;let i=index">
+                      <td class="w50">{{i+1}}</td>
+                      <td class="w110" >{{(data.date_created !=='0000-00-00 00:00:00') ? (data.date_created | date :'d MMM, y') : ('-----')}}</td>  
+                      <td class="w150">{{data.name}}</td>
+                      <td class="w200">{{data.email}}</td>
+                      <td class="w170">{{data.phone}}</td>
+                      <td class="w150"> {{data.product_code}}</td>
+                      <td>{{data.enquiry}}</td>
+                    </tr>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="no-record-data-text" *ngIf="!enquiry_list?.length"> 
+      <h2>No Record Found</h2>
+    </div>
+  </div>
+  <div class="h50"></div>
+  

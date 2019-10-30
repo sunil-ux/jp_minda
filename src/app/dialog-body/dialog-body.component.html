@@ -1,0 +1,1446 @@
+<form #f="ngForm">
+    <!-- Lead detail contact person edit -->
+    <div class="edit-modal" *ngIf="data.type == 'edit'">
+        <div mat-dialog-content>
+            <p class="heading">Update Contact Person</p>
+            <div class="from-fields">
+                <div class="col s12">          
+                    <div class="row">
+                        <div class="col s4 pl0">
+                            <div class="control-field">
+                                <mat-form-field class="cs-input">
+                                    <input matInput placeholder="Name" name="name" [(ngModel)]="data.name" (keypress)="charonly($event)">
+                                </mat-form-field>
+                            </div>  
+                        </div>
+                        <div class="col s4 " [ngClass]="{ 'has-error' : f.submitted && !data.mobile_01 }">
+                            <div class="control-field">
+                                <mat-form-field class="cs-input">
+                                    <input matInput placeholder="Mobile No. 1" name="mobile_01" [(ngModel)]="data.mobile_01" min="0" minlength="10" maxlength="10" #mobile_01="ngModel" (keypress)="MobileNumber2($event)" required>
+                                </mat-form-field>
+                                <mat-error *ngIf="data.mobile_01?.length  && 10>data.mobile_01?.length" >Minimum 10 Digits Required </mat-error>
+                                
+                            </div>
+                        </div>
+                        <div class="col s4 pr0" [ngClass]="{ 'has-error' : f.submitted && !data.mobile_02 }">
+                            <div class="control-field">
+                                <mat-form-field class="cs-input">
+                                    <input matInput placeholder="Mobile No. 2" name="mobile_02" [(ngModel)]="data.mobile_02" min="0" minlength="10" maxlength="10" #mobile_02="ngModel" (keypress)="MobileNumber2($event)">
+                                </mat-form-field>
+                                <mat-error *ngIf="data.mobile_02?.length  && 10>data.mobile_02?.length" >Minimum 10 Digits Required </mat-error>
+                                
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div mat-dialog-actions>
+            <button mat-raised-button color="accent" (click)="f.valid && submit()">Save</button>
+            <button mat-raised-button color="warn"  mat-dialog-close>Cancel</button>
+        </div>
+    </div>
+    
+    <div class="edit-modal" *ngIf="data.type == 'edit_address'">
+        <div *ngIf="loader" class="center-loder cs-loader">
+            <div class="outer">
+                <div class="innear">
+                    <mat-spinner class="loader"></mat-spinner>
+                </div>
+            </div>
+        </div>
+        <div mat-dialog-content>
+            <p class="heading">Update Address</p>
+            <div class="from-fields">
+                <div class="col s12">          
+                    <div class="row">
+                        <div class="col s6">
+                            <div class="control-field">
+                                <mat-form-field class="cs-input">
+                                    <mat-select placeholder="State" name="state" [(ngModel)]="data.state">
+                                        <mat-option *ngFor="let state of state_data" (click)="get_district(state.state_name)" value="{{state.state_name}}">{{state.state_name | titlecase}}</mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                            </div>
+                        </div>
+                        <div class="col s6">
+                            <div class="control-field">
+                                <mat-form-field class="cs-input">
+                                    <mat-select placeholder="District" name="district" [(ngModel)]="data.district">
+                                        <mat-option *ngFor="let district of district_data" (click)="get_city(district.district_name)" value="{{district.district_name}}">{{district.district_name | titlecase}}</mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col s6">
+                            <div class="control-field">
+                                <mat-form-field class="cs-input">
+                                    <mat-select placeholder="City" name="city" [(ngModel)]="data.city">
+                                        <mat-option *ngFor="let city of city_data" (click)="get_pincode(city.city)" value="{{city.city}}">{{city.city | titlecase}}</mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                            </div>
+                        </div>
+                        <div class="col s6">
+                            <div class="control-field">
+                                <mat-form-field class="cs-input">
+                                    <mat-select placeholder="Pincode" name="pincode" [(ngModel)]="data.pincode">
+                                        <mat-option *ngFor="let pincode of pincode_data" value="{{pincode.pincode}}">{{pincode.pincode}}</mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col s12">
+                            <div class="control-field">
+                                <mat-form-field class="cs-input">
+                                    <textarea class="h80" matInput placeholder="Address" name="address" [(ngModel)]="data.address"></textarea>
+                                </mat-form-field>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div mat-dialog-actions>
+            <button mat-raised-button color="accent" (click)="update_address()">Save</button>
+            <button mat-raised-button color="warn"  mat-dialog-close>Cancel</button>
+        </div>
+    </div>
+    
+    <!-- add contact person in distribution detail -->
+    <div class="edit-modal" *ngIf="data.type == 'add_cp'">
+        <div mat-dialog-content>
+            <p class="heading">ADD CONTACT PERSONS</p>
+            <div class="from-fields">
+                <div class="col s12">          
+                    <div class="row">
+                        <div class="col s4 pl0">
+                            <div class="control-field">
+                                <mat-form-field class="cs-input">
+                                    <input matInput placeholder="Name" name="cp_name" [(ngModel)]="data.cp_name" (keypress)="charonly($event)">
+                                </mat-form-field>
+                            </div>
+                        </div>
+                        <div class="col s4 ">
+                            <!-- [ngClass]="{ 'has-error' : f.submitted && !data.cp_mobile_1 }" -->
+                            <div class="control-field">
+                                <mat-form-field class="cs-input">
+                                    <input matInput name="cp_mobile_1" #cp_mobile_1="ngModel"  placeholder="Mobile No. 1"  [(ngModel)]="data.cp_mobile_1"  minlength="10" maxlength="10" (keypress)="MobileNumber2($event)">
+                                </mat-form-field>
+                                <mat-error *ngIf="data.cp_mobile_1?.length && 10>data.cp_mobile_1?.length ">Minimum 10 Digits Required </mat-error>
+                            </div>
+                        </div>
+                        <div class="col s4 ">
+                            <div class="control-field" [ngClass]="{ 'has-error' : f.submitted && !data.cp_mobile_2 }">
+                                <mat-form-field class="cs-input pr85">
+                                    <input matInput placeholder="Mobile No. 2" name="cp_mobile_2" [(ngModel)]="data.cp_mobile_2" minlength="10" maxlength="10" min="0" #cp_mobile_2="ngModel" (keypress)="MobileNumber2($event)">
+                                </mat-form-field>
+                                <div class="plus-btn">
+                                    <button mat-raised-button color="accent" [disabled]="(!data.cp_name) || (!data.cp_mobile_1)" (click)="push_cp_table()">
+                                        <i class="material-icons" >add</i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="row" *ngIf="cp_person_data.length != ''">
+                        <div class="col s12 padding0">
+                            <div class="cs-table left-right-20">
+                                <div class="table-head">
+                                    <table>
+                                        <tr>
+                                            <th class="w300">Name</th>
+                                            <th class="w200">Mobile No. 1</th>
+                                            <th class="w200 bdr0">Mobile No. 2</th>
+                                            <th class="w130">&nbsp;</th>
+                                        </tr>
+                                    </table>
+                                </div>
+                                
+                                <div class="table-container">
+                                    <div class="table-content">
+                                        <table>
+                                            <tr *ngFor="let cp_data of cp_person_data;let index=index">
+                                                <td class="w300">{{cp_data.cp_name}}</td>
+                                                <td class="w200">{{cp_data.cp_mobile_1}}</td>
+                                                <td class="w200">{{cp_data.cp_mobile_2}}</td>
+                                                <td class="w130">
+                                                    <a mat-raised-button class="del-btn" (click)="delete_cp(index)">Delete</a>
+                                                </td>
+                                            </tr>            
+                                        </table>
+                                    </div>
+                                </div>
+                                
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div mat-dialog-actions>
+            <button mat-raised-button color="accent" (click)="f.valid && add_cp_person()" [disabled]="!cp_person_data.length">Save</button>
+            <button mat-raised-button color="warn"  mat-dialog-close>Cancel</button>
+        </div>
+    </div>
+    <!-- Lead-detail name-->
+    <div class="edit-modal" *ngIf="data.type == 'edit_lead_name'">
+        <div mat-dialog-content>
+            <p class="heading">UPDATE NAME</p>
+            <div class="from-fields">
+                <div class="row">          
+                    <div class="col s12">
+                        <div class="control-field">
+                            <mat-form-field class="cs-input">
+                                <input matInput placeholder="Name" [(ngModel)]="data.name" name="name" #name="ngModel" type="text"   [ngClass]="{ 'is-invalid': f.submitted && name.invalid }" required >
+                            </mat-form-field>
+                            <mat-error *ngIf="name.invalid">Name Required</mat-error>
+                            
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div mat-dialog-actions>
+            <button mat-raised-button color="accent" (click)="f.valid && update_name()">Save</button>
+            <button mat-raised-button color="warn"  mat-dialog-close>Cancel</button>
+        </div>
+    </div>
+    
+    
+    <!-- Lead-detail email -->
+    <div class="edit-modal" *ngIf="data.type == 'email_edit'">
+        <div mat-dialog-content>
+            <p class="heading">UPDATE EMAIL-ID</p>
+            <div class="from-fields">
+                <div class="col s12">          
+                    <div class="row">
+                        <div class="col s12 p0">
+                            <div class="control-field">
+                                <mat-form-field class="cs-input">
+                                    <input matInput placeholder="Email" [(ngModel)]="data.email" name="email" #email="ngModel" type="text" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,3}$"  [ngClass]="{ 'is-invalid': f.submitted && email.invalid }" email >
+                                </mat-form-field>
+                                <mat-error *ngIf="email.invalid">Invalid Email</mat-error>
+                                
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div mat-dialog-actions>
+            <button mat-raised-button color="accent" (click)="f.valid && update_email()">Save</button>
+            <button mat-raised-button color="warn"  mat-dialog-close>Cancel</button>
+        </div>
+    </div>
+    <!-- Lead-detail mobile edit -->
+    <div class="edit-modal" *ngIf="data.type == 'mobile_edit'">
+        <div mat-dialog-content>
+            <p class="heading">UPDATE Mobile No.</p>
+            <div class="from-fields">
+                <div class="col s12">          
+                    <div class="row">
+                        <div class="col s12 p0">
+                            <div class="control-field">
+                                <mat-form-field class="cs-input">
+                                    <input matInput placeholder="Landline No." name="mobile" [(ngModel)]="data.mobile" #mobile="ngModel" (keypress)="MobileNumber2($event)">
+                                </mat-form-field>
+                                <mat-error *ngIf="!data.mobile?.length" >Landline No. is empty </mat-error>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div mat-dialog-actions>
+            <button mat-raised-button color="accent" (click)="f.valid && update_mobile()">Save</button>
+            <button mat-raised-button  color="warn"  mat-dialog-close>Cancel</button>
+        </div>
+    </div>
+    
+    <div class="edit-modal" *ngIf="data.type == 'gst_edit'">
+        <div mat-dialog-content>
+            <p class="heading">UPDATE Gst No.</p>
+            <div class="from-fields">
+                <div class="col s12">          
+                    <div class="row">
+                        <div class="col s12 p0">
+                            <div class="control-field">
+                                <mat-form-field class="cs-input">
+                                    <input matInput placeholder="Gst No." name="gst" [(ngModel)]="data.gst" maxlength="15" minlength="15">
+                                </mat-form-field>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div mat-dialog-actions>
+            <button mat-raised-button color="accent" (click)="update_gst()">Save</button>
+            <button mat-raised-button color="warn"   mat-dialog-close>Cancel</button>
+        </div>
+    </div>
+    
+    <div class="edit-modal" *ngIf="data.type == 'edit_user'">
+        <div mat-dialog-content>
+            <p class="heading">Update Address</p>
+            <div class="from-fields">
+                <div class="col s12">          
+                    <div class="row">
+                        <div class="col s6">
+                            <div class="control-field">
+                                <mat-form-field class="cs-input">
+                                    <mat-select placeholder="State" name="state" [(ngModel)]="data.state">
+                                        <mat-option *ngFor="let state of state_data" (click)="get_district(state.state_name)" value="{{state.state_name}}">{{state.state_name | titlecase}}</mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                            </div>
+                        </div>
+                        <div class="col s6 ">
+                            <div class="control-field">
+                                <mat-form-field class="cs-input">
+                                    <mat-select placeholder="District" name="district" [(ngModel)]="data.district">
+                                        <mat-option *ngFor="let district of district_data" (click)="get_city(district.district_name)" value="{{district.district_name}}">{{district.district_name | titlecase}}</mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col s6 ">
+                            <div class="control-field">
+                                <mat-form-field class="cs-input">
+                                    <mat-select placeholder="City" name="city" [(ngModel)]="data.city">
+                                        <mat-option *ngFor="let city of city_data" (click)="get_pincode(city.city)" value="{{city.city}}">{{city.city | titlecase}}</mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                            </div>
+                        </div>
+                        
+                        <div class="col s6 ">
+                            <div class="control-field">
+                                <mat-form-field class="cs-input">
+                                    <!-- <input matInput placeholder="Pincode" name="pincode" [(ngModel)]="data.pincode" > -->
+                                    
+                                    <mat-select placeholder="Pincode" name="pincode" [(ngModel)]="data.pincode">
+                                        <mat-option *ngFor="let pincode of pincode_data" value="{{pincode.pincode}}">{{pincode.pincode}}</mat-option>
+                                    </mat-select>
+                                    
+                                </mat-form-field>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col s12">
+                            <div class="control-field">
+                                <mat-form-field class="cs-input">
+                                    <textarea class="h80" matInput placeholder="Address" name="address" [(ngModel)]="data.address"></textarea>
+                                </mat-form-field>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div mat-dialog-actions>
+            <button mat-raised-button color="accent" (click)="update_user_data()">Save</button>
+            <button mat-raised-button color="warn"  mat-dialog-close>Cancel</button>
+        </div>
+    </div>
+    
+    
+    <!--  -->
+    <div class="edit-modal" *ngIf="data.type == 'edit_sales'">
+        <div mat-dialog-content>
+            <p class="heading">Update Sales Team Information</p>
+            <div class="from-fields">
+                <div class="col s12">          
+                    <div class="row">
+                        
+                        <div class="col s6">
+                            <div class="control-field">
+                                <mat-form-field class="cs-input" >
+                                    <mat-select placeholder="Sale Type" name="sale_type" (selectionChange)="GetTypeList($event,'')"  [(ngModel)]="data.sale_type"  required>
+                                        <ng-container *ngIf="data.access_labeal == 'RSM'">
+                                            <mat-option value="Asm"> ASM </mat-option>
+                                        </ng-container>
+                                        <ng-container *ngIf="data.access_labeal == 'NSM'">
+                                            <mat-option value="Asm"> ASM </mat-option>
+                                            <mat-option value="Rsm"> RSM </mat-option>
+                                        </ng-container>
+                                    </mat-select>
+                                </mat-form-field>
+                            </div>
+                        </div>
+                        
+                        <div class="col s6">
+                            <div class="control-field">
+                                <mat-form-field class="cs-input" >
+                                    <mat-select [placeholder]="sale_type == 'Rsm' ? 'RSM' : 'ASM' " name="parent" [(ngModel)]="data.parent" required>
+                                        <mat-option *ngFor="let v of sm_list" [value]=v.id>{{v.name}}</mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                            </div>
+                        </div>
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div mat-dialog-actions>
+            <button mat-raised-button color="accent" (click)="update_sales_team_info()">Save</button>
+            <button mat-raised-button color="warn"  mat-dialog-close>Cancel</button>
+        </div>
+    </div>
+    
+    <!-- edit sales,system users role dialog -->
+    <div class="edit-modal" *ngIf="data.type == 'edit_sales_user_role' || data.type=='edit_system_user_role'">
+        <div *ngIf="loader" class="center-loder cs-loader">
+            <div class="outer">
+                <div class="innear">
+                    <mat-spinner class="loader"></mat-spinner>
+                </div>
+            </div>
+        </div>
+        <div mat-dialog-content>
+            <p class="heading">Update User Role</p>
+            <div class="from-fields">
+                <div class="col s12">          
+                    <div class="row">
+                        <div class="col s12">
+                            <div class="control-field">
+                                <mat-form-field class="cs-input">
+                                    <mat-select placeholder="Role" name="role_name" [(ngModel)]="data.role_name" >
+                                        <mat-option *ngFor="let data of users_role_list" value="{{data.role_id}}">{{data.role_name | titlecase}}</mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div mat-dialog-actions>
+            <button mat-raised-button color="accent" (click)="update_user_role()">Save</button>
+            
+            <button mat-raised-button color="warn"  mat-dialog-close>Cancel</button>
+        </div>
+    </div>
+    <!-- end -->
+    
+    <div class="edit-modal" *ngIf="data.type == 'edit_territory'">
+        <div mat-dialog-content>
+            <p class="heading">Update Territory</p>
+            <div class="from-fields">
+                <div class="col s12 pl0">          
+                    <div class="row">
+                        <div class="col s12 pl0">
+                            <div class="control-field">
+                                <mat-form-field class="cs-input">
+                                    <mat-select placeholder="Select Territory" name="Territory" [(ngModel)]="data.territory"  required>
+                                        <!-- [(ngModel)]="data.territory" -->
+                                        <mat-option *ngFor="let row of territorylisting" value="{{row.id}}">{{row.territory_name | titlecase}}</mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div mat-dialog-actions>
+            <button mat-raised-button color="accent" (click)="update_territory()">Save</button>
+            
+            <button mat-raised-button color="warn"  mat-dialog-close>Cancel</button>
+        </div>
+    </div>
+    
+    <div class="edit-modal" *ngIf="data.type == 'edit_reporting_manager'">
+        <div mat-dialog-content>
+            <p class="heading">Update Reporting Manager</p>
+            <div class="from-fields">
+                <div class="col s12 pl0">          
+                    <div class="row">
+                        <div class="col s6 pl0">
+                            <div class="control-field">
+                                <mat-form-field class="cs-input" >
+                                    <mat-select placeholder="Sale Type" name="sale_type" (selectionChange)="GetTypeList($event,'')"  [(ngModel)]="data.sale_type"  required>
+                                        <mat-option value="RSM" *ngIf="data.sale_type=='ASM'"> RSM </mat-option>
+                                        <mat-option value="NSM"> NSM </mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                            </div>
+                        </div>
+                        
+                        
+                        <div class="col s6">
+                            <div class="control-field">
+                                <mat-form-field class="cs-input" >
+                                    <mat-select [placeholder]="sale_type == 'Rsm' ? 'RSM' : 'NSM' " name="parent" [(ngModel)]="data.parent" required>
+                                        <mat-option *ngFor="let v of sm_list" [value]=v.id>{{v.name}}</mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div mat-dialog-actions>
+            <button mat-raised-button color="accent" (click)="update_reporting_manager()">Save</button>
+            
+            <button mat-raised-button color="warn"  mat-dialog-close>Cancel</button>
+        </div>
+    </div>
+    <div class="edit-modal" *ngIf="data.type == 'edit_email'">
+        <div mat-dialog-content>
+            <p class="heading">Update Email</p>
+            <div class="from-fields">
+                <div class="col s12 pl0">          
+                    <div class="row">
+                        <div class="col s12 pl0">
+                            <div class="control-field">
+                                <mat-form-field class="cs-input">
+                                    <input matInput placeholder="Email" name="email" [(ngModel)]="data.email"  #email="ngModel"  type="text" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,3}$"  [ngClass]="{ 'is-invalid': f.submitted && email.invalid }" email >
+                                </mat-form-field>
+                                <mat-error *ngIf="email.invalid">Invalid Email</mat-error>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div mat-dialog-actions>
+            <button mat-raised-button color="accent" (click)="update_useremail(data.email)" [disabled]="email.invalid" >Save</button>
+            
+            <button mat-raised-button color="warn"  mat-dialog-close>Cancel</button>
+        </div>
+    </div><div class="edit-modal" *ngIf="data.type == 'edit_mobile'">
+        <div mat-dialog-content>
+            <p class="heading">Update Mobile</p>
+            <div class="from-fields">
+                <div class="col s12 pl0">          
+                    <div class="row">
+                        <div class="col s12 pl0">
+                            <div class="control-field">
+                                <mat-form-field class="cs-input">
+                                    <input matInput placeholder="Mobile" name="mobile" [(ngModel)]="data.mobile"  min="0" maxlength="10" minlength="10" (keypress)="MobileNumber2($event)">
+                                </mat-form-field>
+                                <mat-error *ngIf="data.mobile.length!=10" >Minimum 10 Digits Required </mat-error>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div mat-dialog-actions>
+            <button mat-raised-button color="accent" (click)="update_usermobile(data.mobile)">Save</button>
+            
+            <button mat-raised-button color="warn"  mat-dialog-close>Cancel</button>
+        </div>
+    </div>
+    
+    <div class="edit-modal" *ngIf="data.type == 'edit_discount'">
+        <div mat-dialog-content>
+            <p class="heading">Update Customer Discount</p>
+            <div class="from-fields">
+                <div class="col s12">          
+                    <div class="row">
+                        <div class="col s12 pl0">
+                            <div class="control-field">
+                                <table>
+                                    <tr>
+                                        <td >
+                                            {{data.categoryname}} 
+                                        </td>
+                                        <td>
+                                            <mat-form-field class="cs-input">
+                                                <input class="mt10" matInput placeholder="Discount (%)" name="discount" [(ngModel)]="data.discount"  (keypress)="Discount($event)">
+                                            </mat-form-field>
+                                        </td>
+                                    </tr>
+                                </table>
+                                
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div mat-dialog-actions>
+            <button mat-raised-button color="accent" (click)="update_dr_discount()">Save</button>
+            
+            <button mat-raised-button color="warn"  mat-dialog-close>Cancel</button>
+        </div>
+    </div>
+    
+    <!-- Role List -->
+    
+    
+    <div class="edit-modal" *ngIf="data.type == 'edit_permission'">
+        <div mat-dialog-content>
+            <p class="heading">PERMISSION</p>
+            <div class="from-fields">
+                <div class="col s12">          
+                    <div class="row">
+                        <div class="col s12">
+                            <div class="control-field">
+                                <mat-form-field class="cs-input" >
+                                    <mat-select placeholder="Module Permission" name="module_permission"  [(ngModel)]="data.module_permission"  required>
+                                        <!-- <mat-option value="Edit"> Edit </mat-option>
+                                            <mat-option value="View"> View </mat-option>
+                                            <mat-option value="Delete"> Delete </mat-option>
+                                            <mat-option value="Add"> Add </mat-option> -->
+                                            <mat-option *ngFor="let row of permission_list" [value]=row.id>{{row.action_name}}</mat-option>
+                                        </mat-select>
+                                    </mat-form-field>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div mat-dialog-actions>
+                <button mat-raised-button color="accent" (click)="update_module_permission(data.module_permission)">Save</button>
+                
+                <button mat-raised-button color="warn"  mat-dialog-close>Cancel</button>
+            </div>
+        </div>
+        
+        <!-- role list module update -->
+        <div class="edit-modal" *ngIf="data.type == 'edit_modules'">
+            <div mat-dialog-content>
+                <p class="heading">MODULES</p>
+                <div class="from-fields">
+                    <div class="col s12">          
+                        <div class="row">
+                            <div class="col s12">
+                                <div class="control-field">
+                                    <mat-form-field class="cs-input" >
+                                        <mat-select placeholder="Module*" name="module"  [(ngModel)]="data.module"  required>
+                                            <mat-option *ngFor="let row of modules_array" [value]=row.id>{{row.module_name}}</mat-option>
+                                        </mat-select>
+                                    </mat-form-field>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div mat-dialog-actions>
+                <button mat-raised-button color="accent" (click)="update_module(data.module)">Save</button>
+                <button mat-raised-button color="warn"  mat-dialog-close>Cancel</button>
+            </div>
+        </div>
+        <!-- end -->
+        
+        
+        <!-- System user edit email  -->
+        <div class="edit-modal" *ngIf="data.type == 'email_user_edit'">
+            <div mat-dialog-content>
+                <p class="heading">UPDATE EMAIL-ID</p>
+                <div class="from-fields">
+                    <div class="col s12">          
+                        <div class="row">
+                            <div class="col s12 p0">
+                                <div class="control-field">
+                                    <mat-form-field class="cs-input">
+                                        <input matInput placeholder="Email-Id" name="email" [(ngModel)]="data.email" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,3}$"  #email="ngModel"  type="text"  [ngClass]="{ 'is-invalid': f.submitted && email.invalid }" email >
+                                    </mat-form-field>
+                                    <mat-error *ngIf="email.invalid">Invalid Email</mat-error>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div mat-dialog-actions>
+                <button mat-raised-button color="accent" (click)="f.valid && update_user_email()">Save</button>
+                
+                <button mat-raised-button color="warn"  mat-dialog-close>Cancel</button>
+            </div>
+        </div>
+        <!-- edit user name -->
+        <div class="edit-modal" *ngIf="data.type == 'edit_user_name'">
+            <div mat-dialog-content>
+                <p class="heading">UPDATE NAME *</p>
+                <div class="from-fields">
+                    <div class="col s12">          
+                        <div class="row">
+                            <div class="col s12 p0">
+                                <div class="control-field">
+                                    <mat-form-field class="cs-input">
+                                        <input matInput placeholder="Name" name="name" [(ngModel)]="data.name"  #name="ngModel"  type="text"  [ngClass]="{ 'is-invalid': f.submitted && name.invalid }" required >
+                                    </mat-form-field>
+                                    <mat-error *ngIf="name.invalid">Name Required</mat-error>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div mat-dialog-actions>
+                <button mat-raised-button color="accent" (click)="f.valid && update_user_name()">Save</button>
+                
+                <button mat-raised-button color="warn"  mat-dialog-close>Cancel</button>
+            </div>
+        </div>
+        <!-- end -->
+        <!-- edit systeuser name -->
+        <div class="edit-modal" *ngIf="data.type == 'edit_system_user'">
+            <div mat-dialog-content>
+                <p class="heading">UPDATE NAME *</p>
+                <div class="from-fields">
+                    <div class="col s12">          
+                        <div class="row">
+                            <div class="col s12 p0">
+                                <div class="control-field">
+                                    <mat-form-field class="cs-input">
+                                        <input matInput placeholder="Name" name="name" [(ngModel)]="data.name"  #name="ngModel"  type="text"  [ngClass]="{ 'is-invalid': f.submitted && name.invalid }" required >
+                                    </mat-form-field>
+                                    <mat-error *ngIf="name.invalid">Name Required</mat-error>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div mat-dialog-actions>
+                <button mat-raised-button color="accent" (click)="f.valid && update_systemuser_name()">Save</button>
+                
+                <button mat-raised-button color="warn"  mat-dialog-close>Cancel</button>
+            </div>
+        </div>
+        <!-- end -->
+        <div class="edit-modal" *ngIf="data.type == 'mobile_user_edit'">
+            <div mat-dialog-content>
+                <p class="heading">UPDATE Mobile No.</p>
+                <div class="from-fields">
+                    <div class="col s12">          
+                        <div class="row">
+                            <div class="col s12 p0">
+                                <div class="control-field">
+                                    <mat-form-field class="cs-input">
+                                        <input matInput placeholder="Mobile No." name="mobile" [(ngModel)]="data.mobile" min="0" maxlength="10" minlength="10" #mobile="ngModel"   (keypress)="MobileNumber2($event)">
+                                    </mat-form-field>
+                                    <mat-error *ngIf="data.mobile.length!=10" >Minimum 10 Digits Required </mat-error>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div mat-dialog-actions>
+                <button mat-raised-button color="accent" (click)="f.valid && update_user_mobile()">Save</button>
+                
+                <button mat-raised-button color="warn"  mat-dialog-close>Cancel</button>
+            </div>
+        </div>
+        <div class="edit-modal" *ngIf="data.type == 'user_name_edit'">
+            <div mat-dialog-content>
+                <p class="heading">UPDATE Mobile No.</p>
+                <div class="from-fields">
+                    <div class="col s12">          
+                        <div class="row">
+                            <div class="col s12 p0">
+                                <div class="control-field">
+                                    <mat-form-field class="cs-input">
+                                        <input matInput placeholder="Username" name="username" [(ngModel)]="data.username" #username="ngModel">
+                                    </mat-form-field>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div mat-dialog-actions>
+                <button mat-raised-button color="accent" (click)="f.valid && update_username()">Save</button>
+                
+                <button mat-raised-button color="warn"  mat-dialog-close>Cancel</button>
+            </div>
+        </div>
+        <div class="edit-modal" *ngIf="data.type == 'user_password_edit'">
+            <div mat-dialog-content>
+                <p class="heading">UPDATE Mobile No.</p>
+                <div class="from-fields">
+                    <div class="col s12">          
+                        <div class="row">
+                            <div class="col s12 p0">
+                                <div class="control-field">
+                                    <mat-form-field class="cs-input">
+                                        <input matInput placeholder="Password" name="password" [(ngModel)]="data.password" #password="ngModel">
+                                    </mat-form-field>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div mat-dialog-actions>
+                <button mat-raised-button color="accent" (click)="f.valid && update_user_password()">Save</button>
+                
+                <button mat-raised-button color="warn"  mat-dialog-close>Cancel</button>
+            </div>
+        </div>
+        <!-- ----------- -->
+        
+        
+        <!-- Distributor direct dealer detail email -->
+        <div class="edit-modal" *ngIf="data.type == 'email_dis_edit'">
+            <div mat-dialog-content>
+                <p class="heading">UPDATE EMAIL-ID</p>
+                <div class="from-fields">
+                    <div class="col s12">          
+                        <div class="row">
+                            <div class="col s12 p0">
+                                <div class="control-field">
+                                    <mat-form-field class="cs-input">
+                                        <input matInput placeholder="Email-Id" name="email" [(ngModel)]="data.email" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,3}$" #email="ngModel"  type="text"  [ngClass]="{ 'is-invalid': f.submitted && email.invalid }" email >
+                                    </mat-form-field>
+                                    <mat-error *ngIf="email.invalid">Invalid Email</mat-error>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div mat-dialog-actions>
+                <button mat-raised-button color="accent" (click)="f.valid && update_dis_email()">Save</button>
+                
+                <button mat-raised-button color="warn"  mat-dialog-close>Cancel</button>
+            </div>
+        </div>
+        <!-- Distributor direct dealer detail name -->
+        <div class="edit-modal" *ngIf="data.type == 'edit_distributor_name'">
+            <div mat-dialog-content>
+                <p class="heading">UPDATE NAME</p>
+                <div class="from-fields">
+                    <div class="col s12">          
+                        <div class="row">
+                            <div class="col s12 p0">
+                                <div class="control-field">
+                                    <mat-form-field class="cs-input">
+                                        <input matInput placeholder="Name" [(ngModel)]="data.name" name="name" #name="ngModel" type="text"   [ngClass]="{ 'is-invalid': f.submitted && name.invalid }" required >
+                                    </mat-form-field>
+                                    <mat-error *ngIf="name.invalid">Name Required</mat-error>
+                                    
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div mat-dialog-actions>
+                <button mat-raised-button color="accent" (click)="f.valid && update_dis_name()">Save</button>
+                <button mat-raised-button color="warn"  mat-dialog-close>Cancel</button>
+            </div>
+        </div>
+        
+        
+        <div class="edit-modal" *ngIf="data.type == 'mobile_dis_edit'">
+            <div mat-dialog-content>
+                <p class="heading">UPDATE landline No.</p>
+                <div class="from-fields">
+                    <div class="col s12">          
+                        <div class="row">
+                            <div class="col s12 p0">
+                                <div class="control-field">
+                                    <mat-form-field class="cs-input">
+                                        <input matInput placeholder="Landline No." name="mobile" [(ngModel)]="data.mobile" min="0" maxlength="10" minlength="10" #mobile="ngModel" (keypress)="MobileNumber2($event)">
+                                    </mat-form-field>
+                                    
+                                    <mat-error *ngIf="data.mobile?.length  && 10>data.mobile?.length " >Minimum 10 Digits Required </mat-error>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div mat-dialog-actions>
+                <button mat-raised-button color="accent" (click)="f.valid && update_dis_mobile()">Save</button>
+                
+                <button mat-raised-button color="warn"  mat-dialog-close>Cancel</button>
+            </div>
+        </div>
+        
+        <div class="edit-modal" *ngIf="data.type == 'gst_dis_edit'">
+            <div mat-dialog-content>
+                <p class="heading">UPDATE Gst No.</p>
+                <div class="from-fields">
+                    <div class="col s12">          
+                        <div class="row">
+                            <div class="col s12 p0">
+                                <div class="control-field">
+                                    <mat-form-field class="cs-input">
+                                        <input matInput placeholder="Gst No." name="gst" [(ngModel)]="data.gst" maxlength="15" minlength="15">
+                                    </mat-form-field>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div mat-dialog-actions>
+                <button mat-raised-button color="accent" (click)="update_dis_gst()">Save</button>
+                
+                <button mat-raised-button color="warn"  mat-dialog-close>Cancel</button>
+            </div>
+        </div>
+        
+        <!-- edit assign distribution -->
+        <div class="edit-modal" *ngIf="data.type == 'edit_distribution'">
+            <p class="heading">ASSIGN DISTRIBUTION NETWORK</p>
+            
+            <div mat-dialog-content style="min-height: 250px;">
+                <div class="from-fields">
+                    <div class="col s12">          
+                        <div class="control-field">
+                            <div class="multi-all-select">
+                                <ng-multiselect-dropdown
+                                name="assigning"
+                                [placeholder]="'Select Distributor And Direct Dealer'"
+                                [data]="distributor_list"
+                                [(ngModel)]="oenselecteddist"
+                                [settings]="dropdownSettings"
+                                (onSelect)="onItemSelect($event)"
+                                (onSelectAll)="onSelectAll($event)">
+                            </ng-multiselect-dropdown>
+                        </div>
+                        <!-- <mat-form-field class="cs-input"> -->
+                            
+                            <!-- <mat-select placeholder="Select Distributor And Dealer" name="Distibutor" [(ngModel)]="oenselecteddist" multiple required>
+                                <mat-option *ngFor="let row of distributor_list" value="{{row.name}}">{{row.name | titlecase}}</mat-option>
+                            </mat-select>
+                        </mat-form-field> -->
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div mat-dialog-actions>
+            <button mat-raised-button color="accent" (click)="update_assign_distribution()">Save</button>
+            
+            <button mat-raised-button color="warn"  mat-dialog-close>Cancel</button>
+        </div>
+    </div>
+    
+    <div class="edit-modal" *ngIf="data.type == 'target_duration_dis_edit'">
+        <div mat-dialog-content>
+            <p class="heading">UPDATE Target duration.{{data.target_duration}} </p>
+            <div class="from-fields">
+                <div class="col s12">          
+                    <div class="row">
+                        <div class="col s6 pl0">
+                            <div class="control-field">
+                                <mat-form-field class="cs-input">
+                                    <mat-select placeholder="Target Type" name="target_duration" #target_duration="ngModel" [(ngModel)]="data.target_duration">
+                                        <mat-option value="2019-2020">2019-2020</mat-option>
+                                        <mat-option value="2020-2021">2020-2021</mat-option>
+                                        <mat-option value="2021-2022">2021-2022</mat-option>
+                                        <mat-option value="2022-2023">2022-2023</mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                                <!-- <div class="alert alert-danger" *ngIf="!target_type.valid && target_type.touched">
+                                    Target Type is Required
+                                </div> -->
+                            </div>
+                        </div>
+                        
+                        <div class="col s6 pl0">
+                            <div class="control-field">
+                                <mat-form-field class="cs-input">
+                                    <input matInput placeholder="Target price" name="target_amount" #target_amount="ngModel" [(ngModel)]="data.target_amount" (keypress)="Discount($event)" >
+                                </mat-form-field>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div mat-dialog-actions>
+            <button mat-raised-button color="accent" (click)="update_dis_target_duration()">Save</button>
+            
+            <button mat-raised-button color="warn"  mat-dialog-close>Cancel</button>
+        </div>
+    </div>
+    
+    <div class="edit-modal" *ngIf="data.type == 'target_price_dis_edit'">
+        <div mat-dialog-content>
+            <p class="heading">UPDATE Target price</p>
+            <div class="from-fields">
+                <div class="col s12">          
+                    <div class="row">
+                        <div class="col s12 p0">
+                            <div class="control-field">
+                                <mat-form-field class="cs-input">
+                                    <input matInput placeholder="Target price" name="target_price" [(ngModel)]="data.target_price" maxlength="15" minlength="15" (keypress)="Discount($event)" >
+                                </mat-form-field>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div mat-dialog-actions>
+            <button mat-raised-button color="accent" (click)="update_dis_target_price()">Save</button>
+            
+            <button mat-raised-button color="warn"  mat-dialog-close>Cancel</button>
+        </div>
+    </div>
+    
+    <div class="edit-modal" *ngIf="data.type == 'edit_dis_address'">
+        <div *ngIf="loader" class="center-loder cs-loader">
+            <div class="outer">
+                <div class="innear">
+                    <mat-spinner class="loader"></mat-spinner>
+                </div>
+            </div>
+        </div>
+        <div mat-dialog-content>
+            <p class="heading">Update Address</p>
+            <div class="from-fields">
+                <div class="col s12">          
+                    <div class="row">
+                        <div class="col s6">
+                            <div class="control-field">
+                                <mat-form-field class="cs-input">
+                                    <mat-select placeholder="State" name="state" [(ngModel)]="data.state">
+                                        <mat-option *ngFor="let state of state_data" (click)="get_district(state.state_name)" value="{{state.state_name}}">{{state.state_name | titlecase}}</mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                            </div>
+                        </div>
+                        <div class="col s6">
+                            <div class="control-field">
+                                <mat-form-field class="cs-input">
+                                    <mat-select placeholder="District" name="district" [(ngModel)]="data.district">
+                                        <mat-option *ngFor="let district of district_data" (click)="get_city(district.district_name)" value="{{district.district_name}}">{{district.district_name | titlecase}}</mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        
+                        <div class="col s6">
+                            <div class="control-field">
+                                <mat-form-field class="cs-input">
+                                    <mat-select placeholder="City" name="city" [(ngModel)]="data.city">
+                                        <mat-option *ngFor="let city of city_data" (click)="get_pincode(city.city)" value="{{city.city}}">{{city.city | titlecase}}</mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                            </div>
+                        </div>
+                        <div class="col s6">
+                            <div class="control-field">
+                                <mat-form-field class="cs-input">
+                                    <mat-select placeholder="Pincode" name="pincode" [(ngModel)]="data.pincode">
+                                        <mat-option *ngFor="let pincode of pincode_data" value="{{pincode.pincode}}">{{pincode.pincode}}</mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        
+                        <div class="col s12">
+                            <div class="control-field">
+                                <mat-form-field class="cs-input">
+                                    <textarea matInput placeholder="Address" name="address" [(ngModel)]="data.address" class="h80"></textarea>
+                                </mat-form-field>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div mat-dialog-actions>
+            <button mat-raised-button color="accent" (click)="update_dis_address()">Save</button>
+            
+            <button mat-raised-button color="warn"  mat-dialog-close>Cancel</button>
+        </div>
+    </div>
+    <!-- edit sales team dialog -->
+    <div class="edit-modal" *ngIf="data.type == 'edit_sales_team'">
+        <div *ngIf="loader" class="center-loder cs-loader">
+            <div class="outer">
+                <div class="innear">
+                    <mat-spinner class="loader"></mat-spinner>
+                </div>
+            </div>
+        </div>
+        <div mat-dialog-content>
+            <p class="heading">Update Sales Team</p>
+            <div class="from-fields">
+                <div class="col s12">          
+                    <div class="row">
+                        <div class="col s12">
+                            <div class="control-field">
+                                <mat-form-field class="cs-input">
+                                    <mat-select placeholder="Name & Position" name="sales_team_name" [(ngModel)]="data.sales_team_id" multiple>
+                                        <mat-option *ngFor="let data of sales_team_data" value="{{data.id}}">{{data.name | titlecase}} - {{data.access_labeal | titlecase}}</mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div mat-dialog-actions>
+            <button mat-raised-button color="accent" (click)="update_sales_team()">Save</button>
+            
+            <button mat-raised-button color="warn"  mat-dialog-close>Cancel</button>
+        </div>
+    </div>
+    <!-- end -->
+    
+    
+    <!-- edit sales team dialog -->
+    <div class="edit-modal" *ngIf="data.type == 'edit_lead_sales_team'">
+        <div *ngIf="loader" class="center-loder cs-loader">
+            <div class="outer">
+                <div class="innear">
+                    <mat-spinner class="loader"></mat-spinner>
+                </div>
+            </div>
+        </div>
+        <div mat-dialog-content>
+            <p class="heading">Update Sales Team</p>
+            <div class="from-fields">
+                <div class="col s12">          
+                    <div class="row">
+                        <div class="col s12">
+                            <div class="control-field">
+                                <mat-form-field class="cs-input">
+                                    <mat-select placeholder="Name & Position" name="sales_team_name" [(ngModel)]="data.lead_sales_team_id" multiple>
+                                        <mat-option *ngFor="let data of sales_team_data" value="{{data.id}}">{{data.name | titlecase}} - {{data.access_labeal | titlecase}}</mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div mat-dialog-actions>
+            <button mat-raised-button color="accent" (click)="update_lead_sales_team()">Save</button>
+            
+            <button mat-raised-button color="warn"  mat-dialog-close>Cancel</button>
+        </div>
+    </div>
+    <!-- end -->
+    
+    <div class="edit-modal" *ngIf="data.type == 'dis_edit'">
+        <div mat-dialog-content>
+            <p class="heading">Update Contact Person</p>
+            <div class="from-fields">
+                <div class="col s12">          
+                    <div class="row">
+                        <div class="col s4 pl0">
+                            <div class="control-field">
+                                <mat-form-field class="cs-input">
+                                    <input matInput placeholder="Name" name="name" [(ngModel)]="data.name">
+                                </mat-form-field>
+                            </div>
+                        </div>
+                        <div class="col s4 " [ngClass]="{ 'has-error' : f.submitted && !data.mobile_01 }">
+                            <div class="control-field">
+                                <mat-form-field class="cs-input">
+                                    <input matInput placeholder="Mobile No. 1" name="mobile_01" [(ngModel)]="data.mobile_01" min="0" minlength="10" maxlength="10" #mobile_01="ngModel" required (keypress)="MobileNumber2($event)">
+                                </mat-form-field>
+                            </div>
+                        </div>
+                        <div class="col s4 pr0" [ngClass]="{ 'has-error' : f.submitted && !data.mobile_02 }">
+                            <div class="control-field">
+                                <mat-form-field class="cs-input">
+                                    <input matInput placeholder="Mobile No. 2" name="mobile_02" [(ngModel)]="data.mobile_02" min="0" minlength="10" maxlength="10" #mobile_02="ngModel" (keypress)="MobileNumber2($event)">
+                                </mat-form-field>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div mat-dialog-actions>
+            <button mat-raised-button color="accent" (click)="f.valid && dis_submit()">Save</button>
+            
+            <button mat-raised-button color="warn"  mat-dialog-close>Cancel</button>
+        </div>
+    </div>
+    
+    <div class="edit-modal" *ngIf="data.type == 'add_dis_cp'">
+        <div mat-dialog-content>
+            <p class="heading">ADD CONTACT PERSONS</p>
+            <div class="from-fields">
+                <div class="col s12">          
+                    <div class="row">
+                        <div class="col s4 pl0">
+                            <div class="control-field">
+                                <mat-form-field class="cs-input">
+                                    <input matInput placeholder="Name" name="cp_name" [(ngModel)]="data.cp_name">
+                                </mat-form-field>
+                            </div>
+                        </div>
+                        <div class="col s4 " [ngClass]="{ 'has-error' : f.submitted && !data.cp_mobile_1 }">
+                            <div class="control-field">
+                                <mat-form-field class="cs-input">
+                                    <input matInput placeholder="Mobile No. 1" name="cp_mobile_1" [(ngModel)]="data.cp_mobile_1"  min="0" minlength="10" maxlength="10" #cp_mobile_1="ngModel" (keypress)="MobileNumber2($event)">
+                                </mat-form-field>
+                            </div>
+                        </div>
+                        <div class="col s4 ">
+                            <div class="control-field" [ngClass]="{ 'has-error' : f.submitted && !data.cp_mobile_2 }">
+                                <mat-form-field class="cs-input pr85">
+                                    <input matInput placeholder="Mobile No. 2" name="cp_mobile_2" [(ngModel)]="data.cp_mobile_2" minlength="10" maxlength="10" min="0" #cp_mobile_2="ngModel" (keypress)="MobileNumber2($event)">
+                                </mat-form-field>
+                                <div class="plus-btn">
+                                    <button mat-raised-button color="accent" [disabled]="(!data.cp_name) || (!data.cp_mobile_1)" (click)="push_cp_table()">
+                                        <i class="material-icons" >add</i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="row" *ngIf="cp_person_data.length != ''">
+                        <div class="col s12 padding0">
+                            <div class="cs-table left-right-20">
+                                <div class="table-head">
+                                    <table>
+                                        <tr>
+                                            <th class="w300">Name</th>
+                                            <th class="w200">Mobile No. 1</th>
+                                            <th class="w200 bdr0">Mobile No. 2</th>
+                                            <th class="w130">&nbsp;</th>
+                                        </tr>
+                                    </table>
+                                </div>
+                                
+                                <div class="table-container">
+                                    <div class="table-content">
+                                        <table>
+                                            <tr *ngFor="let cp_data of cp_person_data;let index=index">
+                                                <td class="w300">{{cp_data.cp_name}}</td>
+                                                <td class="w200">{{cp_data.cp_mobile_1}}</td>
+                                                <td class="w200">{{cp_data.cp_mobile_2}}</td>
+                                                <td class="w130">
+                                                    <a mat-raised-button class="del-btn" (click)="delete_cp(index)">Delete</a>
+                                                </td>
+                                            </tr>            
+                                        </table>
+                                    </div>
+                                </div>
+                                
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div mat-dialog-actions>
+            <button mat-raised-button color="accent" (click)="f.valid && add_dis_cp_person()">Save</button>
+            
+            <button mat-raised-button color="warn"  mat-dialog-close>Cancel</button>
+        </div>
+    </div>
+    
+    <!-- payment list dialog box -->
+    
+    <div class="edit-modal" *ngIf="data.type == 'verify_pay_status'">
+        <div mat-dialog-content>
+            <p class="heading">Verify Payment Details</p>
+            <div class="from-fields">
+                <div class="col s12">          
+                    <div class="row">
+                        
+                        <div class="col s6 " [ngClass]="{ 'has-error' : f.submitted && !data.description }">
+                            <div class="control-field">
+                                <mat-form-field class="cs-input">
+                                    <textarea matInput placeholder="Description" name="description" [(ngModel)]="data.description" #description="ngModel" required style="min-height: 120px;"></textarea>
+                                </mat-form-field>
+                            </div>
+                        </div>
+                        
+                        <div class="col s6">
+                            <div class="control-field">
+                                <div class="cs-file-bdr">
+                                    <label>Select file</label>
+                                    <input type="file"  (change)="select_file($event)" name="image"  class="file-cs" multiple accept=".png,.jpeg,.jpg,.doc,.docx,.pdf">
+                                    <ul>
+                                        <li *ngFor="let file of selectedFile;let i = index;">{{file.name}}
+                                            <span><button (click)="delFile(file.name,i)"><i class="material-icons">delete_sweep</i></button></span>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div mat-dialog-actions>
+            <button mat-raised-button color="accent" (click)="f.valid && VerifyPayment(data.description)">Save</button>
+            
+            <button mat-raised-button color="warn"  mat-dialog-close>Cancel</button>
+        </div>
+    </div>
+    
+    
+    <!-- reason reject in order -->
+    <div class="edit-modal" *ngIf="data.type == 'reason_reject'">
+        <div mat-dialog-content>
+            <p class="heading">Reason of Reject</p>
+            <div class="from-fields">
+                <div class="col s12">          
+                    <div class="row">
+                        <div class="col s12 " [ngClass]="{ 'has-error' : f.submitted && !data.reason }">
+                            <div class="control-field">
+                                <mat-form-field class="cs-input">
+                                    <textarea class="h150" matInput placeholder="Reason Of Reject" name="reason" [(ngModel)]="data.reason" #reason="ngModel" required></textarea>
+                                </mat-form-field>
+                            </div>
+                        </div>
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div mat-dialog-actions>
+            <button mat-raised-button color="accent" (click)="f.valid && SubmitReason(data.reason)">Save</button>
+            
+            <button mat-raised-button color="warn"  mat-dialog-close>Cancel</button>
+        </div>
+    </div>
+    
+    
+    <!-- reason reject in expense -->
+    <div class="edit-modal" *ngIf="data.type == 'expense_reason_reject'">
+        <div mat-dialog-content>
+            <p class="heading">Reason of Reject</p>
+            <div class="from-fields">
+                <div class="col s12">          
+                    <div class="row">
+                        <div class="col s12 " [ngClass]="{ 'has-error' : f.submitted && !data.reason_reject }">
+                            <div class="control-field">
+                                <mat-form-field class="cs-input">
+                                    <input matInput placeholder="Reason Of Reject" name="reason_reject" [(ngModel)]="data.reason_reject" #reason_reject="ngModel" required>
+                                </mat-form-field>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div mat-dialog-actions>
+            <button mat-raised-button color="accent" (click)="f.valid && SubmitExpenseRejectReason(data.reason_reject)">Save</button>
+            <button mat-raised-button color="warn"  mat-dialog-close>Cancel</button>
+        </div>
+    </div>
+    <!-- reason reject in payment -->
+    <div class="edit-modal" *ngIf="data.type == 'payment_reason_reject'">
+        <div mat-dialog-content>
+            <p class="heading">Reason of Reject</p>
+            <div class="from-fields">
+                <div class="col s12">          
+                    <div class="row">
+                        <div class="col s12 " [ngClass]="{ 'has-error' : f.submitted && !data.reason_reject }">
+                            <div class="control-field">
+                                <mat-form-field class="cs-input">
+                                    <input matInput placeholder="Reason Of Reject" name="reason_reject" [(ngModel)]="data.reason_reject" #reason_reject="ngModel" required>
+                                </mat-form-field>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div mat-dialog-actions>
+            <button mat-raised-button color="accent" (click)="f.valid && payment_reject(data.reason_reject)">Save</button>
+            <button mat-raised-button color="warn"  mat-dialog-close>Cancel</button>
+        </div>
+    </div>
+    <!-- reason reject in Leave -->
+    <div class="edit-modal" *ngIf="data.type == 'leave_reason_reject'">
+        <div mat-dialog-content>
+            <p class="heading">Reason of Reject</p>
+            <div class="from-fields">
+                <div class="col s12">          
+                    <div class="row">
+                        <div class="col s12 " [ngClass]="{ 'has-error' : f.submitted && !data.reason_reject }">
+                            <div class="control-field">
+                                <mat-form-field class="cs-input">
+                                    <input matInput placeholder="Reason Of Reject" name="reason_reject" [(ngModel)]="data.reason_reject" #reason_reject="ngModel" required>
+                                </mat-form-field>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div mat-dialog-actions>
+            <button mat-raised-button color="accent" (click)="f.valid && SubmitLeaveRejectReason(data.reason_reject)">Save</button>
+            <button mat-raised-button color="warn"  mat-dialog-close>Cancel</button>
+        </div>
+    </div>
+    
+    
+</form>
+
+<!-- <div class="edit-modal" *ngIf="data.type == 'system_user_data_update'">
+    <div mat-dialog-content>
+        <p class="heading">Update Address</p>
+        <div class="from-fields">
+            <div class="col s12">          
+                <div class="row">
+                    <div class="col s4 pl0">
+                        <div class="control-field">
+                            <mat-form-field class="cs-input">
+                                <mat-select placeholder="State" name="state" [(ngModel)]="data.state">
+                                    <mat-option *ngFor="let state of state_data" (click)="get_district(state.state_name)" value="{{state.state_name}}">{{state.state_name | titlecase}}</mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </div>
+                    </div>
+                    <div class="col s4 ">
+                        <div class="control-field">
+                            <mat-form-field class="cs-input">
+                                <mat-select placeholder="District" name="district" [(ngModel)]="data.district">
+                                    <mat-option *ngFor="let district of district_data" (click)="get_city(district.district_name)" value="{{district.district_name}}">{{district.district_name | titlecase}}</mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </div>
+                    </div>
+                    <div class="col s4 ">
+                        <div class="control-field">
+                            <mat-form-field class="cs-input">
+                                <mat-select placeholder="City" name="city" [(ngModel)]="data.city">
+                                    <mat-option *ngFor="let city of city_data" (click)="get_pincode(city.city)" value="{{city.city}}">{{city.city | titlecase}}</mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </div>
+                    </div>
+                    
+                    <div class="col s4 pr0">
+                        <div class="control-field">
+                            <mat-form-field class="cs-input">
+                                <textarea matInput placeholder="Address" name="address" [(ngModel)]="data.address"></textarea>
+                            </mat-form-field>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div mat-dialog-actions>
+        <button mat-raised-button  mat-dialog-close>Cancel</button>
+        <button mat-raised-button (click)="update_user_data()">Save</button>
+    </div>
+</div> -->

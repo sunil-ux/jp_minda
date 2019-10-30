@@ -1,0 +1,157 @@
+<div class="edit-modal" >
+    <div *ngIf="loader" class="center-loder cs-loader">
+        <div class="outer">
+            <div class="innear">
+                <mat-spinner class="loader"></mat-spinner>
+            </div>
+        </div>
+    </div>
+    <div *ngIf="drData.type=='add'" mat-dialog-content>
+        <p class="heading">Add Assign Product</p>
+        <div class="from-fields">
+            <div class="col s12">          
+                <div class="row">
+                    <div class="control-field col s4 pl0" >
+                        <mat-form-field class=" cs-input  infix-bodr8 select-input">
+                            <input matInput placeholder="Product Code" [matAutocomplete]="product_code" (input)="getProductCode(assignProductData.product_code)" name="product_code" id="product_code" #product_code="ngModel" [(ngModel)]="assignProductData.product_code">
+                            <mat-autocomplete #product_code="matAutocomplete">
+                                <mat-option  *ngFor="let data of productCodeList; let i=index" [value]="data.product_code">
+                                    <small>{{data.product_code}}</small>
+                                </mat-option>
+                            </mat-autocomplete>
+                        </mat-form-field>
+                    </div>
+                    <div class="col s4">
+                        <div class="control-field">
+                            <mat-form-field class="cs-input">
+                                <mat-select placeholder="Discount Type" name="discount_type" id="discount_type" #discount_type="ngModel" [(ngModel)]="assignProductData.discount_type">
+                                    <mat-option value="percent"><small>In Percentage(%)</small></mat-option>
+                                    <mat-option value="amount"><small>In Amount(₹)</small></mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </div>
+                    </div>
+                    <div class="col s4 pr0"> 
+                        <div class="control-field pr80">
+                            <mat-form-field class="cs-input">
+                                <input matInput placeholder="Discount value" id="discount_val" name="discount_val" [(ngModel)]="assignProductData.discount_val"     #discount_val="ngModel">
+                            </mat-form-field>
+                            <div class="plus-btn">
+                                <button mat-raised-button color="accent" type="button" [disabled]="!assignProductData.product_code || !assignProductData.discount_type || !assignProductData.discount_val" (click)="addToCodeList()" >
+                                    <i class="material-icons" >add</i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row" *ngIf="productData.length !=''">
+                    <div class="col s12 padding0">
+                        <div class="cs-table left-right-20">
+                            <div class="table-head">
+                                <table>
+                                    <tr>
+                                        <th>Product Code</th>
+                                        <th class="w200">Discount Type</th>
+                                        <th class="w200 bdr0">Discount Value</th>
+                                        <th class="w130">&nbsp;</th>
+                                    </tr>
+                                </table>
+                            </div>
+                            <div class="table-container">
+                                <div class="table-content">
+                                    <table>
+                                        <tr *ngFor="let value of productData;let index=index">
+                                            <td>{{value.product_code}}</td>
+                                            <td class="w200">{{value.discount_type}}</td>
+                                            <td class="w200">{{value.discount_val}}</td>
+                                            <td class="w130">
+                                                <a mat-button class="del-btn" (click)="deleteCodeFromList(index)">Delete</a>
+                                            </td>
+                                        </tr>            
+                                    </table>
+                                </div>
+                            </div>
+                            
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- <div class="row" *ngIf="cp_person_data.length != ''">
+                    <div class="col s12 padding0">
+                        <div class="cs-table left-right-20">
+                            <div class="table-head">
+                                <table>
+                                    <tr>
+                                        <th class="w300">Name</th>
+                                        <th class="w200">Mobile No. 1</th>
+                                        <th class="w200 bdr0">Mobile No. 2</th>
+                                        <th class="w130">&nbsp;</th>
+                                    </tr>
+                                </table>
+                            </div>
+                            
+                            <div class="table-container">
+                                <div class="table-content">
+                                    <table>
+                                        <tr *ngFor="let cp_data of cp_person_data;let index=index">
+                                            <td class="w300">{{cp_data.cp_name}}</td>
+                                            <td class="w200">{{cp_data.cp_mobile_1}}</td>
+                                            <td class="w200">{{cp_data.cp_mobile_2}}</td>
+                                            <td class="w130">
+                                                <a mat-raised-button class="del-btn" (click)="delete_cp(index)">Delete</a>
+                                            </td>
+                                        </tr>            
+                                    </table>
+                                </div>
+                            </div>
+                            
+                        </div>
+                    </div>
+                </div> -->
+            </div>
+        </div>
+    </div>
+
+    <div  *ngIf="drData.type=='edit'" mat-dialog-content>
+            <p class="heading">Edit Assign Product</p>
+            <div class="from-fields">
+                <div class="col s12">          
+                    <div class="row">
+                        <div class="control-field col s4 pl0" >
+                            <mat-form-field class=" cs-input  infix-bodr8 select-input">
+                                <input matInput placeholder="Product Code" [matAutocomplete]="product_code" (input)="getProductCode(assignProductData.product_code)" name="product_code" id="product_code" #product_code="ngModel" [(ngModel)]="assignProductData.product_code">
+                                <mat-autocomplete #product_code="matAutocomplete">
+                                    <mat-option  *ngFor="let data of productCodeList; let i=index" [value]="data.product_code">
+                                        <small>{{data.product_code}}</small>
+                                    </mat-option>
+                                </mat-autocomplete>
+                            </mat-form-field>
+                        </div>
+                        <div class="col s4">
+                            <div class="control-field">
+                                <mat-form-field class="cs-input">
+                                    <mat-select placeholder="Discount Type" name="discount_type" id="discount_type" #discount_type="ngModel" [(ngModel)]="assignProductData.discount_type">
+                                        <mat-option value="percent"><small>In Percentage(%)</small></mat-option>
+                                        <mat-option value="amount"><small>In Amount(₹)</small></mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                            </div>
+                        </div>
+                        <div class="col s4 pr0"> 
+                            <div class="control-field pr80">
+                                <mat-form-field class="cs-input">
+                                    <input matInput placeholder="Discount value" id="discount_val" name="discount_val" [(ngModel)]="assignProductData.discount_val"     #discount_val="ngModel">
+                                </mat-form-field>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    <div mat-dialog-actions>
+        <button mat-raised-button color="accent" *ngIf="drData.type=='add'" (click)="addAssignProduct()" >Save</button>
+        <button mat-raised-button color="accent" *ngIf="drData.type=='edit'" (click)="updateAssignProduct()" >Save</button>
+        <button mat-raised-button color="warn"  mat-dialog-close>Cancel</button>
+    </div>
+</div>

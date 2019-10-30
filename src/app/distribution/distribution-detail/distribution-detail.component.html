@@ -1,0 +1,878 @@
+<div class="main-container" >
+  <div *ngIf="loader" class="center-loder cs-loader">
+    <div class="outer">
+      <div class="innear">
+        <mat-spinner class="loader"></mat-spinner>
+      </div>
+    </div>
+  </div>
+  <div class="main-outer">
+    <div class="main-inner">
+      
+      <div class="middle-container">
+        <div class="page-heading">
+          <div class="heading-text bc-space">
+            <div class="back-btn">
+              <a mat-button (click)="backClicked()"><i class="material-icons">arrow_right_alt</i></a>
+            </div>
+            
+            <h2>{{dr.name}}
+              
+              <a *ngIf="dr.edit" mat-button class="edit-heading" matTooltip="Edit Name" color="accent" (click)="edit_distributor_name(dr.id,dr.name,'edit_distributor_name')"><i class="material-icons">edit</i></a>
+            </h2>
+            
+            <p class="light" *ngIf="dr.type == '1'">Distributor</p>
+            <p class="light" *ngIf="dr.type == '2'">Retailer</p>
+            <p class="light" *ngIf="dr.type == '3'">OEM</p>
+          </div>
+        </div>
+        
+        
+        <div class="left-auto">
+          
+          <div class="tabs">
+            <ul> 
+              <li ><a  style="cursor: pointer"class="{{showdetail==1 ? 'active' : ''}}" routerLinkActive="active" (click)="showDetailPage()" >DETAIL</a></li>
+              
+              <li ><a  style="cursor: pointer" class="{{showdetail==2 ? 'active' : ''}}"routerLinkActive="active" (click)="showFollowUp()" >FOLLOWUP</a></li>
+              
+              <li *ngIf="dr.type==1" ><a  style="cursor: pointer" class="{{showdetail==3 ? 'active' : ''}}" routerLinkActive="active" (click)="showorders()" >ORDER</a></li>
+              
+              <li *ngIf="dr.type==1 || dr.type==2" ><a  style="cursor: pointer" class="{{showdetail==4 ? 'active' : ''}}" routerLinkActive="active" (click)="showPayments()" >PAYMENT</a></li>
+              
+              <li ><a  style="cursor: pointer" class="{{showdetail==5 ? 'active' : ''}}" routerLinkActive="active" (click)="showCheckin()" >CHECKIN</a></li>
+              
+              <li *ngIf="dr.type==1" ><a  style="cursor: pointer" class="{{showdetail==6 ? 'active' : ''}}" routerLinkActive="active" (click)="showpopgift()" >POP & GIFT</a></li>
+              
+              <li *ngIf="dr.type==1"><a  style="cursor: pointer" class="{{showdetail==7 ? 'active' : ''}}" routerLinkActive="active" (click)="showdetail=7" >PRODUCT DISCOUNT</a></li>
+            </ul>
+          </div>
+          
+        </div>
+        
+        <div  *ngIf="showdetail==7" class="top-pagination">
+          <ul>
+            <li class="add-btn">
+              <button  matTooltip="Add Product Discount" (click)="addAssignProduct('add')" routerLinkActive="active">ADD NEW</button>
+            </li>
+          </ul>
+        </div>
+        
+      </div>
+      
+      
+      <div class="container-outer" *ngIf="showdetail==1">
+        <div class="container pr5 height-fix" >
+          <div class="row">
+            <div class="details-info">
+              <div class="basic-details">
+                <div class="profile-info pt0">
+                  <ul>
+                    <li>
+                      <div class="cs-box">
+                        <img src="assets/img/gmail.svg" class="fix-img">
+                        <span>Email</span>
+                        <p>{{dr.email ? '': 'NA'}}</p>
+                        <p class="link-clr"><a *ngIf="dr.email" [href]="'mailto:'+ dr.email + '?Subject=My%20Custom%20Subject'">{{dr.email}}</a></p>
+                        <a  *ngIf="dr.edit" class="edit-icon" color="accent" matRipple matTooltip="Edit Email-Id" (click)="edit_dis_email(dr.id,dr.email,'email_dis_edit')"><i class="material-icons">create</i></a>
+                      </div>
+                    </li>
+                    <li>
+                      <div class="cs-box">
+                        <img src="assets/img/phone.svg" class="fix-img">
+                        <span>Landline No.</span>
+                        <p>{{dr.mobile ? dr.mobile : 'NA'}}</p>
+                        <a *ngIf="dr.edit" class="edit-icon" color="accent" matRipple matTooltip="Edit Mobile No." (click)="edit_dis_mobile(dr.id,dr.mobile,'mobile_dis_edit')"><i class="material-icons">create</i></a>
+                      </div>
+                    </li>
+                    <li>
+                      <div class="cs-box">
+                        <img src="assets/img/gst.svg" class="fix-img">
+                        <span>GST No.</span>
+                        <p>{{dr.gst_no ? dr.gst_no : 'NA'}}</p>
+                        <a *ngIf="dr.edit" class="edit-icon" color="accent" matRipple matTooltip="Edit Gst No." (click)="edit_dis_gst(dr.id,dr.gst_no,'gst_dis_edit')"><i class="material-icons">create</i></a>
+                      </div>
+                    </li>
+                  </ul>
+                </div>
+                
+                
+              </div>
+            </div>
+          </div>
+          
+          <div class="row">
+            <div class="col s8 pl0">
+              <div class="sprate-box padding0 main-bdr">
+                <a *ngIf="dr.edit" mat-button class="edit-btn" matTooltip="Edit Address" color="accent" (click)="edit_dis_address(dr.id,'edit_dis_address')"><i class="material-icons">edit</i></a>
+                <div class="full-address">
+                  <div class="cs-heading">
+                    <h2>ADDRESS</h2>
+                  </div>
+                  <div class="nationality">
+                    <img src="assets/img/india.svg" alt="">
+                    <p>{{dr.country ? dr.country : 'NA'}}</p>
+                  </div>
+                  <div class="ds-from-fields">
+                    <div class="cs-row">
+                      <div class="static-info">
+                        <p>State</p>
+                        <p>{{dr.state ? dr.state : 'NA' }}</p>
+                        <!-- [(ngModel)]="dr.state"  -->
+                      </div>
+                      <div class="static-info">
+                        <p>District</p>
+                        <p>{{dr.district ? dr.district : 'NA' }}</p>
+                      </div>
+                      <div class="static-info">
+                        <p>City</p>
+                        <p>{{dr.city ? dr.city : 'NA'}}</p>
+                      </div>
+                      
+                      <div class="static-info w100" style="min-width: 100px;">
+                        <p>Pincode</p>
+                        <p>{{dr.pincode ? dr.pincode : 'NA' }}</p>
+                      </div>
+                    </div>
+                    
+                    <div class="cs-row">
+                      <div class="static-info">
+                        <p>address</p>
+                        <p>{{dr.address ? dr.address: 'NA'}}</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="sprate-box mt20 padding0 main-bdr">
+                <div class="full-address">
+                  <div class="cs-heading">
+                    <h2>CONTACT PERSONS</h2>
+                    <a *ngIf="dr.edit" class="cs-add" (click)="cp_add(dr.id,'add_cp')"><i class="material-icons">add</i></a>
+                  </div>              
+                  <div class="cs-table" *ngIf="cp_data.length !=''">
+                    <div class="table-head">
+                      <table>
+                        <tr>
+                          <th>Name</th>
+                          <th class="w200">Mobile No. 1</th>
+                          <th class="w250 bdr0">Mobile No. 2</th>
+                          <!-- <th class="w130"></th> -->
+                        </tr>
+                      </table>
+                    </div>
+                    
+                    <div class="table-container">
+                      <div class="table-content none-shadow">
+                        <table>
+                          <tr *ngFor="let cp of cp_data">
+                            <td>{{cp.name | titlecase}}</td>
+                            <td class="w200">{{cp.mobile_01}}</td>
+                            <td class="w250">{{cp.mobile_02 ? cp.mobile_02 : '-----'}}
+                              <div class="action-btns">
+                                <a  *ngIf="dr.edit" mat-button class="edit" (click)="cp_dis_edit(cp,'dis_edit')"><i class="material-icons">edit</i> Edit</a>
+                                <button *ngIf="dr.edit" mat-button class="delete" (click)="delete_cp(cp.id)"><i class="material-icons">delete_sweep</i> Delete</button>
+                              </div>
+                            </td>
+                          </tr>
+                        </table>
+                      </div>
+                    </div>
+                  </div>            
+                </div>
+              </div>
+              
+              <!-- <div class="col s6 mt15 pl0 " *ngIf="dr.type != '2' ">
+                <div class="sprate-box padding0 main-bdr">
+                  <a *ngIf="dr.edit && dr.pincode" mat-button class="edit-btn" matTooltip="Edit Sales Team" color="accent" (click)="edit_sales_team(dr.id,'edit_sales_team',dr.pincode,dr.type)"><i class="material-icons">edit</i></a>
+                  
+                  <div class="full-address">
+                    <div class="cs-heading">
+                      <h2>ASSIGN SALES TEAM</h2>
+                    </div>
+                    <div class="logs-outer" style="max-height: 230px;">
+                      <div class="cs-figure">
+                        <ul *ngFor="let data of sales_team;let i=index "> 
+                          <li *ngIf="data.name!=null">
+                            <div class="outer" >
+                              <div class="inner">
+                                <span>Name</span>
+                                <p>{{data.name | titlecase}}</p>
+                              </div>
+                            </div>
+                          </li>
+                          <li *ngIf="data.mobile!=null">
+                            <div class="outer">
+                              <div class="inner">
+                                <span>Mobile No.</span>
+                                <p>{{data.mobile}}</p>
+                              </div>
+                            </div>
+                          </li>
+                          <li *ngIf="data.access_labeal!=null">
+                            <div class="outer">
+                              <div class="inner">
+                                <span>Position</span>
+                                <p>{{data.access_labeal | titlecase}}</p>
+                              </div>
+                              
+                              <button  class="delete-action"(click)="delete_sales_team(data.id,i)" >
+                                <i class="material-icons">delete_sweep</i></button>
+                                
+                              </div>
+                            </li>
+                          </ul>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div> -->
+                <div class="col s6 mt15 pr0" *ngIf="dr_type==1">
+                  <div class="territory-info sprate-box padding0">
+                    <a *ngIf="dr.edit && editAssign==false" mat-button class="edit-btn" matTooltip="Edit Product Type" color="accent" (click)="editUserAssign=true;getSalesUserList(dr.pincode,dr.type)"><i class="material-icons">edit</i></a>
+                    <div class="cs-heading">
+                      <h2>Assigned Sales Team</h2>
+                    </div>
+                    
+                    <div *ngIf="editUserAssign==false"  class="cs-checkbox" style="max-height: 230px;
+                    overflow: auto;">
+                    
+                    <div class="checkbox-outer" style="height: auto;" >
+                      
+                      <section class="checkbox-inner bodr0" >
+                        
+                        <mat-checkbox class="check-list remove-check" value="1" *ngFor="let data of sales_team;let i=index ">
+                          
+                          <a class="link-btn" routerLinkActive="active">
+                            
+                            <div class="name-outer">
+                              <div class="outer">
+                                <div class="inner">
+                                  <div class="name-inner">
+                                    {{data.name[0]}}
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                            <div class="text-box">
+                              <h2>{{data.name}}({{data.access_labeal | titlecase}})</h2>
+                              <h2>{{data.mobile}}</h2>
+                            </div>
+                          </a>
+                        </mat-checkbox>
+                      </section>
+                    </div>
+                  </div>
+                  
+                  <div *ngIf="editUserAssign==true"  class="cs-checkbox">
+                    
+                    <div class="checkbox-outer">
+                      
+                      <section class="checkbox-inner" >
+                        
+                        <ng-container *ngFor="let list of sales_team_data;let index=index" aria-required="true">
+                          <mat-checkbox class="check-list" [(ngModel)]="list.exist" (change)="selectedUser(index,$event)" >{{list.name}}({{list.access_labeal}})</mat-checkbox>
+                          
+                        </ng-container>
+                        
+                      </section>
+                      
+                    </div>
+                    <div class="bt-box">
+                      <button  class="cancel" style="background: #158700;" (click)="saveSelectedUser();editUserAssign=false">Save</button>
+                      <button class="cancel" (click)="editUserAssign=false">Cancel</button>
+                    </div>
+                  </div>
+                </div>
+                
+              </div>
+                <div class="col s6 mt15 pr0" *ngIf="dr_type==1">
+                  <div class="territory-info sprate-box padding0">
+                    <a *ngIf="dr.edit && editAssign==false" mat-button class="edit-btn" matTooltip="Edit Product Type" color="accent" (click)="editAssign=true;getProductType()"><i class="material-icons">edit</i></a>
+                    <div class="cs-heading">
+                      <h2>Assigned Product Type</h2>
+                    </div>
+                    
+                    <div *ngIf="editAssign==false"  class="cs-checkbox" style="max-height: 230px;
+                    overflow: auto;">
+                    
+                    <div class="checkbox-outer" style="height: auto;" >
+                      
+                      <section class="checkbox-inner bodr0" >
+                        
+                        <mat-checkbox class="check-list remove-check" value="1" *ngFor="let list of productTypeAssign">
+                          
+                          <a class="link-btn" routerLinkActive="active">
+                            
+                            <div class="name-outer">
+                              <div class="outer">
+                                <div class="inner">
+                                  <div class="name-inner">
+                                    {{list.type[0]}}
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                            <div class="text-box">
+                              <h2>{{list.type}}</h2>
+                            </div>
+                          </a>
+                        </mat-checkbox>
+                      </section>
+                    </div>
+                  </div>
+                  
+                  <div *ngIf="editAssign==true"  class="cs-checkbox">
+                    
+                    <div class="checkbox-outer">
+                      
+                      <section class="checkbox-inner" >
+                        
+                        <ng-container *ngFor="let list of allProductType;let index=index" aria-required="true">
+                          <mat-checkbox class="check-list" [(ngModel)]="list.exist" (change)="selectProductType(index,$event)" >{{list.name}}</mat-checkbox>
+                          
+                        </ng-container>
+                        
+                      </section>
+                      
+                    </div>
+                    <div class="bt-box">
+                      <button class="cancel" style="background: #158700;" (click)="saveSelectedProdectType();editAssign=false">Save</button>
+                      <button class="cancel" (click)="editAssign=false">Cancel</button>
+                    </div>
+                  </div>
+                </div>
+                
+              </div>
+            </div>
+            
+            <div class="col s4" *ngIf="notification.length">
+              <div class="col s12 pl0 sprate-box padding0 mb15" *ngIf="dr.type !='2'">
+                  <a mat-button class="edit-btn" matTooltip="Edit Target" (click)="edit_dis_target_duration(dr.id,dr.target_duration,'target_duration_dis_edit',dr.target_price)" color="accent"><i class="material-icons">edit</i></a>
+                <div class="cs-heading have-bdr">
+                  <h2>TARGETS</h2>
+                </div>
+                <div class="cs-figure">
+                  <ul>
+                    <li>
+                      <div class="outer">
+                        <div class="inner">
+                          <span>Target Duration</span>
+                          <p>{{dr.target_duration}}</p>
+                          <!-- <a *ngIf="dr.edit" class="edit-icon" color="accent" matRipple matTooltip="Edit Target Duration" (click)="edit_dis_target_duration(dr.id,dr.target_duration,'target_duration_dis_edit')"><i class="material-icons">create</i></a> -->
+                        </div>
+                      </div>
+                    </li>
+                    <li>
+                      <div class="outer">
+                        <div class="inner">
+                          <span>Amount</span>
+                          <p>RS. {{dr.target_price}}</p>
+                          <!-- <a *ngIf="dr.edit" class="edit-icon" color="accent" matRipple matTooltip="Edit Target Price" (click)="edit_dis_target_price(dr.id,dr.target_price,'target_price_dis_edit')"><i class="material-icons">create</i></a> -->
+                        </div>
+                      </div>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+              
+              <div class="sprate-box padding0 main-bdr">
+                <div class="cs-logs">
+                  <div class="cs-heading">
+                    <h2>LOGS DETAIL</h2>
+                  </div>
+                  <div class="logs-outer" style="max-height: 507px;">
+                    <div class="logs-list">
+                      <ul>
+                        <li *ngFor="let val of notification">
+                          <div class="name">
+                            {{val.created_name | titlecase}}
+                          </div>
+                          <div class="date">
+                            {{val.date_created  | date: 'MMM d,y hh:mm a'}}
+                          </div>
+                          <p>
+                            <!-- <strong>Call</strong> {{val.remark}} -->
+                            {{val.remark}}
+                          </p>
+                        </li>
+                      </ul>
+                      
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+          </div>
+        </div>
+      </div>
+      
+      
+      <!-- Follow up -->
+      <div *ngIf="showdetail==2">
+        <!-- <div class="middle-container padding0">
+          <div class="master-heading">
+            <div class="vl-info">
+              <ul>
+                <li class="af-none">
+                  <div class="th-search-acmt">
+                    <mat-form-field class="example-full-width cs-input select-input">
+                      <input matInput placeholder="Search.... " [(ngModel)]="search.master" (keyup.enter)="getFollowUpList()" >
+                    </mat-form-field>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="top-pagination">
+              <ul>
+                <li class="refresh-area">
+                  <a class="refresh-btn" mat-raised-button  matTooltip="Refresh" (click)="refresh()"><i class="material-icons"> refresh</i></a>
+                </li>
+                <li><p>Pages {{pagenumber}} Of {{total_page}}</p></li>
+                <li> <button mat-button class="left-btn" (click)="getFollowUpList(page_limit,start-page_limit)" [disabled]="pagenumber == 1">
+                  <i class="material-icons">keyboard_arrow_left</i></button>
+                </li>
+                <li> <input type="text" placeholder="GO TO" name="pagenumber" (keyup.enter)="getFollowUpList(page_limit,((pagenumber*page_limit)-page_limit))"  [(ngModel)]="pagenumber" min="1" max="{{total_page}}" [(ngModel)]="pagenumber" (keypress)="pagination($event)" > 
+                </li>            
+                <li><button mat-button class="right-btn"  (click)="getFollowUpList(page_limit,start+page_limit)" [disabled]="pagenumber == total_page">
+                  <i class="material-icons">keyboard_arrow_right</i> </button>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>  -->
+        <div class="container-outer padding0">
+          <div class="container" >
+            <div class="row">
+              <div class="col s12">
+                <div class="cs-table ss-scroll">
+                  <table>
+                    <tr>
+                      <div class="ss-sticky">
+                        <div class="table-head">
+                          <table> 
+                            <tr>
+                              <th class="w50">S.No.</th>
+                              <th class="w100">Date Created</th>
+                              <th class="w100">Next Followup</th>
+                              <th class="w100">Remark</th>
+                            </tr>
+                          </table>
+                        </div>
+                      </div>
+                    </tr>
+                    <tr>
+                      <div class="table-container">
+                        <div class="table-content">
+                          <table>
+                            <tr *ngFor="let data of followup_list; let i = index">
+                              <td class="w50">{{i+1}}</td>
+                              <td class="w100">{{data.date_created | date: 'dd MMM y'}}</td>
+                              <td class="w100">{{data.next_follow_date | date: 'dd MMM y'}}</td>
+                              <td class="w100">{{data.description}}
+                                <div class="action-btns">
+                                  <button *ngIf="dr.edit" mat-button class="delete" (click)="deleteFollowup(data.id,i,data.dr_id)"><i class="material-icons">delete_sweep</i> Delete</button>
+                                </div>
+                              </td>
+                            </tr>
+                          </table>
+                        </div>
+                      </div>
+                    </tr>
+                  </table>
+                  
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div> 
+      
+      <!-- orders-->
+      <div *ngIf="showdetail==3">
+        <!-- <div class="middle-container padding0">
+          <div class="master-heading">
+            <div class="vl-info">
+              <ul>
+                <li class="af-none">
+                  <div class="th-search-acmt">
+                    <mat-form-field class="example-full-width cs-input select-input">
+                      <input matInput placeholder="Search.... " [(ngModel)]="ordersearch.master" (input)="getOrderList()">
+                    </mat-form-field>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            
+          </div>
+        </div>  -->
+        <div class="container-outer padding0">
+          <div class="container" >
+            <div class="row">
+              <div class="col s12">
+                <div class="cs-table ss-scroll">
+                  <table>
+                    <tr>
+                      <div class="ss-sticky">
+                        <div class="table-head">
+                          <table> 
+                            <tr>
+                              <th class="w50">S.No.</th>
+                              <th class="w130">Date</th>
+                              <th>Created By</th>
+                              <th class="w160">Order Id</th>
+                              <th class="w120">Total Item</th>
+                              <th class="w140">Order Value</th>
+                              <th class="w130">Order Status</th>
+                              
+                            </tr>
+                          </table>
+                        </div>
+                      </div>
+                    </tr>
+                    <tr>
+                      <div class="table-container">
+                        <div class="table-content">
+                          <table>
+                            <tr *ngFor="let data of order_list; let i = index">
+                              <td class="w50">{{i+1}}</td>
+                              <td class="w130">{{data.date_created | date: 'dd MMM y'}}</td>
+                              <td >{{data.created_name}}</td>
+                              <td class="w160"><a class="link-btn" mat-button routerLink="/order-detail/{{data.id}}" routerLinkActive="active">ORD#{{data.id}}</a></td>
+                              <td class="w120">{{data.totalQty}}</td>
+                              <td class="w140">{{data.order_total}}</td>
+                              <td class="w130 {{data.order_status=='Pending' ? 'yellow-clr' : (data.order_status=='Reject' ? 'red-clr' : 'green-clr')}}">{{data.order_status}}
+                                
+                                <div class="action-btns">
+                                  <button *ngIf="dr.edit" mat-button class="delete" (click)="deleteorder(data.id,i,data.dr_id)"><i class="material-icons">delete_sweep</i> Delete</button>
+                                </div>
+                              </td>
+                            </tr>
+                          </table>
+                        </div>
+                      </div>
+                    </tr>
+                  </table>
+                  
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      
+      <!-- payments-->
+      <div *ngIf="showdetail==4">
+        <!-- <div class="middle-container padding0">
+          <div class="master-heading">
+            <div class="vl-info">
+              <ul>
+                <li class="af-none">
+                  <div class="th-search-acmt">
+                    <mat-form-field class="example-full-width cs-input select-input">
+                      <input matInput placeholder="Search.... " [(ngModel)]="paymentsearch.master" (input)="getPaymentList()">
+                    </mat-form-field>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            
+          </div>
+        </div>  -->
+        <div class="container-outer padding0">
+          <div class="container" >
+            <div class="row">
+              <div class="col s12 adjust-col">
+                <div class="cs-table ss-scroll">
+                  <table>
+                    <tr>
+                      <div class="table-head">
+                        <table> 
+                          <tr>
+                            <th class="w50">S.No.</th>
+                            <th class="w100">Date</th>
+                            <th class="w130">Created By</th>
+                            <th class="w80">Mode</th>
+                            <th class="w150">Payment Details</th>
+                            <th class="w80 text-right">Amount</th>
+                            <th class="w150">Verification Details</th>
+                            <th class="w120">Image</th>
+                            <th class="w130">Reject Reason</th>
+                            <th class="w90">Status</th>
+                          </tr>
+                        </table>
+                      </div>
+                    </tr>
+                    <tr>
+                      <div class="table-container">
+                        <div class="table-content">
+                          <table>
+                            <tr *ngFor="let data of payment_list; let i = index">
+                              <td class="w50">{{i+1}}</td>
+                              <td class="w100">{{data.date_created | date: 'dd MMM y'}}</td>
+                              <td class="w130">{{data.user_name}}</td>
+                              <td class="w80">{{data.mode}}</td>
+                              <td class="w150">{{data.mode=='cash' ? ' ' : (data.mode=='cheque' ? data.cheque_no : data.transaction_id)}}  {{data.remark ? 'Remark: ' : ''}} {{data.remark ? data.remark : ''}}</td>
+                              <td class="w80 text-right"> &#x20B9;{{data.amount}}</td>
+                              <td class="w150">
+                                {{data.verify_description}}
+                              </td>
+                              <td class="w120">
+                                <ul class="img-secation">
+                                  <li  *ngFor="let file of data.docs">
+                                    <a *ngIf="file.file_name" href="{{constant.upload_url}}/{{file.file_name}}" download={{file.file_name}} target="_blank">
+                                      <img style="height: 35px;
+                                      width: 30px;" *ngIf="file.file_type!='doc' && file.file_type!='doc'" src="assets/img/landscape.svg">
+                                      <img *ngIf="file.file_type=='doc' || file.file_type=='docx'"src="assets/img/doc.svg">
+                                    </a>
+                                  </li>
+                                </ul>
+                              </td>
+                              <td class="w130">{{data.reject_reason}}</td>
+                              
+                              <td class="w90 {{data.payment_status=='Pending' ? 'red-clr' : 'green-clr'}}">
+                                {{data.payment_status}}
+                                <!-- <div class="action-btns"  *ngIf="data.payment_status!='Verified'">
+                                  <button mat-button class="edit" *ngIf="data.payment_status!='Verified'" (click)="verify_pay_status(data.id,data.order_id,i,'verify_pay_status')" type="button"><i class="material-icons">check_circle</i>Verify</button>
+                                  <button *ngIf="data.payment_status!='Reject'" mat-button class="delete" (click)="reject(data.id,i,'payment_reason_reject')" matTooltip="Reject">  <i class="material-icons">cancel</i>Reject</button>
+                                  <button mat-button class="delete" (click)="delete_payment(data.dr_id,data.id)"><i class="material-icons">delete_sweep</i>Delete</button>
+                                </div> -->
+                              </td>
+                            </tr>
+                          </table>
+                        </div>
+                      </div>
+                    </tr>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      
+      <!-- checkins-->
+      <div *ngIf="showdetail==5">
+        <!-- <div class="middle-container padding0">
+          <div class="master-heading">
+            <div class="vl-info">
+              <ul>
+                <li class="af-none">
+                  <div class="th-search-acmt">
+                    <mat-form-field class="example-full-width cs-input select-input">
+                      <input matInput placeholder="Search.... " [(ngModel)]="paymentsearch.master" (input)="getPaymentList()">
+                    </mat-form-field>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            
+          </div>
+        </div>  -->
+        <div class="container-outer padding0">
+          <div class="container" >
+            <div class="row">
+              <div class="col s12 adjust-col">
+                <div class="cs-table ss-scroll">
+                  <table>
+                    <tr>
+                      <div class="table-head">
+                        <table> 
+                          <tr>
+                            <th class="w50">S.No</th>
+                            <th class="w110">Date</th>
+                            <th class="w150">Created By</th>
+                            <th class="w110">Type</th>
+                            <th class="w90">Check-In</th>
+                            <th class="w90"> Check-Out</th>
+                            <th class="w90">Visit time</th>
+                            <th class="w150">Geolocation</th>
+                            <th >Check-In Remark</th>
+                          </tr>
+                        </table>
+                      </div>
+                    </tr>
+                    <tr>
+                      <div class="table-container">
+                        <div class="table-content">
+                          <table>
+                            <tr *ngFor="let row of checkin_list;let i=index">
+                              <td class="w50">{{i+1}}</td>
+                              <td class="w110">{{row.date_created | date: 'dd MMM y' }}</td>
+                              <td class="w150">{{row.created_by_name |titlecase}}-{{row.role_name}}</td>
+                              <td class="w110">
+                                <span *ngIf="row.dr_type == 1">Distributor</span>
+                                <span *ngIf="row.dr_type == 3">Dealer</span>
+                                <span *ngIf="row.dr_type == 2">Retailer</span>
+                                <span *ngIf="row.dr_type == 0">Other</span>
+                              </td>
+                              <td class="w90">{{row.visit_start=='0000-00-00 00:00:00'? '00:00': row.visit_start | date:'hh:mm a'}}</td>
+                              <td class="w90">{{row.visit_end=='0000-00-00 00:00:00'? '00:00' : row.visit_end | date:'hh:mm a'}}</td>
+                              <td class="w90">{{row.total_time=='0000-00-00 00:00:00'? '00:00': row.total_time }}Hr.</td>
+                              <td class="w150">{{row.address ? row.address : 'N/A '}}</td>
+                              <td>{{row.remark}}</td>
+                            </tr>
+                          </table>
+                        </div>
+                      </div>
+                    </tr>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- pop gift-->
+      <div *ngIf="showdetail==6">
+        <div class="container-outer padding0">
+          <div class="container" >
+            <div class="row">
+              <div class="">
+                <div class="cs-table ss-scroll">
+                  <table>
+                    <tr>
+                      <div class="table-head">
+                        <table> 
+                          <tr>
+                            <th class="w50">S.No.</th>
+                            <th class="w130">Date</th>
+                            <th  class="w160">Created By</th>
+                            <th class="w160">Gift Name</th>
+                            <th class="w50">Qty</th>
+                            <th class="w250">Description</th>
+                            
+                          </tr>
+                        </table>
+                      </div>
+                    </tr>
+                    <tr>
+                      <div class="table-container">
+                        <div class="table-content">
+                          <table>
+                            <tr *ngFor="let data of popGiftList; let i = index">
+                              <td class="w50">{{i+1}}</td>
+                              <td class="w130">{{data.date_created | date: 'dd MMM y'}}</td>
+                              <td  class="w160" >{{data.created_name}}</td>
+                              <td class="w160">{{data.pop_name}}</td>
+                              <td class="w50">{{data.qty}}</td>
+                              <td class="w250">{{data.description}}
+                                
+                                <div class="action-btns">
+                                  <button *ngIf="dr.edit" mat-button class="delete" (click)="deletegiftorder(data.id,i,data.dr_id)"><i class="material-icons">delete_sweep</i> Delete</button>
+                                </div>
+                              </td>
+                            </tr>
+                          </table>
+                        </div>
+                      </div>
+                      <div class="no-record-data-text" *ngIf="!popGiftList.length"> 
+                        <img src="assets/img/no-record-found.png">
+                      </div>
+                    </tr>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div> 
+      
+      <!-- <div *ngIf="showdetail==7"  class="sprate-box padding0 mt20">
+        <div class="full-address">
+          <div class="top-heading">
+            <h2>Assing Product Discount</h2>
+            <a *ngIf="dr.edit" class="cs-add" (click)="addAssignProduct('add')"><i class="material-icons">add</i></a>
+          </div>
+          <div *ngIf="productAssign.length" class="ds-from-fields pt0"> 
+            <div class="row mb0">
+              <div class="col s12 padding0">
+                <div class="cs-table left-right-20">
+                  <div class="table-head">
+                    <table>
+                      <tr>
+                        <th>Product Code</th>
+                        <th class="w200">Discount Type</th>
+                        <th class="w250 bdr0">Discount Value</th>
+                      </tr>
+                    </table>
+                  </div>
+                  
+                  <div class="table-container pb0">
+                    <div class="table-content none-shadow">
+                      <table>
+                        <tr *ngFor="let cp_data of productAssign;let index=index">
+                          <td>{{cp_data.product_code }}</td>
+                          <td class="w200">{{cp_data.discount_type}}</td>
+                          <td class="w250">{{cp_data.discount_val}}
+                            <div class="action-btns">
+                              <a *ngIf="dr.edit=='1'" mat-button class="edit" (click)="editAssignProduct('edit',cp_data)"><i class="material-icons">edit</i> Edit</a>
+                              <button *ngIf="dr.edit=='1'" mat-button class="delete" (click)="deleteAssignProduct(cp_data.product_code,i)"><i class="material-icons">delete_sweep</i> Delete</button>
+                            </div>
+                          </td>
+                        </tr>            
+                      </table>
+                    </div>
+                  </div>
+                  
+                </div>
+              </div>
+            </div>
+            
+          </div>
+        </div>
+      </div> -->
+      <div *ngIf="showdetail==7">
+        <div class="container-outer padding0">
+          <div class="container" >
+            <div class="row">
+              <div class="">
+                <div class="cs-table ss-scroll">
+                  <table>
+                    <tr>
+                      <div class="table-head">
+                        <table> 
+                          <tr>
+                            <th>Product Code</th>
+                            <th class="w200">Discount Type</th>
+                            <th class="w250 bdr0">Discount Value</th>
+                          </tr>
+                        </table>
+                      </div>
+                    </tr>
+                    <tr>
+                      <div class="table-container">
+                        <div class="table-content">
+                          <table>
+                            <tr *ngFor="let cp_data of productAssign;let index=index">
+                              <td>{{cp_data.product_code }}</td>
+                              <td class="w200">{{cp_data.discount_type}}</td>
+                              <td class="w250">{{cp_data.discount_val}}
+                                <div class="action-btns">
+                                  <a *ngIf="dr.edit=='1'" mat-button class="edit" (click)="editAssignProduct('edit',cp_data)"><i class="material-icons">edit</i> Edit</a>
+                                  <button *ngIf="dr.edit=='1'" mat-button class="delete" (click)="deleteAssignProduct(cp_data.product_code,i)"><i class="material-icons">delete_sweep</i> Delete</button>
+                                </div>
+                              </td>
+                            </tr> 
+                          </table>
+                        </div>
+                      </div>
+                    </tr>
+                  </table>
+                  
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div> 
+    </div>
+  </div>
+  <div class="h50"></div>
+  
+  
