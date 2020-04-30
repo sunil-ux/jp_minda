@@ -28,7 +28,7 @@
     "font-awesome": "^4.7.0",
     "fusioncharts": "^3.14.0-sr.1",
     "hammerjs": "^2.0.8",
-    "jquery": "^3.4.1",
+    "jquery": "^3.5.0",
     "jwt-decode": "^2.2.0",
     "moment": "^2.24.0",
     "ng-multiselect-dropdown": "^0.2.3",
